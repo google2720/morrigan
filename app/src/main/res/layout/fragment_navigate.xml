@@ -1,0 +1,221 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.morrigan.m.main.NavigateFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/headIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="张小三"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#fffffd" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#8d03d5"
+                android:paddingBottom="10dp"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_kneading"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <com.morrigan.m.main.NavigateTextView
+                android:id="@+id/my_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_my_information"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_my_information"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <com.morrigan.m.main.NavigateTextView
+                android:id="@+id/goal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_goal"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_goal"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <com.morrigan.m.main.NavigateTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_history"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_history"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <com.morrigan.m.main.NavigateTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_relate_account"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_relate_account"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_relate_device"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_relate_device"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#8d03d5"
+                android:paddingBottom="10dp"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_about_app"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <com.morrigan.m.main.NavigateTextView
+                android:id="@+id/about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_about"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_about"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <com.morrigan.m.main.NavigateTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_firmware_upgrade"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_firmware_upgrade"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <com.morrigan.m.main.NavigateTextView
+                android:id="@+id/feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_feedback"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_feedback"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+
+            <com.morrigan.m.main.NavigateTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_setting_quit"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:text="@string/navigate_setting_quit"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fffffd" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

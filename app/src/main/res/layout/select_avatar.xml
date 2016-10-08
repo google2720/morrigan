@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f7f7"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:minHeight="@dimen/line_min_height"
+        android:text="@string/select_avatar"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#999" />
+
+    <TextView
+        android:id="@+id/pick_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/item_line_background"
+        android:clickable="true"
+        android:gravity="center"
+        android:minHeight="@dimen/line_min_height"
+        android:text="@string/from_photo"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#333" />
+
+    <TextView
+        android:id="@+id/capture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/item_line_bottom_background"
+        android:clickable="true"
+        android:gravity="center"
+        android:minHeight="@dimen/line_min_height"
+        android:text="@string/capture"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#333" />
+
+    <TextView
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/item_line_background"
+        android:clickable="true"
+        android:gravity="center"
+        android:minHeight="@dimen/line_min_height"
+        android:text="@string/action_cancel"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#666" />
+</LinearLayout>

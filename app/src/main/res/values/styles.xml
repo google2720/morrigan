@@ -1,0 +1,23 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:dividerVertical">@drawable/divider_vertical</item>
+        <item name="android:dividerHorizontal">@drawable/divider_vertical</item>
+        <item name="android:listDivider">@drawable/divider_vertical</item>
+    </style>
+
+    <style name="AppTheme.Welcome">
+        <item name="colorPrimaryDark">@color/welcome_default_bg</item>
+        <item name="android:windowBackground">@drawable/welcome_default_bg</item>
+    </style>
+
+    <style name="AppTheme.Login">
+        <item name="colorPrimaryDark">#440067</item>
+    </style>
+
+</resources>
