@@ -118,6 +118,15 @@ public class UserController {
         preferences.edit().putString("weight", w).apply();
     }
 
+    public String getTarget(Context context) {
+        return getSharedPreferences(context).getString("target", null);
+    }
+
+    public void setTarget(Context context, String target) {
+        SharedPreferences preferences = getSharedPreferences(context);
+        preferences.edit().putString("target", target).apply();
+    }
+
     public UiResult modify(Context context, String col, String value) {
         UiResult uiResult = new UiResult();
         try {

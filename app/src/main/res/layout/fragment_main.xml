@@ -66,7 +66,7 @@
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="手动按摩"
+            android:text="@string/knead_manual"
             android:textColor="#8f54ca" />
 
         <TextView
@@ -80,7 +80,7 @@
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="自动按摩"
+            android:text="@string/knead_auto"
             android:textColor="#8f54ca" />
 
         <TextView
@@ -94,7 +94,7 @@
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="音乐随动"
+            android:text="@string/knead_music"
             android:textColor="#8f54ca" />
     </LinearLayout>
 </LinearLayout>

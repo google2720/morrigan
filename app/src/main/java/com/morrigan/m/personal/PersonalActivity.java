@@ -1,7 +1,6 @@
 package com.morrigan.m.personal;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -166,7 +165,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             public void onOptionsSelect(int options1, int options2, int options3) {
                 final String emotion = emotionValues[options1];
                 final String emotionText = emotionNames[options1];
-                ModifyTask task = new ModifyTask(PersonalActivity.this, "emotion", emotion, new Runnable() {
+                PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "emotion", emotion, new Runnable() {
                     @Override
                     public void run() {
                         UserController.getInstance().setEmotion(PersonalActivity.this, emotion);
@@ -201,7 +200,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
                 final String h = items.get(options1).getName();
-                ModifyTask task = new ModifyTask(PersonalActivity.this, "high", h, new Runnable() {
+                PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "high", h, new Runnable() {
                     @Override
                     public void run() {
                         UserController.getInstance().setHeight(PersonalActivity.this, h);
@@ -236,7 +235,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
                 final String w = items.get(options1).getName();
-                ModifyTask task = new ModifyTask(PersonalActivity.this, "weight", w, new Runnable() {
+                PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "weight", w, new Runnable() {
                     @Override
                     public void run() {
                         UserController.getInstance().setWeight(PersonalActivity.this, w);
@@ -271,7 +270,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
                 final String age = items.get(options1).getName();
-                ModifyTask task = new ModifyTask(PersonalActivity.this, "age", age, new Runnable() {
+                PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "age", age, new Runnable() {
                     @Override
                     public void run() {
                         UserController.getInstance().setAge(PersonalActivity.this, age);
@@ -459,46 +458,6 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             onClickCapture();
         } else {
             ToastUtils.show(this, R.string.capture_permission, Toast.LENGTH_LONG);
-        }
-    }
-
-    class ModifyTask extends AsyncTask<Void, Void, UiResult> {
-
-        private Activity activity;
-        private String col;
-        private String value;
-        private Runnable runnable;
-        private ProgressDialog dialog;
-
-        ModifyTask(Activity activity, String col, String value, Runnable runnable) {
-            this.activity = activity;
-            this.col = col;
-            this.value = value;
-            this.runnable = runnable;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(activity);
-            dialog.setMessage(activity.getString(R.string.changing));
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected UiResult doInBackground(Void... params) {
-            return UserController.getInstance().modify(activity, col, value);
-        }
-
-        @Override
-        protected void onPostExecute(UiResult result) {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            ToastUtils.show(activity, result.message);
-            if (result.success) {
-                runnable.run();
-            }
         }
     }
 }

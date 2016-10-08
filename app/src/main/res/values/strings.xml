@@ -60,9 +60,16 @@
     <string name="uploading">"正在上传"</string>
     <!-- 设定目标 -->
     <string name="goal_title">"设定目标"</string>
+    <string name="minute">"分"</string>
+    <string name="goal_title_tip">"设定您的每日分钟目标"</string>
+    <string name="goal_title_message">"设置合理的目的进行挑战\n趣味从达到目标开始"</string>
     <!-- 关于界面 -->
     <string name="about_title">"关于摩莉"</string>
     <!-- 意见反馈 -->
     <string name="feedback_title">"意见反馈"</string>
     <string name="feedback_hint">"请输入您的改善意见和问题反馈"</string>
+    <!-- 主界面 -->
+    <string name="knead_manual">"手动按摩"</string>
+    <string name="knead_auto">"自动按摩"</string>
+    <string name="knead_music">"音乐随动"</string>
 </resources>

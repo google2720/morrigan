@@ -12,7 +12,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="50dp"
         android:layout_marginTop="50dp"
-        android:text="设定您的每日分钟目标"
+        android:text="@string/goal_title_tip"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#999" />
 
@@ -22,7 +22,8 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <com.morrigan.m.goal.RulerView
+        <com.morrigan.m.goal.GoalView
+            android:id="@+id/goal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
@@ -34,7 +35,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="设置合理的目的进行挑战\n趣味从达到目标开始"
+            android:text="@string/goal_title_message"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#666" />
 
@@ -43,10 +44,12 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:layout_marginBottom="50dp"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="50dp"
-        android:text="@string/action_complete" />
+        android:background="@drawable/common_button"
+        android:onClick="onClickComplete"
+        android:text="@string/action_complete"
+        android:textColor="#fff" />
 </LinearLayout>
