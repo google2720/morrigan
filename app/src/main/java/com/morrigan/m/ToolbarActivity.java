@@ -46,7 +46,7 @@ public abstract class ToolbarActivity extends BaseActivity {
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
-        setContentView(getLayoutInflater().inflate(layoutResID, contentPanel, false));
+        getLayoutInflater().inflate(layoutResID, contentPanel);
     }
 
     @Override

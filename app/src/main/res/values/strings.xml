@@ -65,6 +65,10 @@
     <string name="goal_title_message">"设置合理的目的进行挑战\n趣味从达到目标开始"</string>
     <!-- 关于界面 -->
     <string name="about_title">"关于摩莉"</string>
+    <string name="about_product_team">"产品团队"</string>
+    <string name="about_private">"隐私政策"</string>
+    <string name="about_service">"服务条例"</string>
+    <string name="about_copy_right">"摩莉公司版权所有 ©2015-©2016"</string>
     <!-- 意见反馈 -->
     <string name="feedback_title">"意见反馈"</string>
     <string name="feedback_hint">"请输入您的改善意见和问题反馈"</string>

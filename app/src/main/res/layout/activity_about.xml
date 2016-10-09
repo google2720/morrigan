@@ -33,13 +33,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
             android:drawableEnd="@drawable/ic_arrow_grey"
             android:gravity="center_vertical"
             android:minHeight="@dimen/line_min_height"
+            android:onClick="onClickProductTeam"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
-            android:text="产品团队"
+            android:text="@string/about_product_team"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#333" />
 
@@ -51,9 +51,10 @@
             android:drawableEnd="@drawable/ic_arrow_grey"
             android:gravity="center_vertical"
             android:minHeight="@dimen/line_min_height"
+            android:onClick="onClickService"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
-            android:text="服务条例"
+            android:text="@string/about_service"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#333" />
 
@@ -65,9 +66,10 @@
             android:drawableEnd="@drawable/ic_arrow_grey"
             android:gravity="center_vertical"
             android:minHeight="@dimen/line_min_height"
+            android:onClick="onClickPrivate"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
-            android:text="隐私政策"
+            android:text="@string/about_private"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#333" />
     </LinearLayout>
@@ -83,7 +85,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="摩莉公司版权所有 ©2015-©2016"
+        android:text="@string/about_copy_right"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#999" />
 </LinearLayout>

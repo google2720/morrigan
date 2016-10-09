@@ -2,11 +2,15 @@ package com.morrigan.m.about;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
+import com.morrigan.m.WebViewActivity;
 import com.squareup.picasso.Picasso;
+
+import java.util.Locale;
 
 /**
  * 关于界面
@@ -29,5 +33,17 @@ public class AboutActivity extends ToolbarActivity {
         super.onDestroy();
         Picasso.with(this).cancelRequest(aboutTopView);
         aboutTopView.setImageDrawable(null);
+    }
+
+    public void onClickProductTeam(View view) {
+        WebViewActivity.start(this, getString(R.string.about_product_team), "file:///android_asset/product-team.html");
+    }
+
+    public void onClickPrivate(View view) {
+        WebViewActivity.start(this, getString(R.string.about_private), "file:///android_asset/private.html");
+    }
+
+    public void onClickService(View view) {
+        WebViewActivity.start(this, getString(R.string.about_service), "file:///android_asset/service.html");
     }
 }
