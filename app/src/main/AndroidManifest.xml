@@ -44,7 +44,7 @@
             android:name=".goal.GoalActivity"
             android:label="@string/goal_title" />
         <activity
-            android:name=".AboutActivity"
+            android:name=".about.AboutActivity"
             android:label="@string/about_title" />
         <activity
             android:name=".FeedbackActivity"

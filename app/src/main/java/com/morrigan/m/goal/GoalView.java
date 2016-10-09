@@ -45,11 +45,12 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
             boolean a = scroller.computeScrollOffset();
             if (!scroller.isFinished()) {
                 Log.i(TAG, String.format("computeScroll2 %s/%s", false, a));
-                postDelayed(runnable, 250);
+                postDelayed(runnable, 150);
             } else {
                 int sx = getScrollX();
                 int mode = sx % divide;
                 if (mode != 0) {
+                    scroller.abortAnimation();
                     if (mode >= divide / 2) {
                         scroller.startScroll(sx, 0, divide - mode, 0, 150);
                     } else {
@@ -123,7 +124,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                postDelayed(runnable, 500);
+                postDelayed(runnable, 150);
                 break;
             default:
                 break;

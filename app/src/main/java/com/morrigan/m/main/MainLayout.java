@@ -14,6 +14,8 @@ import android.widget.FrameLayout;
  */
 public class MainLayout extends FrameLayout {
 
+    private boolean open;
+
     public MainLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -34,24 +36,33 @@ public class MainLayout extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        if (open) {
+            setAnimValue(getChildAt(0).getWidth());
+        }
     }
 
     public boolean isMenuOpen() {
-        return getChildAt(1).getLeft() != 0;
+        return open;
     }
 
     public void closeMenu() {
-        ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), 0);
-        animator.setDuration(250);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.start();
+        if (open) {
+            open = false;
+            ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), 0);
+            animator.setDuration(250);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.start();
+        }
     }
 
     public void openMenu() {
-        ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), getChildAt(0).getWidth());
-        animator.setDuration(250);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.start();
+        if (!open) {
+            open = true;
+            ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), getChildAt(0).getWidth());
+            animator.setDuration(250);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.start();
+        }
     }
 
     @Keep

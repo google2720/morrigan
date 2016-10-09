@@ -35,6 +35,7 @@ import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.UserController;
+import com.morrigan.m.login.LoginActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -304,6 +305,13 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
                 AsyncTaskCompat.executeParallel(task);
             }
         }
+    }
+
+    public void onClickQuit(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     class UploadTask extends AsyncTask<Void, Void, UiResult<String>> {

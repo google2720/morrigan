@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="171dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/aboutTop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/about_top_logo" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_line_top_bottom_bg"
+        android:orientation="vertical">
+
+        <com.morrigan.m.about.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_arrow_grey"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/line_min_height"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="产品团队"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#333" />
+
+        <com.morrigan.m.about.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_arrow_grey"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/line_min_height"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="服务条例"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#333" />
+
+        <com.morrigan.m.about.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_arrow_grey"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/line_min_height"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="隐私政策"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#333" />
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="摩莉公司版权所有 ©2015-©2016"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#999" />
+</LinearLayout>

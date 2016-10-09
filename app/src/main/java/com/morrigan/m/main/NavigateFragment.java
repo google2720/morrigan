@@ -8,16 +8,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.morrigan.m.AboutActivity;
+import com.morrigan.m.about.AboutActivity;
 import com.morrigan.m.FeedbackActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.UserController;
 import com.morrigan.m.goal.GoalActivity;
+import com.morrigan.m.login.LoginActivity;
 import com.morrigan.m.personal.PersonalActivity;
+import com.squareup.picasso.Picasso;
 
 public class NavigateFragment extends Fragment {
 
-    private NavigateListener mListener;
+    private NavigateListener listener;
+    private TextView nicknameView;
+    private ImageView avatarView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,8 @@ public class NavigateFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        nicknameView = (TextView) view.findViewById(R.id.nickname);
+        avatarView = (ImageView) view.findViewById(R.id.avatar);
         view.findViewById(R.id.my_info).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,13 +68,22 @@ public class NavigateFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        view.findViewById(R.id.quit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof NavigateListener) {
-            mListener = (NavigateListener) context;
+            listener = (NavigateListener) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
@@ -74,7 +92,17 @@ public class NavigateFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        nicknameView.setText(UserController.getInstance().getNickname(getActivity()));
+        Picasso.with(getActivity()).load(UserController.getInstance().getImgUrl(getActivity()))
+                .placeholder(R.drawable.default_avatar)
+                .error(R.drawable.default_avatar)
+                .centerCrop().into(avatarView);
     }
 
     public interface NavigateListener {

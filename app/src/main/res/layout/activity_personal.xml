@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <ImageView
+                <com.github.yzeaho.common.CircleImageView
                     android:id="@+id/avatar"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
@@ -273,6 +273,7 @@
             android:clickable="true"
             android:gravity="center_vertical"
             android:minHeight="@dimen/line_min_height"
+            android:onClick="onClickQuit"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:text="@string/quit_current_account"
