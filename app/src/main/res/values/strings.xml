@@ -76,4 +76,10 @@
     <string name="knead_manual">"手动按摩"</string>
     <string name="knead_auto">"自动按摩"</string>
     <string name="knead_music">"音乐随动"</string>
+    <!-- 历史记录 -->
+    <string name="history_title_today">"今天一览"</string>
+    <string name="history_title_week">"本周一阅"</string>
+    <string name="history_today">"日"</string>
+    <string name="history_week">"周"</string>
+    <string name="history_record_ing_message">"正在加载..."</string>
 </resources>

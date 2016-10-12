@@ -49,6 +49,10 @@
             android:name=".FeedbackActivity"
             android:label="@string/feedback_title" />
         <activity android:name=".WebViewActivity" />
+        <activity
+            android:theme="@style/AppTheme.History"
+            android:name=".historyrecord.HisttofyRecordActivity"
+            android:label="@string/history_title_today" />
     </application>
 
 </manifest>

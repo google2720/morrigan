@@ -19,5 +19,9 @@
     <style name="AppTheme.Login">
         <item name="colorPrimaryDark">#440067</item>
     </style>
+    <style name="AppTheme.History">
+        <item name="colorPrimary">@color/c8c39e5</item>
+        <item name="colorPrimaryDark">@color/c8c39e5</item>
+    </style>
 
 </resources>

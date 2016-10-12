@@ -16,6 +16,7 @@ import com.morrigan.m.FeedbackActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.UserController;
 import com.morrigan.m.goal.GoalActivity;
+import com.morrigan.m.historyrecord.HisttofyRecordActivity;
 import com.morrigan.m.login.LoginActivity;
 import com.morrigan.m.personal.PersonalActivity;
 import com.squareup.picasso.Picasso;
@@ -74,6 +75,13 @@ public class NavigateFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+        view.findViewById(R.id.history).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), HisttofyRecordActivity.class);
                 startActivity(intent);
             }
         });
