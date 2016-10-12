@@ -11,10 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.morrigan.m.about.AboutActivity;
+import com.morrigan.m.device.DeviceActivity;
 import com.morrigan.m.FeedbackActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.UserController;
+import com.morrigan.m.about.AboutActivity;
 import com.morrigan.m.goal.GoalActivity;
 import com.morrigan.m.historyrecord.HisttofyRecordActivity;
 import com.morrigan.m.login.LoginActivity;
@@ -52,6 +53,13 @@ public class NavigateFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), GoalActivity.class);
+                startActivity(intent);
+            }
+        });
+        view.findViewById(R.id.device).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DeviceActivity.class);
                 startActivity(intent);
             }
         });

@@ -63,6 +63,9 @@
     <string name="minute">"分"</string>
     <string name="goal_title_tip">"设定您的每日分钟目标"</string>
     <string name="goal_title_message">"设置合理的目的进行挑战\n趣味从达到目标开始"</string>
+    <!-- 关联设备 -->
+    <string name="device_title">"关联设备"</string>
+    <string name="device_add">"添加新设备"</string>
     <!-- 关于界面 -->
     <string name="about_title">"关于摩莉"</string>
     <string name="about_product_team">"产品团队"</string>

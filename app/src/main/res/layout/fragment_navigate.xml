@@ -116,9 +116,11 @@
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_relate_account"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#fffffd" />
+                android:textColor="#fffffd"
+                android:visibility="gone" />
 
             <TextView
+                android:id="@+id/device"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
@@ -180,7 +182,8 @@
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_firmware_upgrade"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#fffffd" />
+                android:textColor="#fffffd"
+                android:visibility="gone" />
 
             <com.morrigan.m.main.NavigateTextView
                 android:id="@+id/feedback"

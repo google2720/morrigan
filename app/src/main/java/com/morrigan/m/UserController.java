@@ -119,7 +119,7 @@ public class UserController {
     }
 
     public String getTarget(Context context) {
-        return getSharedPreferences(context).getString("target", null);
+        return getSharedPreferences(context).getString("target", "60");
     }
 
     public void setTarget(Context context, String target) {
