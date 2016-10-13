@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">"摩莉"</string>
     <string name="action_cancel">"取消"</string>
     <string name="action_confirm">"确定"</string>
@@ -66,6 +66,12 @@
     <!-- 关联设备 -->
     <string name="device_title">"关联设备"</string>
     <string name="device_add">"添加新设备"</string>
+    <string name="device_scan_title">"摩莉智能文胸"</string>
+    <string name="device_scan_tip">"正在搜索设备..."</string>
+    <string name="device_scan_stop">"停止搜索"</string>
+    <string name="device_please_select">"请选择设备"</string>
+    <string name="device_result_num">"设备<xliff:g>%s</xliff:g>"</string>
+    <string name="device_connect">"正在连接..."</string>
     <!-- 关于界面 -->
     <string name="about_title">"关于摩莉"</string>
     <string name="about_product_team">"产品团队"</string>
