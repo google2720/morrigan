@@ -141,6 +141,9 @@ public class HisttofyRecordActivity extends ToolbarActivity {
                 HistoryResult r = result.parse(HistoryResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
+                if (uiResult.success) {
+                    uiResult.t = r;
+                }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to login", e);
                 uiResult.message = e.getMessage();
@@ -155,16 +158,24 @@ public class HisttofyRecordActivity extends ToolbarActivity {
             }
             ToastUtils.show(activity, result.message);
             if (result.success) {
-                if (fragments == null) {
-                    fragments = new ArrayList<>();
-                    fragments.add(new DayHistotyRecordFragment());
-                    fragments.add(new WeekHistotyRecordFragment());
-                    TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), fragments);
-                    mViewPager.setOffscreenPageLimit(fragments.size());
-                    mViewPager.setAdapter(tabAdapter);
-                    showDay();
-                    mViewPager.setCurrentItem(0);
+
+                fragments = new ArrayList<>();
+                DayHistotyRecordFragment day = new DayHistotyRecordFragment();
+                WeekHistotyRecordFragment week = null;
+                if (result.t != null) {
+                    week = WeekHistotyRecordFragment.getIntance((HistoryResult) result.t);
+                } else {
+                    week = WeekHistotyRecordFragment.getIntance(null);
                 }
+                fragments.add(day);
+                fragments.add(week);
+                TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), fragments);
+                mViewPager.setOffscreenPageLimit(fragments.size());
+                mViewPager.setAdapter(tabAdapter);
+                showDay();
+                mViewPager.setCurrentItem(0);
+
+
             }
         }
     }

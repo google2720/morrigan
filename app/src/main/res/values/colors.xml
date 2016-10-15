@@ -7,4 +7,11 @@
     <drawable name="welcome_default_bg">#ff100f11</drawable>
     <color name="c8c39e5">#8c39e5</color>
     <color name="c8126e4">#8126e4</color>
+    <color name="cffbe8ef2">#ffbe8ef2</color>
+    <color name="cf7f7f7">#f7f7f7</color>
+    <color name="cf3f3f3">#e3e3e3</color>
+    <color name="cffffff">#ffffff</color>
+    <color name="c5a5a5a">#5a5a5a</color>
+    <color name="c000000">#000000</color>
+
 </resources>

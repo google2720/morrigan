@@ -91,4 +91,9 @@
     <string name="history_today">"日"</string>
     <string name="history_week">"周"</string>
     <string name="history_record_ing_message">"正在加载..."</string>
+    <string name="history_week_goal">本周目标</string>
+    <string name="history_week_nursing">本周护养</string>
+    <string name="history_week_surplus">剩余目标值</string>
+    <string name="history_week_average_nursing">平均护养</string>
+
 </resources>
