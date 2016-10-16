@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.github.yzeaho.file.Closeables;
 import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
-import com.google.gson.Gson;
 import com.morrigan.m.historyrecord.TodayRecord;
 import com.morrigan.m.login.UserInfo;
-import com.morrigan.m.utils.Closeables;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -147,11 +146,11 @@ public class UserController {
         if (data == null || !data.date.equals(sf.format(new Date()))) {
             data = new TodayRecord();
         }
-       return data;
+        return data;
     }
 
     public boolean setTodayRecord(Context context, TodayRecord todayRecord) {
-        return save(context,"todayRecord",todayRecord);
+        return save(context, "todayRecord", todayRecord);
     }
 
     public <T> T get(Context context, String key, Class<T> c) {

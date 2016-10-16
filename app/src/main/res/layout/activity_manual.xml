@@ -32,6 +32,7 @@
         </RelativeLayout>
 
         <com.morrigan.m.main.ManualView
+            android:id="@+id/manual"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
@@ -57,8 +58,8 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:background="@null"
+                android:onClick="onClickAddGear"
                 android:src="@drawable/ic_gear_add" />
 
             <android.support.v4.widget.Space
@@ -81,6 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:onClick="onClickDeleteGear"
                 android:src="@drawable/ic_gear_delete" />
 
             <android.support.v4.widget.Space
@@ -102,6 +104,7 @@
                 android:background="@null"
                 android:drawablePadding="5dp"
                 android:drawableTop="@drawable/bar_left"
+                android:onClick="onClickLeftBra"
                 android:text="@string/bra_left"
                 android:textColor="#7128bd" />
 
@@ -116,6 +119,7 @@
                 android:background="@null"
                 android:drawablePadding="5dp"
                 android:drawableTop="@drawable/bar_right"
+                android:onClick="onClickRightBra"
                 android:text="@string/bra_right"
                 android:textColor="#7128bd" />
         </LinearLayout>

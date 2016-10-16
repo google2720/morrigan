@@ -12,13 +12,32 @@ import com.morrigan.m.R;
  */
 public class ManualActivity extends BaseActivity {
 
+    private ManualView manualView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual);
+        manualView = (ManualView) findViewById(R.id.manual);
     }
 
     public void onClickBack(View view) {
         onBackPressed();
+    }
+
+    public void onClickAddGear(View view) {
+        manualView.addGear();
+    }
+
+    public void onClickDeleteGear(View view) {
+        manualView.deleteGear();
+    }
+
+    public void onClickLeftBra(View view) {
+        view.setActivated(!view.isActivated());
+    }
+
+    public void onClickRightBra(View view) {
+        view.setActivated(!view.isActivated());
     }
 }
