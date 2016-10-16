@@ -30,7 +30,7 @@ public class WeekView extends View {
         initView();
     }
     void initView(){
-        mPaint=new Paint();
+        mPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(0xffbe8ef2);
         mPaint.setTextSize(40);
     }
@@ -45,11 +45,17 @@ public class WeekView extends View {
                 int t=(int)(getHeight()*(0.2+  0.6*(1-(datas.get(i)*1.0/max))));
                 int r =l+w;
                 int b=(int)(getHeight()*0.8);
-                if (max!=0){
-                    canvas.drawRect(l, t, r, b, mPaint);
-                }
+                if (max==0){
+                    t=b-5;//数据全为0时。//默认画出高度为5px柱形
+                }else {
+                    if(b-t<5){
+                        t=b-5; //数据小于默认值时。画出高度为5px柱形
+                    }
 
-                if (max==datas.get(i)&&max!=0){
+                }
+                canvas.drawRect(l, t, r, b, mPaint);
+
+                if (max==datas.get(i)&&max!=0){//画出最大值数字
                     String str=max+"";
                     Rect bounds = new Rect();
 

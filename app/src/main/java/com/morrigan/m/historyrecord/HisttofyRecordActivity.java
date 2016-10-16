@@ -36,23 +36,16 @@ public class HisttofyRecordActivity extends ToolbarActivity {
     private MyViewPager mViewPager;
     private List<Fragment> fragments;
     private static final String TAG = "HisttofyRecordActivity";
-    GetHistTask getHistTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_record);
         initView();
-        intiData();
     }
 
-    private void intiData() {
-        if (getHistTask != null) {
-            getHistTask.cancel(true);
-        }
-        getHistTask = new GetHistTask(this);
-        AsyncTaskCompat.executeParallel(getHistTask);
-    }
+
 
     private void initView() {
         radio1 = findViewById(R.id.contact_radio1);
@@ -94,6 +87,18 @@ public class HisttofyRecordActivity extends ToolbarActivity {
 
             }
         });
+
+        fragments = new ArrayList<>();
+        DayHistotyRecordFragment day = new DayHistotyRecordFragment();
+        WeekHistotyRecordFragment week=new WeekHistotyRecordFragment();
+        fragments.add(day);
+        fragments.add(week);
+        HisttofyRecordActivity.TabAdapter tabAdapter = new HisttofyRecordActivity.TabAdapter(getSupportFragmentManager(), fragments);
+        mViewPager.setOffscreenPageLimit(fragments.size());
+        mViewPager.setAdapter(tabAdapter);
+        showDay();
+        mViewPager.setCurrentItem(0);
+
     }
 
     private void showDay() {
@@ -108,77 +113,7 @@ public class HisttofyRecordActivity extends ToolbarActivity {
         setTitle(R.string.history_title_week);
     }
 
-    class GetHistTask extends AsyncTask<Void, Void, UiResult> {
 
-        private Activity activity;
-        private HttpInterface.Result result;
-        private ProgressDialog dialog;
-
-        GetHistTask(Activity activity) {
-            this.activity = activity;
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(activity);
-            dialog.setMessage(activity.getString(R.string.history_record_ing_message));
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected UiResult doInBackground(Void... params) {
-            UiResult uiResult = new UiResult();
-            try {
-                String url = activity.getString(R.string.host) + "/rest/moli/get-record-list";
-                FormBody.Builder b = new FormBody.Builder();
-                b.add("userId", UserController.getInstance().getUserId(activity));
-                Request.Builder builder = new Request.Builder();
-                builder.url(url);
-                builder.post(b.build());
-                result = HttpInterface.Factory.create().execute(builder.build());
-                HistoryResult r = result.parse(HistoryResult.class);
-                uiResult.success = r.isSuccessful();
-                uiResult.message = r.retMsg;
-                if (uiResult.success) {
-                    uiResult.t = r;
-                }
-            } catch (Exception e) {
-                Lg.w(TAG, "failed to login", e);
-                uiResult.message = e.getMessage();
-            }
-            return uiResult;
-        }
-
-        @Override
-        protected void onPostExecute(UiResult result) {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            ToastUtils.show(activity, result.message);
-            if (result.success) {
-
-                fragments = new ArrayList<>();
-                DayHistotyRecordFragment day = new DayHistotyRecordFragment();
-                WeekHistotyRecordFragment week = null;
-                if (result.t != null) {
-                    week = WeekHistotyRecordFragment.getIntance((HistoryResult) result.t);
-                } else {
-                    week = WeekHistotyRecordFragment.getIntance(null);
-                }
-                fragments.add(day);
-                fragments.add(week);
-                TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), fragments);
-                mViewPager.setOffscreenPageLimit(fragments.size());
-                mViewPager.setAdapter(tabAdapter);
-                showDay();
-                mViewPager.setCurrentItem(0);
-
-
-            }
-        }
-    }
 
     public static class TabAdapter extends FragmentPagerAdapter {
 

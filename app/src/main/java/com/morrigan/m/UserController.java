@@ -2,10 +2,23 @@ package com.morrigan.m;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
+import com.google.gson.Gson;
+import com.morrigan.m.historyrecord.TodayRecord;
 import com.morrigan.m.login.UserInfo;
+import com.morrigan.m.utils.Closeables;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -15,6 +28,7 @@ import okhttp3.Request;
  * Created by y on 2016/10/3.
  */
 public class UserController {
+    private static final String TAG = "UserController";
 
     private static UserController sInstance = new UserController();
 
@@ -125,6 +139,53 @@ public class UserController {
     public void setTarget(Context context, String target) {
         SharedPreferences preferences = getSharedPreferences(context);
         preferences.edit().putString("target", target).apply();
+    }
+
+    public TodayRecord getTodayRecord(Context context) {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
+        TodayRecord data = UserController.getInstance().get(context, "todayRecord", TodayRecord.class);
+        if (data == null || !data.date.equals(sf.format(new Date()))) {
+            data = new TodayRecord();
+        }
+       return data;
+    }
+
+    public boolean setTodayRecord(Context context, TodayRecord todayRecord) {
+        return save(context,"todayRecord",todayRecord);
+    }
+
+    public <T> T get(Context context, String key, Class<T> c) {
+        ObjectInputStream in = null;
+        try {
+            File file = context.getFileStreamPath(key);
+            in = new ObjectInputStream(new FileInputStream(file));
+            Object o = in.readObject();
+            if (o != null && c.isInstance(o)) {
+                return (T) o;
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "", e);
+        } finally {
+            Closeables.close(in);
+        }
+        return null;
+    }
+
+
+    public boolean save(Context context, String key, Serializable obj) {
+        ObjectOutputStream out = null;
+        try {
+            File file = context.getFileStreamPath(key);
+            out = new ObjectOutputStream(new FileOutputStream(file));
+            out.writeObject(obj);
+            out.flush();
+            return true;
+        } catch (Exception e) {
+            Log.w(TAG, "", e);
+            return false;
+        } finally {
+            Closeables.close(out);
+        }
     }
 
     public UiResult modify(Context context, String col, String value) {

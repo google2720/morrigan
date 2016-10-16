@@ -102,5 +102,8 @@
     <string name="history_week_nursing">本周护养</string>
     <string name="history_week_surplus">剩余目标值</string>
     <string name="history_week_average_nursing">平均护养</string>
+    <string name="history_day_goal"> 今日目标</string>
+    <string name="history_day_nursing">今日护养</string>
+    <string name="history_day_surplus">剩余目标值</string>
 
 </resources>

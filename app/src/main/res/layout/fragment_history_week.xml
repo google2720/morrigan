@@ -25,7 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_total_min"
-                android:text="  分钟"
+                android:text="分钟"
+                android:drawablePadding="5dp"
                 android:textColor="@color/cffbe8ef2"/>
 
             <TextView
@@ -77,6 +78,7 @@
                     android:drawableLeft="@drawable/ic_history_goal"
                     android:gravity="center"
                     android:text="@string/history_week_goal"
+                    android:drawablePadding="5dp"
                     android:textColor="@color/c5a5a5a"/>
 
                 <TextView
@@ -87,6 +89,7 @@
                     android:drawableLeft="@drawable/ic_min"
                     android:gravity="center"
                     android:text="分钟"
+                    android:drawablePadding="3dp"
                     android:textColor="@color/c5a5a5a"/>
 
             </RelativeLayout>
@@ -115,6 +118,7 @@
                     android:drawableLeft="@drawable/ic_history_nursing"
                     android:gravity="center"
                     android:text="@string/history_week_nursing"
+                    android:drawablePadding="5dp"
                     android:textColor="@color/c5a5a5a"/>
 
                 <TextView
@@ -125,6 +129,7 @@
                     android:drawableLeft="@drawable/ic_min"
                     android:gravity="center"
                     android:text="分钟"
+                    android:drawablePadding="3dp"
                     android:textColor="@color/c5a5a5a"/>
 
             </RelativeLayout>
@@ -153,6 +158,7 @@
                     android:drawableLeft="@drawable/ic_history_sulplus"
                     android:gravity="center"
                     android:text="@string/history_week_surplus"
+                    android:drawablePadding="5dp"
                     android:textColor="@color/c5a5a5a"/>
 
                 <TextView
@@ -163,6 +169,7 @@
                     android:drawableLeft="@drawable/ic_min"
                     android:gravity="center"
                     android:text="分钟"
+                    android:drawablePadding="3dp"
                     android:textColor="@color/c5a5a5a"/>
 
             </RelativeLayout>
@@ -191,6 +198,7 @@
                     android:drawableLeft="@drawable/ic_history_averge_nursing"
                     android:gravity="center"
                     android:text="@string/history_week_average_nursing"
+                    android:drawablePadding="5dp"
                     android:textColor="@color/c5a5a5a"/>
 
                 <TextView
@@ -200,7 +208,8 @@
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@drawable/ic_min"
                     android:gravity="center"
-                    android:text="分钟"
+                    android:text="分钟/日"
+                    android:drawablePadding="3dp"
                     android:textColor="@color/c5a5a5a"/>
 
             </RelativeLayout>
