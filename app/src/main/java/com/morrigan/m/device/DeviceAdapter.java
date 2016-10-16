@@ -20,10 +20,39 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     private Activity activity;
     private Listener listener;
     private List<Device> objects;
+    private View.OnClickListener updateClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Device data = (Device) v.getTag();
+            if (data != null) {
+                listener.onListItemUpdateClick(v, data);
+            }
+        }
+    };
+    private View.OnClickListener deleteClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Device data = (Device) v.getTag();
+            if (data != null) {
+                listener.onListItemDeleteClick(v, data);
+            }
+        }
+    };
+
+    public void remove(Device data) {
+        int position = objects.indexOf(data);
+        if (objects.remove(position) != null) {
+            notifyItemRemoved(position);
+        }
+    }
 
     public interface Listener {
 
         void onListItemClick(View v, Device data);
+
+        void onListItemUpdateClick(View v, Device data);
+
+        void onListItemDeleteClick(View v, Device data);
     }
 
     DeviceAdapter(@NonNull Activity activity, @NonNull Listener listener) {
@@ -49,6 +78,10 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
             holder.numView = (TextView) view.findViewById(R.id.num);
             holder.nameView = (TextView) view.findViewById(R.id.name);
             holder.macView = (TextView) view.findViewById(R.id.mac);
+            holder.updateView = view.findViewById(R.id.update);
+            holder.updateView.setOnClickListener(updateClickListener);
+            holder.deleteView = view.findViewById(R.id.delete);
+            holder.deleteView.setOnClickListener(deleteClickListener);
             return holder;
         }
     }
@@ -64,6 +97,8 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         if (data.type == Device.TYPE_ADD) {
             holder.itemView.setTag(data);
         } else {
+            holder.updateView.setTag(data);
+            holder.deleteView.setTag(data);
             holder.numView.setText(String.valueOf(data.num));
             holder.nameView.setText(data.name);
             holder.macView.setText(data.mac);
@@ -87,6 +122,8 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         TextView nameView;
         TextView macView;
         TextView numView;
+        View updateView;
+        View deleteView;
 
         DeviceViewHolder(View view) {
             super(view);

@@ -72,6 +72,10 @@
     <string name="device_please_select">"请选择设备"</string>
     <string name="device_result_num">"设备<xliff:g>%s</xliff:g>"</string>
     <string name="device_connect">"正在连接..."</string>
+    <string name="device_name_update_title">"修改设备名称"</string>
+    <string name="device_name_input_hint">"请输入设备名称"</string>
+    <string name="device_connect_failed">"连接失败"</string>
+    <string name="device_reseach">"重新搜索"</string>
     <!-- 关于界面 -->
     <string name="about_title">"关于摩莉"</string>
     <string name="about_product_team">"产品团队"</string>
@@ -85,6 +89,9 @@
     <string name="knead_manual">"手动按摩"</string>
     <string name="knead_auto">"自动按摩"</string>
     <string name="knead_music">"音乐随动"</string>
+    <!-- 手动按摩界面-->
+    <string name="bra_left">"左胸"</string>
+    <string name="bra_right">"右胸"</string>
     <!-- 历史记录 -->
     <string name="history_title_today">"今天一览"</string>
     <string name="history_title_week">"本周一阅"</string>

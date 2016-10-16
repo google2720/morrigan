@@ -32,45 +32,47 @@
             android:src="@drawable/ic_fw_close" />
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_horizontal_margin"
-            android:text="@string/device_please_select"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#a96bec" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.github.yzeaho.common.CircleFrameLayout
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:background="#974ce8">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/ic_wonder"
+                android:text="@string/device_connect_failed"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fff" />
+        </com.github.yzeaho.common.CircleFrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:onClick="onClickScan"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp" 
-            android:visibility="gone"
+        android:layout_margin="30dp"
         android:background="@drawable/device_scan"
         android:minHeight="@dimen/line_min_height">
 
         <TextView
-            android:id="@+id/connectState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_connect"
-            android:text="@string/device_connect"
+            android:drawableStart="@drawable/ic_reconnect"
+            android:gravity="center"
+            android:text="开始养护"
+            android:textAppearance="?android:attr/textAppearanceButton"
             android:textColor="#a361ea" />
     </FrameLayout>
 </LinearLayout>

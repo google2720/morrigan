@@ -6,6 +6,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="homeAsUpIndicator">@drawable/ic_home_as_up_indicator</item>
         <item name="android:dividerVertical">@drawable/divider_vertical</item>
         <item name="android:dividerHorizontal">@drawable/divider_vertical</item>
         <item name="android:listDivider">@drawable/divider_vertical</item>

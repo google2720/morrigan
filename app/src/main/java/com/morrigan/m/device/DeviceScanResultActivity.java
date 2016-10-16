@@ -39,12 +39,14 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
             startActivity(intent);
+            finish();
         }
 
         @Override
         public void onBindDeviceFailed(BluetoothDevice device) {
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindFailedActivity.class);
             startActivity(intent);
+            finish();
         }
     };
     private View connectStateView;
@@ -76,5 +78,10 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
     protected void onDestroy() {
         super.onDestroy();
         ble.removeCallback(cb);
+    }
+
+    @Override
+    public void onListItemClick(View v, Device device) {
+        ble.getCallbacks().onBindDeviceSuccess(null, false);
     }
 }

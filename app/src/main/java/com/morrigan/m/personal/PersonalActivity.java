@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import android.widget.Toast;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.model.ItemBean;
-import com.github.yzeaho.common.BitmapCompress;
 import com.github.yzeaho.common.ToastUtils;
 import com.github.yzeaho.file.Closeables;
 import com.github.yzeaho.file.FileApi;
@@ -38,17 +38,18 @@ import com.morrigan.m.UserController;
 import com.morrigan.m.login.LoginActivity;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
-import okhttp3.MediaType;
+import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okio.BufferedSink;
 
 /**
  * 我的资料界面
@@ -59,6 +60,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     private static final String TAG = "Personal";
     private static final int REQUEST_CODE_PICK_PHOTO = 1;
     private static final int REQUEST_CODE_CAPTURE = 2;
+    private static final int REQUEST_CODE_CUT = 3;
     private TextView heightView;
     private TextView weightView;
     private TextView emotionView;
@@ -88,8 +90,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     private void loadImg(String imgUrl) {
         Picasso.with(this).load(imgUrl)
                 .placeholder(R.drawable.default_avatar)
-                .error(R.drawable.default_avatar)
-                .centerCrop().into(avatarView);
+                .error(R.drawable.default_avatar).into(avatarView);
     }
 
     private void setViewState() {
@@ -296,13 +297,20 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                UploadTask task = new UploadTask(this, data.getData());
-                AsyncTaskCompat.executeParallel(task);
+                startPhotoZoom(data.getData(), 144);
             }
         } else if (requestCode == REQUEST_CODE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                UploadTask task = new UploadTask(this, Uri.fromFile(captureOutFile));
-                AsyncTaskCompat.executeParallel(task);
+                startPhotoZoom(Uri.fromFile(captureOutFile), 144);
+            }
+        } else if (requestCode == REQUEST_CODE_CUT) {
+            if (resultCode == RESULT_OK) {
+                Bundle bundle = data.getExtras();
+                if (bundle != null) {
+                    Bitmap bitmap = bundle.getParcelable("data");
+                    UploadTask task = new UploadTask(this, bitmap);
+                    AsyncTaskCompat.executeParallel(task);
+                }
             }
         }
     }
@@ -314,15 +322,30 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         startActivity(intent);
     }
 
+    private void startPhotoZoom(Uri uri, int size) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        // crop为true是设置在开启的intent中设置显示的view可以剪裁
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX,outputY 是剪裁图片的宽高
+        intent.putExtra("outputX", size);
+        intent.putExtra("outputY", size);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, REQUEST_CODE_CUT);
+    }
+
     class UploadTask extends AsyncTask<Void, Void, UiResult<String>> {
 
         private Context context;
-        private Uri uri;
+        private Bitmap bitmap;
         private ProgressDialog dialog;
 
-        UploadTask(Context context, Uri uri) {
+        UploadTask(Context context, Bitmap bitmap) {
             this.context = context;
-            this.uri = uri;
+            this.bitmap = bitmap;
         }
 
         @Override
@@ -337,50 +360,33 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         protected UiResult<String> doInBackground(Void... params) {
             UiResult<String> uiResult = new UiResult<>();
             try {
-                final String userId = UserController.getInstance().getUserId(context);
+                String userId = UserController.getInstance().getUserId(context);
                 File dir = context.getCacheDir();
                 FileApi.checkDir(dir);
                 final File file = new File(dir, "tmp.png");
-                InputStream in = null;
-                Base64OutputStream out = null;
+                OutputStream out = null;
                 try {
-                    in = BitmapCompress.compress(context.getContentResolver(), uri, 144, 144);
                     out = new Base64OutputStream(new FileOutputStream(file), Base64.NO_WRAP);
-                    FileApi.copy(in, out);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 } finally {
-                    Closeables.close(in);
                     Closeables.close(out);
                 }
-
-                RequestBody requestBody = new RequestBody() {
-                    @Override
-                    public MediaType contentType() {
-                        return MediaType.parse("application/x-www-form-urlencoded");
+                InputStream in = null;
+                ByteArrayOutputStream bouts = new ByteArrayOutputStream();
+                try {
+                    in = new FileInputStream(file);
+                    int v;
+                    byte[] bytes = new byte[1024];
+                    while ((v = in.read(bytes)) != -1) {
+                        bouts.write(bytes, 0, v);
                     }
-
-                    @Override
-                    public long contentLength() throws IOException {
-                        return ("userId=" + userId + "&img=").length() + file.length();
-                    }
-
-                    @Override
-                    public void writeTo(BufferedSink sink) throws IOException {
-                        sink.writeUtf8("userId=");
-                        sink.writeUtf8(userId);
-                        sink.writeUtf8("&img=");
-                        InputStream in = null;
-                        try {
-                            in = new FileInputStream(file);
-                            int v;
-                            byte[] bytes = new byte[1024];
-                            while ((v = in.read(bytes)) != -1) {
-                                sink.write(bytes, 0, v);
-                            }
-                        } finally {
-                            Closeables.close(in);
-                        }
-                    }
-                };
+                } finally {
+                    Closeables.close(in);
+                }
+                FormBody.Builder b = new FormBody.Builder();
+                b.add("userId", userId);
+                b.add("img", new String(bouts.toByteArray()));
+                RequestBody requestBody = b.build();
                 String url = context.getString(R.string.host) + "/rest/moli/upload-img";
                 Request.Builder builder = new Request.Builder();
                 builder.url(url);

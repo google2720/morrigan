@@ -22,6 +22,7 @@ public class DeviceScanResultAdapter extends RecyclerView.Adapter<DeviceScanResu
     private List<Device> objects;
 
     public interface Listener {
+        void onListItemClick(View v, Device device);
     }
 
     DeviceScanResultAdapter(@NonNull Activity activity, @NonNull Listener listener) {
@@ -48,6 +49,7 @@ public class DeviceScanResultAdapter extends RecyclerView.Adapter<DeviceScanResu
     @Override
     public void onBindViewHolder(DeviceScanResultViewHolder holder, int position) {
         Device device = objects.get(position);
+        holder.itemView.setTag(device);
         holder.numView.setText(activity.getString(R.string.device_result_num, String.valueOf(position)));
         holder.nameView.setText(device.name);
     }
@@ -59,6 +61,10 @@ public class DeviceScanResultAdapter extends RecyclerView.Adapter<DeviceScanResu
 
     @Override
     public void onClick(View v) {
+        Device device = (Device) v.getTag();
+        if (device != null) {
+            listener.onListItemClick(v, device);
+        }
     }
 
     static class DeviceScanResultViewHolder extends RecyclerView.ViewHolder {

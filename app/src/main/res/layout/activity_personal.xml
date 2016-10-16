@@ -45,7 +45,8 @@
                     android:id="@+id/avatar"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:layout_marginEnd="10dp" />
+                    android:layout_marginEnd="10dp"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:layout_width="wrap_content"

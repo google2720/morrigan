@@ -15,7 +15,8 @@
         <com.github.yzeaho.common.CircleImageView
             android:id="@+id/avatar"
             android:layout_width="48dp"
-            android:layout_height="48dp" />
+            android:layout_height="48dp"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/nickname"

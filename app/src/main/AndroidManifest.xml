@@ -42,6 +42,9 @@
             android:name=".main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".main.ManualActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".personal.PersonalActivity"
             android:label="@string/personal_title"
             android:screenOrientation="portrait" />
@@ -59,10 +62,21 @@
             android:label="@string/device_title"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".device.DeviceNameUpdateActivity"
+            android:label="@string/device_name_update_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
             android:name=".device.DeviceScanActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".device.DeviceScanResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.DeviceBindFailedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.DeviceBindSuccessActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".about.AboutActivity"

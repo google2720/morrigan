@@ -1,6 +1,7 @@
 package com.morrigan.m.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -44,6 +45,13 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 listener.onMenuClick();
+            }
+        });
+        view.findViewById(R.id.knead_manual).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ManualActivity.class);
+                startActivity(intent);
             }
         });
     }

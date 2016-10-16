@@ -117,8 +117,7 @@ public class NavigateFragment extends Fragment {
         nicknameView.setText(UserController.getInstance().getNickname(getActivity()));
         Picasso.with(getActivity()).load(UserController.getInstance().getImgUrl(getActivity()))
                 .placeholder(R.drawable.default_avatar)
-                .error(R.drawable.default_avatar)
-                .centerCrop().into(avatarView);
+                .error(R.drawable.default_avatar).into(avatarView);
     }
 
     public interface NavigateListener {
