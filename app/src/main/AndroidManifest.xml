@@ -45,6 +45,9 @@
             android:name=".main.ManualActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".main.AutoActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".personal.PersonalActivity"
             android:label="@string/personal_title"
             android:screenOrientation="portrait" />
@@ -94,6 +97,7 @@
             android:label="@string/history_title_today"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.History" />
+        <service android:name=".main.UploadHistoryDataService" />
     </application>
 
 </manifest>

@@ -61,6 +61,7 @@
             android:textColor="#8f54ca" />
 
         <TextView
+            android:id="@+id/knead_auto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -75,6 +76,7 @@
             android:textColor="#8f54ca" />
 
         <TextView
+            android:id="@+id/knead_music"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -92,6 +92,14 @@
     <!-- 手动按摩界面-->
     <string name="bra_left">"左胸"</string>
     <string name="bra_right">"右胸"</string>
+    <!-- 自动按摩界面 -->
+    <string name="massage_intense">"强震"</string>
+    <string name="massage_gently">"微按"</string>
+    <string name="massage_dynamic">"动感"</string>
+    <string name="massage_wave">"水波"</string>
+    <string name="massage_soft">"轻柔"</string>
+    <string name="massage_tip1">"向上拖动 任意模式按钮"</string>
+    <string name="massage_tip2">"进行自由组合按摩 点START开始按摩"</string>
     <!-- 历史记录 -->
     <string name="history_title_today">"今天一览"</string>
     <string name="history_title_week">"本周一阅"</string>

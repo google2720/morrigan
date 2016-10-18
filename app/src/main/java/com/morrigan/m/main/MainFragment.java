@@ -25,7 +25,7 @@ public class MainFragment extends Fragment {
         if (context instanceof Listener) {
             listener = (Listener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement Listener");
+            throw new RuntimeException(context.toString() + " must implement MainFragment.Listener");
         }
     }
 
@@ -54,8 +54,21 @@ public class MainFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        view.findViewById(R.id.knead_auto).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AutoActivity.class);
+                startActivity(intent);
+            }
+        });
+        view.findViewById(R.id.knead_music).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AutoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
-
 
     @Override
     public void onDetach() {

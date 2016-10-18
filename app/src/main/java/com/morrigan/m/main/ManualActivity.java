@@ -40,4 +40,15 @@ public class ManualActivity extends BaseActivity {
     public void onClickRightBra(View view) {
         view.setActivated(!view.isActivated());
     }
+
+    public void onClickStart(View view) {
+        boolean a = view.isActivated();
+        if (a) {
+            manualView.stop();
+            UploadHistoryDataService.startAction(this);
+        } else {
+            manualView.start();
+        }
+        view.setActivated(!a);
+    }
 }
