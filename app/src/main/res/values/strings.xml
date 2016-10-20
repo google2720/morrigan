@@ -100,6 +100,7 @@
     <string name="massage_soft">"轻柔"</string>
     <string name="massage_tip1">"向上拖动 任意模式按钮"</string>
     <string name="massage_tip2">"进行自由组合按摩 点START开始按摩"</string>
+    <string name="massage_ready">"准备按摩吧!"</string>
     <!-- 历史记录 -->
     <string name="history_title_today">"今天一览"</string>
     <string name="history_title_week">"本周一阅"</string>

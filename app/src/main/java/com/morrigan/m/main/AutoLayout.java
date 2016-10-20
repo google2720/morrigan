@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,6 +21,7 @@ import com.morrigan.m.R;
 public class AutoLayout extends FrameLayout {
 
     private Paint paint = new Paint();
+    private Paint textPaint = new Paint();
     private RectF rectF = new RectF();
     private int strokeWidth = 5;
     private View startView;
@@ -26,6 +30,12 @@ public class AutoLayout extends FrameLayout {
     private View massage3View;
     private View massage4View;
     private View massage5View;
+    private boolean start;
+    private int startColor = 0xff7128bd;
+    private String startTip;
+    private Rect boundText = new Rect();
+    private Drawable drawable;
+    private Rect rect = new Rect();
 
     public AutoLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -34,6 +44,13 @@ public class AutoLayout extends FrameLayout {
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(strokeWidth);
+        textPaint.setAntiAlias(true);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(64);
+        textPaint.setColor(Color.WHITE);
+        startTip = getResources().getString(R.string.massage_ready);
+        textPaint.getTextBounds(startTip, 0, startTip.length(), boundText);
+        drawable = getResources().getDrawable(R.drawable.massage_soft_ing);
     }
 
     @Override
@@ -130,7 +147,7 @@ public class AutoLayout extends FrameLayout {
         final int cy = generateCenterY(w, h);
 
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(0xff7128bd);
+        paint.setColor(startColor);
         canvas.drawCircle(cx, cy, radius, paint);
 
         paint.setStyle(Paint.Style.STROKE);
@@ -148,7 +165,25 @@ public class AutoLayout extends FrameLayout {
         paint.setColor(Color.WHITE);
         canvas.drawArc(rectF, 180, 180, false, paint);
 
+        if (start) {
+            int vw = massage1View.getMeasuredWidth();
+            int vh = massage1View.getMeasuredHeight();
+            rect.left = cx - vw / 2;
+            rect.top = cy - vh;
+            rect.right = rect.left + vw;
+            rect.bottom = rect.top + vh;
+            paint.setColor(0x7fff0000);
+            drawable.setBounds(rect);
+            drawable.draw(canvas);
+            // canvas.drawRect(rect, paint);
+        } else {
+            canvas.drawText(startTip, cx, cy - boundText.height(), textPaint);
+        }
+
         super.dispatchDraw(canvas);
+
+        // canvas.drawLine(cx - radius, cy, cx + radius, cy, paint);
+        // canvas.drawLine(cx, cy - radius, cx, cy + radius, paint);
     }
 
     private float generateRadius(int w, int h) {
@@ -169,5 +204,17 @@ public class AutoLayout extends FrameLayout {
         } else {
             return h / 2;
         }
+    }
+
+    public void start() {
+        start = true;
+        startColor = 0xff9438ca;
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+    public void stop() {
+        start = false;
+        startColor = 0xff7128bd;
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 }

@@ -1,9 +1,7 @@
 package com.morrigan.m.main;
 
-import android.content.ClipData;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.DragEvent;
 import android.view.View;
 
 import com.morrigan.m.BaseActivity;
@@ -15,31 +13,32 @@ import com.morrigan.m.R;
  */
 public class AutoActivity extends BaseActivity {
 
-    private View sortView;
+    private AutoLayout autoLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto);
-        sortView = findViewById(R.id.massage_soft);
-//        sortView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                ClipData dragData = ClipData.newPlainText("", "");
-//                View.DrawShadowBuilder myShadow = new MyDragShadowBuilder(v);
-//                v.startDrag(dragData, myShadow, null, 0);
-//                return true;
-//            }
-//        });
-//        sortView.setOnDragListener(new View.OnDragListener() {
-//            @Override
-//            public boolean onDrag(View v, DragEvent event) {
-//                return false;
-//            }
-//        });
+        findViewById(R.id.massage_soft).setOnTouchListener(new AutoTouchListener(new AutoItem(AutoItem.TYPE_SOFT, R.drawable.massage_soft_check)));
+        findViewById(R.id.massage_wave).setOnTouchListener(new AutoTouchListener(new AutoItem(AutoItem.TYPE_WAVE, R.drawable.massage_wave_check)));
+        findViewById(R.id.massage_dynamic).setOnTouchListener(new AutoTouchListener(new AutoItem(AutoItem.TYPE_DYNAMIC, R.drawable.massage_dynamic_check)));
+        findViewById(R.id.massage_gently).setOnTouchListener(new AutoTouchListener(new AutoItem(AutoItem.TYPE_GENTLY, R.drawable.massage_gently_check)));
+        findViewById(R.id.massage_intense).setOnTouchListener(new AutoTouchListener(new AutoItem(AutoItem.TYPE_INTENSE, R.drawable.massage_intense_check)));
+        autoLayout = (AutoLayout) findViewById(R.id.auto);
     }
 
     public void onClickBack(View view) {
         finish();
+    }
+
+    public void onClickStart(View view) {
+        boolean a = view.isActivated();
+        if (a) {
+            autoLayout.stop();
+            UploadHistoryDataService.startAction(this);
+        } else {
+            autoLayout.start();
+        }
+        view.setActivated(!a);
     }
 }

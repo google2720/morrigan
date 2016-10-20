@@ -64,7 +64,7 @@ public class MainFragment extends Fragment {
         view.findViewById(R.id.knead_music).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AutoActivity.class);
+                Intent intent = new Intent(getActivity(), MusicActivity.class);
                 startActivity(intent);
             }
         });
