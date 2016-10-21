@@ -3,7 +3,10 @@ package com.morrigan.m.main;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.annotation.Keep;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
@@ -14,10 +17,54 @@ import android.widget.FrameLayout;
  */
 public class MainLayout extends FrameLayout {
 
+    private static final String TAG = "MainLayout";
+    private ViewDragHelper dragHelper;
     private boolean open;
 
     public MainLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        dragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelper.Callback() {
+            @Override
+            public boolean tryCaptureView(View child, int pointerId) {
+                return child == getChildAt(1);
+            }
+
+            @Override
+            public int clampViewPositionHorizontal(View child, int left, int dx) {
+                int leftBound = getPaddingLeft();
+                int rightBound = getWidth() - getPaddingRight() - leftBound;
+                return Math.min(Math.max(left, leftBound), rightBound);
+            }
+
+            @Override
+            public int clampViewPositionVertical(View child, int top, int dy) {
+                return 0;
+            }
+
+            @Override
+            public void onEdgeDragStarted(int edgeFlags, int pointerId) {
+                dragHelper.captureChildView(getChildAt(1), pointerId);
+            }
+
+            @Override
+            public void onViewReleased(View releasedChild, float xvel, float yvel) {
+                if (releasedChild == getChildAt(1)) {
+                    if (releasedChild.getLeft() >= getWidth() / 2) {
+                        openMenuInner();
+                    } else {
+                        closeMenuInner();
+                    }
+                }
+            }
+
+            @Override
+            public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+                if (changedView == getChildAt(1)) {
+                    setAnimValue(left);
+                }
+            }
+        });
+        dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
     }
 
     @Override
@@ -41,6 +88,24 @@ public class MainLayout extends FrameLayout {
         }
     }
 
+    @Override
+    public void computeScroll() {
+        if (dragHelper.continueSettling(true)) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return dragHelper.shouldInterceptTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        dragHelper.processTouchEvent(event);
+        return true;
+    }
+
     public boolean isMenuOpen() {
         return open;
     }
@@ -48,21 +113,32 @@ public class MainLayout extends FrameLayout {
     public void closeMenu() {
         if (open) {
             open = false;
-            ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), 0);
-            animator.setDuration(250);
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.start();
+            closeMenuInner();
         }
+    }
+
+    private void closeMenuInner() {
+        open = false;
+        ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), 0);
+        animator.setDuration(250);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.start();
+        dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
     }
 
     public void openMenu() {
         if (!open) {
-            open = true;
-            ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), getChildAt(0).getWidth());
-            animator.setDuration(250);
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.start();
+            openMenuInner();
         }
+    }
+
+    private void openMenuInner() {
+        open = true;
+        ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), getChildAt(0).getWidth());
+        animator.setDuration(250);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.start();
+        dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_RIGHT);
     }
 
     @Keep

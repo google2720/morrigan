@@ -6,6 +6,7 @@ import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import com.morrigan.m.BaseActivity;
@@ -52,10 +53,11 @@ public class MusicActivity extends BaseActivity {
     private void setupVisualizerFxAndUI() {
         visualizerView = (VisualizerView) findViewById(R.id.visualizer);
         visualizer = new Visualizer(mediaPlayer.getAudioSessionId());
-        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
         visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
             @Override
             public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+                Log.i("music", "onWaveFormDataCapture " + bytes.length);
                 visualizerView.updateVisualizer(bytes);
             }
 

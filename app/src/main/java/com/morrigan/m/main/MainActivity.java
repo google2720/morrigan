@@ -5,7 +5,8 @@ import android.os.Bundle;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 
-public class MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener {
+public class
+MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener {
 
     private MainLayout mainLayout;
 
