@@ -1,149 +1,174 @@
 package com.morrigan.m.main;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.support.annotation.Keep;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ViewDragHelper;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.morrigan.m.R;
+
 /**
- * 主界面布局
- * Created by y on 2016/10/3.
+ * 主界面
+ * Created by y on 2016/10/20.
  */
 public class MainLayout extends FrameLayout {
 
-    private static final String TAG = "MainLayout";
-    private ViewDragHelper dragHelper;
-    private boolean open;
+    private Paint paint = new Paint();
+    private Rect rect = new Rect();
+    private BatteryView batteryView;
+    private CenterView centerView;
+    private int outlineSize = 5;
+    private int bOutlineSize = 6;
+    private int offset = 1;
+    private Path path = new Path();
+    private Point point = new Point();
+    private int pathOffset = 8;
 
     public MainLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        dragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelper.Callback() {
-            @Override
-            public boolean tryCaptureView(View child, int pointerId) {
-                return child == getChildAt(1);
-            }
-
-            @Override
-            public int clampViewPositionHorizontal(View child, int left, int dx) {
-                int leftBound = getPaddingLeft();
-                int rightBound = getWidth() - getPaddingRight() - leftBound;
-                return Math.min(Math.max(left, leftBound), rightBound);
-            }
-
-            @Override
-            public int clampViewPositionVertical(View child, int top, int dy) {
-                return 0;
-            }
-
-            @Override
-            public void onEdgeDragStarted(int edgeFlags, int pointerId) {
-                dragHelper.captureChildView(getChildAt(1), pointerId);
-            }
-
-            @Override
-            public void onViewReleased(View releasedChild, float xvel, float yvel) {
-                if (releasedChild == getChildAt(1)) {
-                    if (releasedChild.getLeft() >= getWidth() / 2) {
-                        openMenuInner();
-                    } else {
-                        closeMenuInner();
-                    }
-                }
-            }
-
-            @Override
-            public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-                if (changedView == getChildAt(1)) {
-                    setAnimValue(left);
-                }
-            }
-        });
-        dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
+        float density = getResources().getDisplayMetrics().density;
+        outlineSize *= density;
+        bOutlineSize *= density;
+        pathOffset *= density;
+        offset *= density;
+        paint.setAntiAlias(true);
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        batteryView = (BatteryView) findViewById(R.id.battery);
+        centerView = (CenterView) findViewById(R.id.center);
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        widthMeasureSpec = MeasureSpec.makeMeasureSpec(Math.round(getMeasuredWidth() * 0.8f), MeasureSpec.EXACTLY);
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY);
-        getChildAt(0).measure(widthMeasureSpec, heightMeasureSpec);
+    protected void dispatchDraw(Canvas canvas) {
+        final int w = getWidth();
+        final int h = getHeight();
+
+        int cx = centerView.getLeft() + centerView.getWidth() / 2;
+        int cy = centerView.getTop() + centerView.getHeight() / 2;
+        float radius = centerView.getWidth() / 2 + outlineSize + offset * 4;
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(0xff9a43cd);
+        canvas.drawCircle(cx, cy - offset, radius, paint);
+        radius = centerView.getWidth() / 2 + outlineSize + offset;
+        paint.setColor(0xffbc55f8);
+        canvas.drawCircle(cx, cy - offset, radius, paint);
+
+        int ccx = centerView.getLeft() + centerView.getWidth() / 2;
+        int ccy = centerView.getTop() + centerView.getHeight() / 2;
+        int cr = centerView.getWidth() / 2 + outlineSize;
+        paint.setColor(0xff852abb);
+        canvas.drawCircle(ccx, ccy, cr, paint);
+
+        cx = batteryView.getLeft() + batteryView.getWidth() / 2;
+        cy = batteryView.getTop() + batteryView.getHeight() / 2;
+        radius = batteryView.getWidth() / 2 + bOutlineSize + offset * 4;
+        paint.setColor(0xff9a43cd);
+        canvas.drawCircle(cx, cy + offset, radius, paint);
+        radius = batteryView.getWidth() / 2 + bOutlineSize + offset;
+        paint.setColor(0xffbc55f8);
+        canvas.drawCircle(cx, cy + offset, radius, paint);
+
+        int bcx = batteryView.getLeft() + batteryView.getWidth() / 2;
+        int bcy = batteryView.getTop() + batteryView.getHeight() / 2;
+        int br = batteryView.getWidth() / 2 + bOutlineSize;
+        paint.setColor(0xff852abb);
+        canvas.drawCircle(bcx, bcy, br, paint);
+
+        super.dispatchDraw(canvas);
+
+//        paint.setColor(Color.BLACK);
+//        rect.left = batteryView.getLeft();
+//        rect.top = batteryView.getTop();
+//        rect.right = batteryView.getRight();
+//        rect.bottom = batteryView.getBottom();
+//        canvas.drawRect(rect, paint);
+//        paint.setColor(Color.RED);
+
+        // cosA=(b方＋c方－a方)／2*b*c
+        int a = bcx - ccx;
+        int b = ccy - bcy;
+        double c = Math.sqrt(a * a + b * b);
+        double ba = Math.acos(b / c) * 180 / Math.PI;
+        Log.i("abc", String.format("a %s/%s/%s/%s", a, b, c, ba));
+
+        /*
+        圆点坐标：(x0,y0)
+        半径：r
+        角度：angle
+        则圆上任一点为：（x1,y1）
+        x1   =   x0   +   r   *   cos(angle   *   3.14   /180   )
+        y1   =   y0   +   r   *   sin(angle   *   3.14   /180   )
+        */
+        // (x-a)^2+(y-b)^2=c^2 其中(a,b)为圆心，c为半径。
+        int x2 = (int) Math.round(bcx + br * Math.cos((90 + ba + 20) * Math.PI / 180));
+        int y2 = (int) Math.round(bcy + br * Math.sin((90 + ba + 20) * Math.PI / 180));
+        int x3 = (int) Math.round(bcx + br * Math.cos((90 + ba - 20) * Math.PI / 180));
+        int y3 = (int) Math.round(bcy + br * Math.sin((90 + ba - 20) * Math.PI / 180));
+        calculateCenterPoint(ccx, ccy, x2, y2, cr, point);
+        int x1 = point.x;
+        int y1 = point.y;
+        calculateCenterPoint(ccx, ccy, x3, y3, cr, point);
+        int x4 = point.x;
+        int y4 = point.y;
+        Log.i("abc", String.format("x %s/%s/%s/%s", x1, y1, x2, y2));
+        path.reset();
+        path.moveTo(x1, y1);
+        path.quadTo(x1 + (x2 - x1) / 2 + pathOffset, y1 + (y2 - y1) / 2 + pathOffset, x2, y2);
+        path.lineTo(x3, y3);
+        path.quadTo(x3 - (x3 - x4) / 2 - pathOffset, y3 - (y3 - y4) / 2 - pathOffset, x4, y4);
+        path.lineTo(x1, y1);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(0xff852abb);
+        canvas.drawPath(path, paint);
+
+//        path.reset();
+//        path.moveTo(x1, y1);
+//        path.quadTo(x1 + (x2 - x1) / 2 + pathOffset, y1 + (y2 - y1) / 2 + pathOffset, x2, y2);
+//        paint.setStyle(Paint.Style.STROKE);
+//        paint.setStrokeWidth(offset * 2);
+//        paint.setColor(0xff9a43cd);
+//        canvas.drawPath(path, paint);
+//        path.reset();
+//        path.moveTo(x3, y3);
+//        path.quadTo(x3 - (x3 - x4) / 2 - pathOffset, y3 - (y3 - y4) / 2 - pathOffset, x4, y4);
+//        canvas.drawPath(path, paint);
+
+        path.reset();
+        path.moveTo(x1, y1);
+        path.quadTo(x1 + (x2 - x1) / 2 + pathOffset, y1 + (y2 - y1) / 2 + pathOffset, x2, y2);
+//        path.cubicTo(x1 + 1, y1 + 2, x1 + (x2 - x1) / 2 + pathOffset, y1 + (y2 - y1) / 2 + pathOffset, x2, y2);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(offset);
+        paint.setColor(0xffbc55f8);
+        canvas.drawPath(path, paint);
+        path.reset();
+        path.moveTo(x3, y3);
+        path.quadTo(x3 - (x3 - x4) / 2 - pathOffset, y3 - (y3 - y4) / 2 - pathOffset, x4, y4);
+        canvas.drawPath(path, paint);
+
+//        paint.setColor(Color.RED);
+//        canvas.drawLine(x3, y3, ccx, ccy, paint);
+//        canvas.drawLine(ccx, ccy, x3, ccy, paint);
+//        canvas.drawLine(x3, y3, x3, ccy, paint);
+//        canvas.drawLine(bcx, bcy, ccx, ccy, paint);
+//        canvas.drawLine(bcx, bcy, bcx, ccy, paint);
+//        canvas.drawLine(ccx, ccy, bcx, ccy, paint);
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        if (open) {
-            setAnimValue(getChildAt(0).getWidth());
-        }
-    }
-
-    @Override
-    public void computeScroll() {
-        if (dragHelper.continueSettling(true)) {
-            ViewCompat.postInvalidateOnAnimation(this);
-        }
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        return dragHelper.shouldInterceptTouchEvent(event);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        dragHelper.processTouchEvent(event);
-        return true;
-    }
-
-    public boolean isMenuOpen() {
-        return open;
-    }
-
-    public void closeMenu() {
-        if (open) {
-            open = false;
-            closeMenuInner();
-        }
-    }
-
-    private void closeMenuInner() {
-        open = false;
-        ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), 0);
-        animator.setDuration(250);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.start();
-        dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
-    }
-
-    public void openMenu() {
-        if (!open) {
-            openMenuInner();
-        }
-    }
-
-    private void openMenuInner() {
-        open = true;
-        ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), getChildAt(0).getWidth());
-        animator.setDuration(250);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.start();
-        dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_RIGHT);
-    }
-
-    @Keep
-    public void setAnimValue(int v) {
-        View view = getChildAt(1);
-        view.layout(v, v / 10, v + view.getWidth(), getHeight() - v / 10);
+    private void calculateCenterPoint(int ccx, int ccy, int x2, int y2, int r, Point point) {
+        int a = x2 - ccx;
+        int b = y2 - ccy;
+        double c = Math.sqrt(a * a + b * b);
+        double angle = Math.acos(a / c) * 180 / Math.PI;
+        point.x = (int) Math.round(ccx + r * Math.cos((360 - angle) * Math.PI / 180));
+        point.y = (int) Math.round(ccy + r * Math.sin((360 - angle) * Math.PI / 180));
     }
 }

@@ -2,7 +2,6 @@ package com.morrigan.m.main;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,10 +12,13 @@ import android.view.View;
  */
 public class CenterView extends View {
 
+    private float offset = 5;
     private Paint paint = new Paint();
 
     public CenterView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        float density = getResources().getDisplayMetrics().density;
+        offset *= density;
         paint.setAntiAlias(true);
     }
 
@@ -27,7 +29,7 @@ public class CenterView extends View {
         final int h = getHeight();
         final int cx = w / 2;
         final int cy = h / 2;
-        float radius = w / 2 - 15;
+        float radius = w / 2 - offset;
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(0xff7128bd);
         canvas.drawCircle(cx, cy, radius, paint);

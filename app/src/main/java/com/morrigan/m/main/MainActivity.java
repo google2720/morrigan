@@ -8,13 +8,13 @@ import com.morrigan.m.R;
 public class
 MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener {
 
-    private MainLayout mainLayout;
+    private MenuLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainLayout = (MainLayout) findViewById(R.id.mainLayout);
+        mainLayout = (MenuLayout) findViewById(R.id.mainLayout);
         getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, MainFragment.newInstance()).commitAllowingStateLoss();
     }
 
