@@ -11,15 +11,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper instance;
 
-    /** 数据库名称 */
+    /**
+     * 数据库名称
+     */
     public static String DATABASE_NAME = "db.db";
 
-    /** 数据库版本号 */
+    /**
+     * 数据库版本号
+     */
     public static final int DB_VERSION = 1;
 
-    public static final String TABLE_DEVICE_INFO = "device_info";
-    public static final String TABLE_HISTORY = "history";
-    public static final String TABLE_CURRENT_DATA = "current_data";
+    public static final String TABLE_MASSAGE = "massage";
 
     private DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DB_VERSION);
@@ -32,18 +34,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public static synchronized void delete(Context context) {
-        instance = null;
-        context.deleteDatabase(DATABASE_NAME);
-    }
-
     @Override
-    public void onCreate(final SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db) {
         onUpgrade(db, 0, DB_VERSION);
     }
 
     @Override
-    public void onUpgrade(final SQLiteDatabase db, int oldV, final int newV) {
+    public void onUpgrade(SQLiteDatabase db, int oldV, final int newV) {
         for (int version = oldV + 1; version <= newV; version++) {
             upgradeTo(db, version);
         }
@@ -52,9 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private void upgradeTo(SQLiteDatabase db, int version) {
         switch (version) {
             case 1:
-                createDeviceInfoTable(db);
-                createHistory(db);
-                createCurrentData(db);
+                createRecodeTable(db);
                 break;
             default:
                 throw new IllegalStateException("Don't know how to upgrade to " + version);
@@ -62,66 +57,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * 创建索引
-     */
-    private void createIndex(SQLiteDatabase db, String tableName, String... colNames) {
-        StringBuilder cols = new StringBuilder();
-        StringBuilder indexNames = new StringBuilder(tableName);
-        int index = 0;
-        for (String col : colNames) {
-            if (index != 0) {
-                cols.append(",");
-            }
-            index++;
-            cols.append(col);
-            indexNames.append("_").append(col);
-        }
-        db.execSQL("create index " + indexNames.toString() + " on " + tableName + " (" + cols.toString() + ");");
-    }
-
-    /**
-     * 创建UNIQUE约束
-     */
-    private void createUnique(SQLiteDatabase db, String tableName, String... colNames) {
-        StringBuilder cols = new StringBuilder();
-        StringBuilder uniqueNames = new StringBuilder(tableName);
-        int index = 0;
-        for (String col : colNames) {
-            if (index != 0) {
-                cols.append(",");
-            }
-            index++;
-            cols.append(col);
-            uniqueNames.append("_").append(col);
-        }
-        db.execSQL("create unique index " + uniqueNames.toString() + " on " + tableName + "(" + cols.toString() + ");");
-    }
-
-    /**
-     * 创建设备信息表
-     */
-    private void createDeviceInfoTable(SQLiteDatabase db) {
-        db.execSQL("drop table if exists " + TABLE_DEVICE_INFO);
-        db.execSQL("create table if not exists " + TABLE_DEVICE_INFO
-                + "(_address text, _main_version text, _minor_version text, primary key (_address))");
-    }
-
-    /**
-     * 创建历史记录表
-     */
-    private void createHistory(SQLiteDatabase db) {
-        db.execSQL("drop table if exists " + TABLE_HISTORY);
-        db.execSQL("create table if not exists " + TABLE_HISTORY
-                + "(_address text, _step integer, _cal integer, _sleep integer, _battery integer, _time integer, primary key (_address, _time))");
-    }
-
-    /**
      * 创建当前数据表
      */
-    private void createCurrentData(SQLiteDatabase db) {
-        db.execSQL("drop table if exists " + TABLE_CURRENT_DATA);
-        db.execSQL("create table if not exists " + TABLE_CURRENT_DATA
-                + "(_address text,_date text, _step integer, _distance integer, _cal integer, _gol integer, _battery integer, primary key (_address))");
+    private void createRecodeTable(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MASSAGE);
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_MASSAGE
+                + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, _address TEXT, _startTime INTEGER, _endTime INTEGER)");
     }
-
 }

@@ -3,7 +3,7 @@ package com.morrigan.m.ble.scanner;
 import android.bluetooth.BluetoothAdapter;
 import android.os.Build;
 
-import com.morrigan.m.ble.BleController;
+import com.morrigan.m.ble.AbstractBleController;
 
 /**
  * 蓝牙扫描器
@@ -11,7 +11,7 @@ import com.morrigan.m.ble.BleController;
  */
 public class BleScannerHelper {
 
-    public static BleScanner create(BleController bleController, BluetoothAdapter bleAdapter) {
+    public static BleScanner create(AbstractBleController bleController, BluetoothAdapter bleAdapter) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return new BleScannerLollipop(bleController, bleAdapter);
         } else {

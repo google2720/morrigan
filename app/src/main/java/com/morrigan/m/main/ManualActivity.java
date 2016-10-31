@@ -45,7 +45,10 @@ public class ManualActivity extends BaseActivity {
         boolean a = view.isActivated();
         if (a) {
             manualView.stop();
-            UploadHistoryDataService.startAction(this);
+            String address = "";
+            long startTime = manualView.getStartSystemTime();
+            long endTime = manualView.getStopSystemTime();
+            MassageController.getInstance().save(this, address, startTime, endTime);
         } else {
             manualView.start();
         }

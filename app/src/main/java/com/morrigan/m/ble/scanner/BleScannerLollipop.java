@@ -8,7 +8,7 @@ import android.bluetooth.le.ScanResult;
 import android.os.Build;
 import android.util.Log;
 
-import com.morrigan.m.ble.BleController;
+import com.morrigan.m.ble.AbstractBleController;
 
 /**
  * android5.0的蓝牙扫描器
@@ -18,7 +18,7 @@ import com.morrigan.m.ble.BleController;
 public class BleScannerLollipop implements BleScanner {
 
     public static final String TAG = "BleScannerLollipop";
-    private BleController mBle;
+    private AbstractBleController mBle;
     private BluetoothAdapter mBleAdapter;
     private ScanCallback mScanCallback = new ScanCallback() {
 
@@ -35,7 +35,7 @@ public class BleScannerLollipop implements BleScanner {
         }
     };
 
-    public BleScannerLollipop(BleController bleController, BluetoothAdapter bleAdapter) {
+    public BleScannerLollipop(AbstractBleController bleController, BluetoothAdapter bleAdapter) {
         this.mBle = bleController;
         this.mBleAdapter = bleAdapter;
     }

@@ -34,12 +34,13 @@
                 android:id="@+id/battery"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_gravity="top|end" />
+                android:layout_gravity="top|end"
+                android:layout_marginTop="10dp" />
 
             <com.morrigan.m.main.CenterView
                 android:id="@+id/center"
-                android:layout_width="220dp"
-                android:layout_height="220dp"
+                android:layout_width="210dp"
+                android:layout_height="210dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp" />
 
@@ -48,6 +49,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="bottom|end"
+                android:layout_marginBottom="2dp"
                 android:layout_marginEnd="60dp" />
 
         </com.morrigan.m.main.MainLayout>

@@ -2,10 +2,13 @@ package com.morrigan.m.main;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -19,15 +22,18 @@ import com.morrigan.m.R;
 public class MainLayout extends FrameLayout {
 
     private Paint paint = new Paint();
-    private Rect rect = new Rect();
+    private RectF rectF = new RectF();
     private BatteryView batteryView;
     private CenterView centerView;
+    private StarView startView;
     private int outlineSize = 5;
     private int bOutlineSize = 6;
     private int offset = 1;
     private Path path = new Path();
     private Point point = new Point();
     private int pathOffset = 8;
+//    private Drawable drawableBg;
+//    private Rect bounds = new Rect();
 
     public MainLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,6 +43,7 @@ public class MainLayout extends FrameLayout {
         pathOffset *= density;
         offset *= density;
         paint.setAntiAlias(true);
+        // drawableBg = getResources().getDrawable(R.drawable.dial_bg);
     }
 
     @Override
@@ -44,6 +51,7 @@ public class MainLayout extends FrameLayout {
         super.onFinishInflate();
         batteryView = (BatteryView) findViewById(R.id.battery);
         centerView = (CenterView) findViewById(R.id.center);
+        startView = (StarView) findViewById(R.id.star);
     }
 
     @Override
@@ -81,6 +89,21 @@ public class MainLayout extends FrameLayout {
         int br = batteryView.getWidth() / 2 + bOutlineSize;
         paint.setColor(0xff852abb);
         canvas.drawCircle(bcx, bcy, br, paint);
+
+        cx = startView.getLeft() + startView.getWidth() / 2;
+        cy = startView.getTop() + startView.getHeight() / 2;
+        radius = startView.getWidth() / 2 + outlineSize / 2 + offset * 4;
+        paint.setColor(0xff9a43cd);
+        canvas.drawCircle(cx, cy + offset, radius, paint);
+        radius = startView.getWidth() / 2 + outlineSize / 2 + offset;
+        paint.setColor(0xffbc55f8);
+        canvas.drawCircle(cx, cy + offset, radius, paint);
+
+        int scx = startView.getLeft() + startView.getWidth() / 2;
+        int scy = startView.getTop() + startView.getHeight() / 2;
+        int sr = startView.getWidth() / 2 + outlineSize / 2;
+        paint.setColor(0xff852abb);
+        canvas.drawCircle(scx, scy, sr, paint);
 
         super.dispatchDraw(canvas);
 
@@ -161,6 +184,14 @@ public class MainLayout extends FrameLayout {
 //        canvas.drawLine(bcx, bcy, ccx, ccy, paint);
 //        canvas.drawLine(bcx, bcy, bcx, ccy, paint);
 //        canvas.drawLine(ccx, ccy, bcx, ccy, paint);
+
+//        bounds.left = getPaddingLeft();
+//        bounds.top = getPaddingTop();
+//        bounds.right = getRight() - getPaddingRight();
+//        bounds.bottom = getBottom() - getPaddingBottom();
+//        drawableBg.setBounds(bounds);
+//        drawableBg.draw(canvas);
+//        super.dispatchDraw(canvas);
     }
 
     private void calculateCenterPoint(int ccx, int ccy, int x2, int y2, int r, Point point) {

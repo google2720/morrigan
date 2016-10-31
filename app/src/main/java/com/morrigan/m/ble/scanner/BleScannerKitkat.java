@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
-import com.morrigan.m.ble.BleController;
+import com.morrigan.m.ble.AbstractBleController;
 
 /**
  * android5.0以下版本的蓝牙扫描器
@@ -12,7 +12,7 @@ import com.morrigan.m.ble.BleController;
  */
 public class BleScannerKitkat implements BleScanner {
     public static final String TAG = "BleScannerKitkat";
-    private BleController mBle;
+    private AbstractBleController mBle;
     private BluetoothAdapter mBleAdapter;
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
@@ -24,7 +24,7 @@ public class BleScannerKitkat implements BleScanner {
         }
     };
 
-    public BleScannerKitkat(BleController bleController, BluetoothAdapter bleAdapter) {
+    public BleScannerKitkat(AbstractBleController bleController, BluetoothAdapter bleAdapter) {
         this.mBle = bleController;
         this.mBleAdapter = bleAdapter;
     }
