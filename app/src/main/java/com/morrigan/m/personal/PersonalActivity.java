@@ -34,7 +34,7 @@ import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
 import com.morrigan.m.login.LoginActivity;
 import com.squareup.picasso.Picasso;
 

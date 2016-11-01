@@ -41,6 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_horizontal_margin"
@@ -58,10 +59,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp" 
-            android:visibility="gone"
+        android:layout_margin="30dp"
         android:background="@drawable/device_scan"
-        android:minHeight="@dimen/line_min_height">
+        android:minHeight="@dimen/line_min_height"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/connectState"

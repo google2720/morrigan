@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -34,10 +35,12 @@ public class DeviceScanActivity extends BaseActivity {
     private BleCallback cb = new SimpleBleCallback() {
         @Override
         public void onLeScan(BluetoothDevice device) {
-            Device d = new Device();
-            d.name = device.getName();
-            d.mac = device.getAddress();
-            devices.add(d);
+            if (!TextUtils.isEmpty(device.getName())) {
+                Device d = new Device();
+                d.name = device.getName();
+                d.mac = device.getAddress();
+                devices.add(d);
+            }
         }
     };
 
@@ -105,30 +108,6 @@ public class DeviceScanActivity extends BaseActivity {
     }
 
     private void gotoResult() {
-        Device device = new Device();
-        device.name = "dsfhdskfjds";
-        devices.add(device);
-        device = new Device();
-        device.name = "12321321321";
-        devices.add(device);
-        device = new Device();
-        device.name = "12321321321";
-        devices.add(device);
-        device = new Device();
-        device.name = "12321321321";
-        devices.add(device);
-        device = new Device();
-        device.name = "12321321321";
-        devices.add(device);
-        device = new Device();
-        device.name = "12321321321";
-        devices.add(device);
-        device = new Device();
-        device.name = "12321321321";
-        devices.add(device);
-        device = new Device();
-        device.name = "12321321321";
-        devices.add(device);
         Intent intent = new Intent(DeviceScanActivity.this, DeviceScanResultActivity.class);
         intent.putExtra("data", devices);
         startActivity(intent);

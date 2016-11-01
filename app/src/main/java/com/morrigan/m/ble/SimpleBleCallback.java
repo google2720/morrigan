@@ -37,10 +37,14 @@ public class SimpleBleCallback implements BleCallback {
     }
 
     @Override
-    public void onBindDeviceFailed(BluetoothDevice device) {
+    public void onBindDeviceFailed(int error) {
     }
 
     @Override
     public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
+    }
+
+    @Override
+    public void onGattServicesNoFound(BluetoothDevice device) {
     }
 }

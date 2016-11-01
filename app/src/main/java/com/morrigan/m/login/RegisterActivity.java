@@ -14,7 +14,6 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.yzeaho.common.ToastUtils;
 import com.github.yzeaho.http.HttpInterface;
@@ -23,7 +22,7 @@ import com.morrigan.m.BaseActivity;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
 
 import okhttp3.FormBody;
 import okhttp3.Request;

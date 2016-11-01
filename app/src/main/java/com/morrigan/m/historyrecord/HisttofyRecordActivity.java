@@ -1,30 +1,18 @@
 package com.morrigan.m.historyrecord;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import com.github.yzeaho.common.ToastUtils;
-import com.github.yzeaho.http.HttpInterface;
-import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
-import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
 import com.morrigan.m.view.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.FormBody;
-import okhttp3.Request;
 
 /**
  * Created by fei on 2016/10/12.

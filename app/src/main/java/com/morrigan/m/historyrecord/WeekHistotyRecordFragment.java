@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.os.AsyncTaskCompat;
-import android.support.v4.util.DebugUtils;
-import android.support.v4.util.TimeUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +17,11 @@ import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
 import com.morrigan.m.utils.DateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.FormBody;

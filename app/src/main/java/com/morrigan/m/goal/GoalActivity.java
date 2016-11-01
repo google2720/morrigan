@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
 import com.morrigan.m.personal.PersonalModifyTask;
 
 public class GoalActivity extends ToolbarActivity {

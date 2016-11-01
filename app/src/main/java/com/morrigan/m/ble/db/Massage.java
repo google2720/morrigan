@@ -5,6 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.morrigan.m.main.UploadHistoryDataService;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import static com.morrigan.m.ble.db.DBHelper.TABLE_MASSAGE;
 
 /**
@@ -16,12 +22,18 @@ public class Massage {
     public String address;
     public long startTime;
     public long endTime;
+    public String date;
+    public String hour;
+    public long duration;
 
     protected void restore(Cursor cursor) {
         id = cursor.getLong(cursor.getColumnIndex("_id"));
         address = cursor.getString(cursor.getColumnIndex("_address"));
         startTime = cursor.getLong(cursor.getColumnIndex("_startTime"));
         endTime = cursor.getLong(cursor.getColumnIndex("_endTime"));
+        date = cursor.getString(cursor.getColumnIndex("_date"));
+        hour = cursor.getString(cursor.getColumnIndex("_hour"));
+        duration = cursor.getLong(cursor.getColumnIndex("_duration"));
     }
 
     protected ContentValues toValue() {
@@ -29,6 +41,9 @@ public class Massage {
         values.put("_address", address);
         values.put("_startTime", startTime);
         values.put("_endTime", endTime);
+        values.put("_date", date);
+        values.put("_hour", hour);
+        values.put("_duration", endTime - startTime);
         return values;
     }
 
@@ -79,5 +94,32 @@ public class Massage {
             close(cursor);
         }
         return null;
+    }
+
+    public static List<UploadHistoryDataService.Data> queryUploadData(Context context, String userId, String goalLong) {
+        List<UploadHistoryDataService.Data> result = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            String selection = "_startTime<?";
+            String[] selectionArgs = new String[]{String.valueOf(calendar.getTimeInMillis())};
+            String[] columns = new String[]{"sum(_duration) as _total_duration", "_date"};
+            cursor = getReadableDatabase(context).query(TABLE_MASSAGE, columns, selection, selectionArgs, "_date", null, null);
+            while (cursor != null && cursor.moveToNext()) {
+                UploadHistoryDataService.Data data = new UploadHistoryDataService.Data();
+                data.userId = userId;
+                data.goalLong = goalLong;
+                data.date = cursor.getString(cursor.getColumnIndex("_date"));
+                data.timeLong = cursor.getString(cursor.getColumnIndex("_total_duration"));
+                result.add(data);
+            }
+        } finally {
+            close(cursor);
+        }
+        return result;
     }
 }

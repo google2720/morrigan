@@ -11,16 +11,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.github.yzeaho.common.ToastUtils;
-import com.github.yzeaho.http.HttpInterface;
-import com.github.yzeaho.log.Lg;
-import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.Toolbar2Activity;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
-
-import okhttp3.FormBody;
-import okhttp3.Request;
 
 /**
  * 修改绑定设备的名字界面
@@ -90,25 +83,7 @@ public class DeviceNameUpdateActivity extends Toolbar2Activity {
 
         @Override
         protected UiResult doInBackground(Void... params) {
-            UiResult uiResult = new UiResult();
-            try {
-                String url = activity.getString(R.string.host) + "/rest/moli/edit-device-name";
-                FormBody.Builder b = new FormBody.Builder();
-                b.add("userId", UserController.getInstance().getUserId(activity));
-                b.add("mac", mac);
-                b.add("deviceName", name);
-                Request.Builder builder = new Request.Builder();
-                builder.url(url);
-                builder.post(b.build());
-                HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-                HttpResult r = result.parse(HttpResult.class);
-                uiResult.success = r.isSuccessful();
-                uiResult.message = r.retMsg;
-            } catch (Exception e) {
-                Lg.w("user", "failed to remove device", e);
-                uiResult.message = e.getMessage();
-            }
-            return uiResult;
+            return DeviceController.getInstance().modifyDeviceName(activity, mac, name);
         }
 
         @Override

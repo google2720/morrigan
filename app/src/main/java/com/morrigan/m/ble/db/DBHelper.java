@@ -49,19 +49,17 @@ public class DBHelper extends SQLiteOpenHelper {
     private void upgradeTo(SQLiteDatabase db, int version) {
         switch (version) {
             case 1:
-                createRecodeTable(db);
+                createMassageTable(db);
                 break;
             default:
                 throw new IllegalStateException("Don't know how to upgrade to " + version);
         }
     }
 
-    /**
-     * 创建当前数据表
-     */
-    private void createRecodeTable(SQLiteDatabase db) {
+    private void createMassageTable(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MASSAGE);
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_MASSAGE
-                + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, _address TEXT, _startTime INTEGER, _endTime INTEGER)");
+                + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, _address TEXT, _startTime INTEGER, "
+                + "_endTime INTEGER, _date TEXT, _hour TEXT, _duration INTEGER)");
     }
 }

@@ -63,9 +63,9 @@ public class GroupBleCallback implements BleCallback {
     }
 
     @Override
-    public void onBindDeviceFailed(BluetoothDevice device) {
+    public void onBindDeviceFailed(int error) {
         for (BleCallback l : listeners) {
-            l.onBindDeviceFailed(device);
+            l.onBindDeviceFailed(error);
         }
     }
 
@@ -73,6 +73,13 @@ public class GroupBleCallback implements BleCallback {
     public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBinded) {
         for (BleCallback l : listeners) {
             l.onBindDeviceSuccess(device, firstBinded);
+        }
+    }
+
+    @Override
+    public void onGattServicesNoFound(BluetoothDevice device) {
+        for (BleCallback l : listeners) {
+            l.onGattServicesNoFound(device);
         }
     }
 

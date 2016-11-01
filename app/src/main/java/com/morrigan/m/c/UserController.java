@@ -1,4 +1,4 @@
-package com.morrigan.m;
+package com.morrigan.m.c;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,6 +7,9 @@ import android.util.Log;
 import com.github.yzeaho.file.Closeables;
 import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
+import com.morrigan.m.HttpResult;
+import com.morrigan.m.R;
+import com.morrigan.m.UiResult;
 import com.morrigan.m.historyrecord.TodayRecord;
 import com.morrigan.m.login.UserInfo;
 
@@ -27,6 +30,7 @@ import okhttp3.Request;
  * Created by y on 2016/10/3.
  */
 public class UserController {
+
     private static final String TAG = "UserController";
 
     private static UserController sInstance = new UserController();
@@ -51,6 +55,15 @@ public class UserController {
         return getSharedPreferences(context).getString("userId", null);
     }
 
+    public boolean isAutoLogin(Context context) {
+        return getSharedPreferences(context).getBoolean("auto_login", false);
+    }
+
+    public void setAutoLogin(Context context, boolean b) {
+        SharedPreferences preferences = getSharedPreferences(context);
+        preferences.edit().putBoolean("auto_login", b).apply();
+    }
+
     public void setUserInfo(Context context, UserInfo userInfo) {
         SharedPreferences preferences = getSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -66,6 +79,7 @@ public class UserController {
         editor.putString("target", userInfo.target);
         editor.putString("authCode", userInfo.authCode);
         editor.putString("imgUrl", userInfo.imgUrl);
+        editor.putBoolean("auto_login", true);
         editor.apply();
     }
 

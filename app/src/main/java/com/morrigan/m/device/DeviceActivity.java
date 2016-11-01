@@ -15,36 +15,34 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.github.yzeaho.common.ToastUtils;
-import com.github.yzeaho.http.HttpInterface;
-import com.github.yzeaho.log.Lg;
-import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.SpacingDecoration;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
 
 import java.util.List;
 
-import okhttp3.FormBody;
-import okhttp3.Request;
-
 public class DeviceActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<List<Device>>, DeviceAdapter.Listener {
 
-    private RecyclerView recyclerView;
     private DeviceAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device);
-        recyclerView = (RecyclerView) findViewById(R.id.list);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         int padding = getResources().getDimensionPixelSize(R.dimen.device_padding);
         recyclerView.addItemDecoration(new SpacingDecoration(padding, padding, true));
         adapter = new DeviceAdapter(this, this);
         recyclerView.setAdapter(adapter);
         getSupportLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DeviceController.getInstance().fetchAsync(this);
     }
 
     @Override
@@ -80,9 +78,10 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
     @Override
     public void onListItemDeleteClick(View v, final Device data) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("是否需要解绑");
-        builder.setNegativeButton("否", null);
-        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.device_remove);
+        builder.setMessage(R.string.device_remove_msg);
+        builder.setNegativeButton(R.string.action_no, null);
+        builder.setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 removeBind(data);
@@ -110,31 +109,14 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
         @Override
         protected void onPreExecute() {
             dialog = new ProgressDialog(activity);
-            dialog.setMessage(activity.getString(R.string.changing));
+            dialog.setMessage(activity.getString(R.string.deleting));
             dialog.setCancelable(false);
             dialog.show();
         }
 
         @Override
         protected UiResult doInBackground(Void... params) {
-            UiResult uiResult = new UiResult();
-            try {
-                String url = activity.getString(R.string.host) + "/rest/moli/remove-bind";
-                FormBody.Builder b = new FormBody.Builder();
-                b.add("userId", UserController.getInstance().getUserId(activity));
-                b.add("mac", data.mac);
-                Request.Builder builder = new Request.Builder();
-                builder.url(url);
-                builder.post(b.build());
-                HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-                HttpResult r = result.parse(HttpResult.class);
-                uiResult.success = r.isSuccessful();
-                uiResult.message = r.retMsg;
-            } catch (Exception e) {
-                Lg.w("user", "failed to remove device", e);
-                uiResult.message = e.getMessage();
-            }
-            return uiResult;
+            return DeviceController.getInstance().remove(activity, data.mac);
         }
 
         @Override

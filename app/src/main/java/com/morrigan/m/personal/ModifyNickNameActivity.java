@@ -14,7 +14,7 @@ import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.R;
 import com.morrigan.m.Toolbar2Activity;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
 
 public class ModifyNickNameActivity extends Toolbar2Activity {
 

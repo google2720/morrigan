@@ -16,10 +16,10 @@ import com.github.yzeaho.common.ToastUtils;
 import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BaseActivity;
-import com.morrigan.m.main.MainActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
+import com.morrigan.m.main.MainActivity;
 
 import okhttp3.FormBody;
 import okhttp3.Request;

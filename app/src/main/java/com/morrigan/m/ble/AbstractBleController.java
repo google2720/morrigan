@@ -27,20 +27,19 @@ import java.util.concurrent.Executors;
 
 public abstract class AbstractBleController {
 
-    private static final String TAG = "AbstractBleController";
+    public static final String TAG = "AbstractBleController";
 
-    private final static UUID UUID_DATA_SERVICE = UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb");
-    private final static UUID UUID_DATA_CHARACTERISTIC = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb");
-    private final static UUID UUID_SOS_CHARACTERISTIC = UUID.fromString("0000fff2-0000-1000-8000-00805f9b34fb");
-    private final static UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+    private final static UUID UUID_DATA_SERVICE = UUID.fromString("000056ff-0000-1000-8000-00805f9b34fb");
+    private final static UUID UUID_DATA_CHARACTERISTIC = UUID.fromString("000033f1-0000-1000-8000-00805f9b34fb");
+    private final static UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002901-0000-1000-8000-00805f9b34fb");
 
     protected Context mContext;
     private static final Object mLock = new Object();
-    private final ExecutorService EXECUTOR_SERVICE_SINGLE = Executors.newSingleThreadExecutor();
-    private final Executor EXECUTOR_SERVICE_POOL = AsyncTask.THREAD_POOL_EXECUTOR;
+    protected final ExecutorService EXECUTOR_SERVICE_SINGLE = Executors.newSingleThreadExecutor();
+    protected final Executor EXECUTOR_SERVICE_POOL = AsyncTask.THREAD_POOL_EXECUTOR;
     private BluetoothAdapter mBleAdapter;
     private BleConnection mBleConnection;
-    private GroupBleCallback mCallbacks = new GroupBleCallback();
+    protected GroupBleCallback mCallbacks = new GroupBleCallback();
     private BluetoothGattService mDefaultGattService;
     private BluetoothGattCharacteristic mDataCharacteristic;
     private BluetoothGattDescriptor mDataDescriptor;
@@ -117,16 +116,16 @@ public abstract class AbstractBleController {
             if (mDefaultGattService == null) {
                 // TODO 设备没有该服务？
                 Log.i(TAG, "It find no gatt service");
-                mDeviceReady = false;
-                mBleConnection.disconnect();
+                disconnect();
+                mCallbacks.onGattServicesNoFound(mBleConnection.getDevice());
                 return;
             }
             mDataCharacteristic = mDefaultGattService.getCharacteristic(UUID_DATA_CHARACTERISTIC);
             if (mDataCharacteristic == null) {
                 // TODO 设备没有该特征？
                 Log.i(TAG, "It find no characteristic");
-                mDeviceReady = false;
-                mBleConnection.disconnect();
+                disconnect();
+                mCallbacks.onGattServicesNoFound(mBleConnection.getDevice());
                 return;
             }
             if (BuildConfig.DEBUG) {
@@ -166,7 +165,6 @@ public abstract class AbstractBleController {
                     mScanning = true;
                     Log.i(TAG, "startLeScan");
                     mScanner.startLeScan();
-                    Log.i(TAG, "startLeScan2");
                 }
             }
         });
@@ -220,9 +218,7 @@ public abstract class AbstractBleController {
     public void disconnect() {
         Log.i(TAG, "disconnect");
         disconnectInner();
-        if (mBleConnection != null) {
-            mBleConnection.disconnect();
-        }
+        mBleConnection.disconnect();
     }
 
     protected byte[] write(byte[] data) {

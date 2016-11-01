@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.morrigan.m.device.DeviceActivity;
 import com.morrigan.m.FeedbackActivity;
 import com.morrigan.m.R;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
 import com.morrigan.m.about.AboutActivity;
 import com.morrigan.m.goal.GoalActivity;
 import com.morrigan.m.historyrecord.HisttofyRecordActivity;
@@ -80,6 +80,7 @@ public class NavigateFragment extends Fragment {
         view.findViewById(R.id.quit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UserController.getInstance().setAutoLogin(getContext(), false);
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

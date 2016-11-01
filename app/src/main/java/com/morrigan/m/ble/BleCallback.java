@@ -20,7 +20,9 @@ public interface BleCallback {
 
     void onGattServicesDiscovered(BluetoothDevice device);
 
-    void onBindDeviceFailed(BluetoothDevice device);
+    void onBindDeviceFailed(int error);
 
     void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind);
+
+    void onGattServicesNoFound(BluetoothDevice device);
 }

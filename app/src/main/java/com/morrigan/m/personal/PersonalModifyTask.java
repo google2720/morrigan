@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
 
 /**
  * 修改用户信息的task

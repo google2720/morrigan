@@ -1,5 +1,7 @@
 package com.morrigan.m.device;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 
 /**

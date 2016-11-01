@@ -15,7 +15,7 @@ import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.UserController;
+import com.morrigan.m.c.UserController;
 
 import okhttp3.FormBody;
 import okhttp3.Request;

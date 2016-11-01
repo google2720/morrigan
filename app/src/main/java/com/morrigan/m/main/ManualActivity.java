@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.c.MassageController;
 
 /**
  * 手动按摩界面

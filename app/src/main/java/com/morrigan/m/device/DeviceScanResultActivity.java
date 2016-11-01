@@ -36,6 +36,11 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         }
 
         @Override
+        public void onGattServicesDiscovered(BluetoothDevice device) {
+            ble.bindDeviceAsync(device);
+        }
+
+        @Override
         public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
             startActivity(intent);
@@ -43,7 +48,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         }
 
         @Override
-        public void onBindDeviceFailed(BluetoothDevice device) {
+        public void onBindDeviceFailed(int error) {
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindFailedActivity.class);
             startActivity(intent);
             finish();
@@ -82,6 +87,9 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
 
     @Override
     public void onListItemClick(View v, Device device) {
-        ble.getCallbacks().onBindDeviceSuccess(null, false);
+        ble.setAutoConnect(false);
+        ble.setAutoReconnect(false);
+        ble.disconnect();
+        ble.connectAsync(this, device.mac);
     }
 }
