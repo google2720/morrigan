@@ -5,17 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.morrigan.m.device.DeviceActivity;
 import com.morrigan.m.FeedbackActivity;
 import com.morrigan.m.R;
-import com.morrigan.m.c.UserController;
 import com.morrigan.m.about.AboutActivity;
+import com.morrigan.m.c.UserController;
+import com.morrigan.m.device.DeviceActivity;
 import com.morrigan.m.goal.GoalActivity;
 import com.morrigan.m.historyrecord.HisttofyRecordActivity;
 import com.morrigan.m.login.LoginActivity;
@@ -116,9 +117,14 @@ public class NavigateFragment extends Fragment {
     public void onStart() {
         super.onStart();
         nicknameView.setText(UserController.getInstance().getNickname(getActivity()));
-        Picasso.with(getActivity()).load(UserController.getInstance().getImgUrl(getActivity()))
-                .placeholder(R.drawable.default_avatar)
-                .error(R.drawable.default_avatar).into(avatarView);
+        String url = UserController.getInstance().getImgUrl(getActivity());
+        if (TextUtils.isEmpty(url)) {
+            Picasso.with(getActivity()).load(R.drawable.default_avatar).into(avatarView);
+        } else {
+            Picasso.with(getActivity()).load(url)
+                    .placeholder(R.drawable.default_avatar)
+                    .error(R.drawable.default_avatar).into(avatarView);
+        }
     }
 
     public interface NavigateListener {
