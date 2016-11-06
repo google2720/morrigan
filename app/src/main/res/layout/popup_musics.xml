@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_root"
+               >
+    <LinearLayout
+        android:id="@+id/ll_close"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@+id/iv_top">
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/line_top"
+        android:background="@drawable/ic_music_poup_top"
+        />
+
+    <View
+        android:id="@+id/line_top"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/divider_line"
+        android:layout_above="@+id/ll_rw"></View>
+    <LinearLayout
+        android:id="@+id/ll_rw"
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:layout_above="@+id/line_bottom"
+        android:orientation="vertical"
+        android:background="@color/cfaffffff"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rw_music"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_above="@+id/rl_close"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/divider_line"
+        ></View>
+    <RelativeLayout
+        android:id="@+id/rl_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cfaffffff"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:id="@+id/tv_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/music_popup_colose"
+            android:textSize="20dp"
+            android:background="@drawable/item_background"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

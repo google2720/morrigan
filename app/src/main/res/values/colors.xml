@@ -14,6 +14,9 @@
     <color name="c5a5a5a">#5a5a5a</color>
     <color name="c000000">#000000</color>
     <color name="cA957FF">#A957FF</color>
-
+    <color name="cfaffffff">#faffffff</color>
+    <color name="c7E7879">#7E7879</color>
+    <color name="cFFC3DC">#F4A2C6</color>
+    <color name="divider_line">#F6F6F6</color>
 
 </resources>
