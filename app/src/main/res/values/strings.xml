@@ -123,5 +123,8 @@
     <string name="history_day_goal"> 今日目标</string>
     <string name="history_day_nursing">今日护养</string>
     <string name="history_day_surplus">剩余目标值</string>
+    <!-- 音乐随动 -->
+    <string name="music_play_title">"音乐随动"</string>
+   <string name="music_popup_colose">"关闭 "</string>
 
 </resources>

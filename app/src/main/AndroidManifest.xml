@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".MainApplication"
@@ -119,7 +120,9 @@
             android:label="@string/history_title_today"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.History" />
-
+        <activity
+            android:name=".music.MusicActivity"
+            android:screenOrientation="portrait" />
         <service android:name=".main.UploadHistoryDataService" />
         <service android:name=".ble.BleService" />
 

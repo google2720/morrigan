@@ -24,5 +24,9 @@
         <item name="colorPrimary">@color/c8c39e5</item>
         <item name="colorPrimaryDark">@color/c8c39e5</item>
     </style>
+    <style name="AppTheme.Music">
+        <item name="colorPrimary">@color/cA957FF</item>
+        <item name="colorPrimaryDark">@color/cA957FF</item>
+    </style>
 
 </resources>
