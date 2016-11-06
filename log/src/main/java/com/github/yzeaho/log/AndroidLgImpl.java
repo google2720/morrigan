@@ -1,35 +1,35 @@
 package com.github.yzeaho.log;
 
+import android.util.Log;
+
 /**
  * java的日志记录
  * Created by y on 2016/8/26.
  */
-public class JavaLgImpl implements LgInterface {
+public class AndroidLgImpl implements LgInterface {
 
     @Override
     public void d(String tag, String msg) {
-        System.out.println(tag + " " + msg);
+        Log.d(tag, msg);
     }
 
     @Override
     public void i(String tag, String msg) {
-        System.out.println(tag + " " + msg);
+        Log.i(tag, msg);
     }
 
     @Override
     public void w(String tag, String msg, Throwable e) {
-        System.out.println(tag + " " + msg);
-        e.printStackTrace();
+        Log.w(tag, msg, e);
     }
 
     @Override
     public void w(String tag, String msg) {
-        System.out.println(tag + " " + msg);
+        Log.w(tag, msg);
     }
 
     @Override
     public void e(String tag, String msg, Throwable e) {
-        System.out.println(tag + " " + msg);
-        e.printStackTrace();
+        Log.e(tag, msg, e);
     }
 }

@@ -18,6 +18,7 @@ import com.morrigan.m.ble.SimpleBleCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class DeviceScanActivity extends BaseActivity {
 
@@ -31,15 +32,19 @@ public class DeviceScanActivity extends BaseActivity {
         }
     };
     private ArrayList<Device> devices = new ArrayList<>();
+    private HashSet<String> addresses = new HashSet<>();
     private BleController ble = BleController.getInstance();
     private BleCallback cb = new SimpleBleCallback() {
         @Override
         public void onLeScan(BluetoothDevice device) {
             if (!TextUtils.isEmpty(device.getName())) {
-                Device d = new Device();
-                d.name = device.getName();
-                d.mac = device.getAddress();
-                devices.add(d);
+                if (!addresses.contains(device.getAddress())) {
+                    Device d = new Device();
+                    d.name = device.getName();
+                    d.mac = device.getAddress();
+                    devices.add(d);
+                    addresses.add(device.getAddress());
+                }
             }
         }
     };

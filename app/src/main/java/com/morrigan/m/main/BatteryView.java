@@ -7,8 +7,13 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.morrigan.m.ble.BleCallback;
+import com.morrigan.m.ble.BleController;
+import com.morrigan.m.ble.SimpleBleCallback;
 
 /**
  * 电池电量
@@ -27,8 +32,16 @@ public class BatteryView extends View {
     private int offset2 = 2;
     private Rect rect = new Rect();
     private PorterDuffXfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP);
-    private int battery = 20;
-    private String batteryStr = "20";
+    private String batteryStr = "0";
+    private int battery = 0;
+    private BleCallback cb = new SimpleBleCallback() {
+        @Override
+        public void onFetchBatterySuccess(int value) {
+            battery = value;
+            batteryStr = String.valueOf(value);
+            ViewCompat.postInvalidateOnAnimation(BatteryView.this);
+        }
+    };
 
     public BatteryView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,6 +60,18 @@ public class BatteryView extends View {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        BleController.getInstance().addCallback(cb);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        BleController.getInstance().removeCallback(cb);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         final int w = getWidth();
@@ -60,7 +85,7 @@ public class BatteryView extends View {
         paint.setColor(0xff9438ca);
         canvas.drawCircle(cx, cy, radius, paint);
         rect.left = 0;
-        rect.top = h * 70 / 100;
+        rect.top = h * (100 - battery) / 100;
         rect.right = w;
         rect.bottom = h;
         paint.setColor(0xffc34fdc);

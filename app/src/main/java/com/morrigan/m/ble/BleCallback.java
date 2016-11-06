@@ -25,4 +25,12 @@ public interface BleCallback {
     void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind);
 
     void onGattServicesNoFound(BluetoothDevice device);
+
+    void onFetchBatterySuccess(int value);
+
+    void onFetchBatteryFailed(int error);
+
+    void onMassageFailed(int error);
+
+    void onMassageSuccess();
 }

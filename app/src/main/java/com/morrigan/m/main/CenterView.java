@@ -80,7 +80,7 @@ public class CenterView extends View {
         int bottom = Math.round(cy + radius);
         drawDynamicWave(canvas, left, right, bottom, top, w, radius, cx, cy);
 
-        textPaint1.setTextSize(w / 5);
+        textPaint1.setTextSize(w / 4);
         textPaint1.getTextBounds(goal, 0, goal.length(), boundText1);
         textPaint2.setTextSize(w / 10);
         textPaint2.getTextBounds("min", 0, "min".length(), boundText2);

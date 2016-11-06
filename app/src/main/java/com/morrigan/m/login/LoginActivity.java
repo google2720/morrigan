@@ -35,9 +35,9 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         phoneView = (EditText) findViewById(R.id.phone);
-        phoneView.setText(UserController.getInstance().getMobile(this));
+        // phoneView.setText(UserController.getInstance().getMobile(this));
         pwView = (EditText) findViewById(R.id.pw);
-        pwView.setText(UserController.getInstance().getPassword(this));
+        // pwView.setText(UserController.getInstance().getPassword(this));
         findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

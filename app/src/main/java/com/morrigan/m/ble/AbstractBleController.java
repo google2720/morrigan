@@ -13,9 +13,12 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
+import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BuildConfig;
+import com.morrigan.m.ble.data.BatteryResult;
+import com.morrigan.m.ble.data.Data;
+import com.morrigan.m.ble.data.NotifyDataHelper;
 import com.morrigan.m.ble.scanner.BleScanner;
 import com.morrigan.m.ble.scanner.BleScannerHelper;
 
@@ -31,6 +34,7 @@ public abstract class AbstractBleController {
 
     private final static UUID UUID_DATA_SERVICE = UUID.fromString("000056ff-0000-1000-8000-00805f9b34fb");
     private final static UUID UUID_DATA_CHARACTERISTIC = UUID.fromString("000033f1-0000-1000-8000-00805f9b34fb");
+    private final static UUID UUID_NOTIFY_CHARACTERISTIC = UUID.fromString("000033f2-0000-1000-8000-00805f9b34fb");
     private final static UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002901-0000-1000-8000-00805f9b34fb");
 
     protected Context mContext;
@@ -41,13 +45,14 @@ public abstract class AbstractBleController {
     private BleConnection mBleConnection;
     protected GroupBleCallback mCallbacks = new GroupBleCallback();
     private BluetoothGattService mDefaultGattService;
-    private BluetoothGattCharacteristic mDataCharacteristic;
-    private BluetoothGattDescriptor mDataDescriptor;
+    protected BluetoothGattCharacteristic mDataCharacteristic;
+    protected BluetoothGattCharacteristic mNotifyCharacteristic;
+    protected BluetoothGattDescriptor mNotifyDescriptor;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
-            Log.i(TAG, "onReceive " + action);
+            Lg.i(TAG, "onReceive " + action);
             EXECUTOR_SERVICE_POOL.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -67,10 +72,10 @@ public abstract class AbstractBleController {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            Log.i(TAG, "onReceive " + action);
+            Lg.i(TAG, "onReceive " + action);
             if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
                 int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF);
-                Log.i(TAG, "bluetooth state " + state);
+                Lg.i(TAG, "bluetooth state " + state);
                 if (state == BluetoothAdapter.STATE_OFF) {
                     disconnect();
                     mCallbacks.onBluetoothOff();
@@ -114,34 +119,44 @@ public abstract class AbstractBleController {
         } else if (BleConnection.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
             mDefaultGattService = mBleConnection.getService(UUID_DATA_SERVICE);
             if (mDefaultGattService == null) {
-                Log.i(TAG, "It find no gatt service");
+                Lg.i(TAG, "It find no gatt service");
                 disconnect();
                 mCallbacks.onGattServicesNoFound(mBleConnection.getDevice());
                 return;
             }
             mDataCharacteristic = mDefaultGattService.getCharacteristic(UUID_DATA_CHARACTERISTIC);
             if (mDataCharacteristic == null) {
-                Log.i(TAG, "It find no characteristic");
+                Lg.i(TAG, "It find no characteristic");
+                disconnect();
+                mCallbacks.onGattServicesNoFound(mBleConnection.getDevice());
+                return;
+            }
+            mNotifyCharacteristic = mDefaultGattService.getCharacteristic(UUID_NOTIFY_CHARACTERISTIC);
+            if (mDataCharacteristic == null) {
+                Lg.i(TAG, "It find no characteristic");
                 disconnect();
                 mCallbacks.onGattServicesNoFound(mBleConnection.getDevice());
                 return;
             }
             if (BuildConfig.DEBUG) {
-                List<BluetoothGattDescriptor> descriptors = mDataCharacteristic.getDescriptors();
+                List<BluetoothGattDescriptor> descriptors = mNotifyCharacteristic.getDescriptors();
                 for (BluetoothGattDescriptor d : descriptors) {
-                    Log.i(TAG, "  d:" + d.getUuid() + " " + d.getPermissions());
+                    Lg.i(TAG, "  d:" + d.getUuid() + " " + d.getPermissions());
                 }
             }
-            mDataDescriptor = mDataCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
+            mNotifyDescriptor = mDataCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
             mDeviceReady = true;
             mCallbacks.onGattServicesDiscovered(mBleConnection.getDevice());
         } else if (BleConnection.ACTION_DATA_AVAILABLE.equals(action)) {
             String uuid = intent.getStringExtra(BleConnection.EXTRA_UUID);
             byte[] data = intent.getByteArrayExtra(BleConnection.EXTRA_DATA);
             if (data != null && data.length > 0) {
+                onReceiveNotifyData(data);
             }
         }
     }
+
+    protected abstract void onReceiveNotifyData(byte[] data);
 
     public void addCallback(BleCallback cb) {
         mCallbacks.addListener(cb);
@@ -161,7 +176,7 @@ public abstract class AbstractBleController {
             public void run() {
                 if (!mScanning) {
                     mScanning = true;
-                    Log.i(TAG, "startLeScan");
+                    Lg.i(TAG, "startLeScan");
                     mScanner.startLeScan();
                 }
             }
@@ -174,7 +189,7 @@ public abstract class AbstractBleController {
             public void run() {
                 if (mScanning) {
                     mScanning = false;
-                    Log.i(TAG, "stopLeScan");
+                    Lg.i(TAG, "stopLeScan");
                     mScanner.stopLeScan();
                 }
             }
@@ -214,7 +229,7 @@ public abstract class AbstractBleController {
     }
 
     public void disconnect() {
-        Log.i(TAG, "disconnect");
+        Lg.i(TAG, "disconnect");
         disconnectInner();
         mBleConnection.disconnect();
     }

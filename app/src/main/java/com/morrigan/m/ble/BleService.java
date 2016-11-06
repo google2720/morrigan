@@ -43,13 +43,13 @@ public class BleService extends Service {
         public void onGattServicesDiscovered(BluetoothDevice device) {
             String address = device.getAddress();
             if (mBle.isAutoConnect() && address.equals(mBle.getBindDeviceAddress())) {
-                mBle.bindDeviceAsync(device);
+                mBle.bindDeviceAsync(device, false);
             }
         }
 
         @Override
         public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
-
+            mBle.fetchBatteryAsync();
         }
     };
 

@@ -10,4 +10,8 @@ public class Data {
         }
         return (byte) (total % 256);
     }
+
+    public int getIntValue() {
+        return 0;
+    }
 }

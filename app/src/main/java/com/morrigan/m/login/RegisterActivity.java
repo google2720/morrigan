@@ -96,6 +96,7 @@ public class RegisterActivity extends BaseActivity {
                 womenView.setActivated(true);
             }
         });
+        womenView.setActivated(true);
         sendSmsCodeView = (TextView) findViewById(R.id.sendSmsCode);
         sendSmsCodeView.setOnClickListener(new View.OnClickListener() {
             @Override

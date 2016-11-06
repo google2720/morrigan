@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleCallback;
@@ -38,7 +39,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
 
         @Override
         public void onGattServicesDiscovered(BluetoothDevice device) {
-            ble.bindDeviceAsync(device);
+            ble.bindDeviceAsync(device, true);
         }
 
         @Override
@@ -47,9 +48,14 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         }
 
         @Override
+        public void onGattDisconnected(BluetoothDevice device) {
+            if (device.getAddress().equals(connectAddress)) {
+                onBindDeviceFailed(BleError.SYSTEM);
+            }
+        }
+
+        @Override
         public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
-            ble.setAutoConnect(true);
-            ble.setAutoReconnect(true);
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
             startActivity(intent);
             finish();
@@ -57,12 +63,16 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
 
         @Override
         public void onBindDeviceFailed(int error) {
+            if (error == BleError.BIND_BY_OTHER) {
+                ToastUtils.show(getApplicationContext(), "设备已被绑定");
+            }
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindFailedActivity.class);
             startActivity(intent);
             finish();
         }
     };
     private View connectStateView;
+    private String connectAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,15 +101,18 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
     protected void onDestroy() {
         super.onDestroy();
         ble.removeCallback(cb);
+        ble.setAutoConnect(true);
+        ble.setAutoReconnect(true);
     }
 
     @Override
     public void onListItemClick(View v, Device device) {
         if (connectStateView.getVisibility() == View.GONE) {
+            connectAddress = device.mac;
             ble.setAutoConnect(false);
             ble.setAutoReconnect(false);
             ble.disconnect();
-            ble.connectAndBindAsync(this, device.mac);
+            ble.connectAndBindAsync(device.name, device.mac);
             connectStateView.setVisibility(View.VISIBLE);
         }
     }

@@ -47,4 +47,20 @@ public class SimpleBleCallback implements BleCallback {
     @Override
     public void onGattServicesNoFound(BluetoothDevice device) {
     }
+
+    @Override
+    public void onFetchBatterySuccess(int value) {
+    }
+
+    @Override
+    public void onFetchBatteryFailed(int error) {
+    }
+
+    @Override
+    public void onMassageFailed(int error) {
+    }
+
+    @Override
+    public void onMassageSuccess() {
+    }
 }

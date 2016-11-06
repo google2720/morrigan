@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BuildConfig;
 
 import java.util.List;
@@ -52,16 +53,16 @@ public class BleConnection {
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.i(TAG, "onConnectionStateChange " + status + " to " + newState);
+            Lg.i(TAG, "onConnectionStateChange " + status + " to " + newState);
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                Log.i(TAG, "Connected to GATT server.");
+                Lg.i(TAG, "Connected to GATT server.");
                 setState(STATE_CONNECTED);
                 broadcastUpdate(ACTION_GATT_CONNECTED);
                 // 连接成功，进行搜索服务
                 boolean r = mBluetoothGatt.discoverServices();
-                Log.i(TAG, "Attempting to start service discovery:" + r);
+                Lg.i(TAG, "Attempting to start service discovery:" + r);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                Log.i(TAG, "Disconnected from GATT server.");
+                Lg.i(TAG, "Disconnected from GATT server.");
                 connectFailed(false);
                 broadcastUpdate(ACTION_GATT_DISCONNECTED);
             }
@@ -69,15 +70,15 @@ public class BleConnection {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            Log.i(TAG, "onServicesDiscovered received " + status);
+            Lg.i(TAG, "onServicesDiscovered received " + status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 if (BuildConfig.DEBUG) {
                     List<BluetoothGattService> ss = mBluetoothGatt.getServices();
                     for (BluetoothGattService s : ss) {
-                        Log.d(TAG, "s:" + s.getUuid() + " " + s.getInstanceId());
+                        Lg.d(TAG, "s:" + s.getUuid() + " " + s.getInstanceId());
                         List<BluetoothGattCharacteristic> cs = s.getCharacteristics();
                         for (BluetoothGattCharacteristic c : cs) {
-                            Log.d(TAG, " c:" + c.getUuid());
+                            Lg.d(TAG, " c:" + c.getUuid());
                         }
                     }
                 }
@@ -87,7 +88,7 @@ public class BleConnection {
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            Log.i(TAG, "onCharacteristicRead " + status + " " + characteristic.getUuid());
+            Lg.i(TAG, "onCharacteristicRead " + status + " " + characteristic.getUuid());
             synchronized (mObject) {
                 mObject.notifyAll();
             }
@@ -95,13 +96,13 @@ public class BleConnection {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            Log.i(TAG, "onCharacteristicChanged " + characteristic.getUuid());
+            Lg.i(TAG, "onCharacteristicChanged " + characteristic.getUuid());
             broadcastUpdate(characteristic);
         }
 
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            Log.i(TAG, "onCharacteristicWrite " + status + " " + characteristic.getUuid());
+            Lg.i(TAG, "onCharacteristicWrite " + status + " " + characteristic.getUuid());
             synchronized (mObject) {
                 mObject.notifyAll();
             }
@@ -109,7 +110,7 @@ public class BleConnection {
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            Log.i(TAG, "onDescriptorWrite " + status + " " + descriptor.getUuid());
+            Lg.i(TAG, "onDescriptorWrite " + status + " " + descriptor.getUuid());
             synchronized (mObject) {
                 mObject.notifyAll();
             }
@@ -117,12 +118,12 @@ public class BleConnection {
 
         @Override
         public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            Log.i(TAG, "onDescriptorRead " + status + " " + descriptor.getUuid());
+            Lg.i(TAG, "onDescriptorRead " + status + " " + descriptor.getUuid());
         }
 
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            Log.i(TAG, "onReadRemoteRssi " + status + " " + rssi);
+            Lg.i(TAG, "onReadRemoteRssi " + status + " " + rssi);
             synchronized (mObject) {
                 mObject.notifyAll();
             }
@@ -135,16 +136,16 @@ public class BleConnection {
 
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, BluetoothGattDescriptor descriptor, boolean enabled) {
         if (mBluetoothGatt == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized");
+            Lg.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
         synchronized (mObject) {
             boolean r = mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
-            Log.d(TAG, "setCharacteristicNotification " + r);
+            Lg.d(TAG, "setCharacteristicNotification " + r);
             byte[] data = enabled ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
             descriptor.setValue(data);
             r = mBluetoothGatt.writeDescriptor(descriptor);
-            Log.d(TAG, "write descriptor " + (r ? "success " : "failed ") + "[" + toHex(data) + "]");
+            Lg.d(TAG, "write descriptor " + (r ? "success " : "failed ") + "[" + toHex(data) + "]");
             try {
                 mObject.wait(TIMEOUT_MILLIS);
             } catch (InterruptedException e) {
@@ -161,7 +162,7 @@ public class BleConnection {
     public void readRemoteRssi() {
         synchronized (mObject) {
             if (mBluetoothGatt == null) {
-                Log.w(TAG, "BluetoothAdapter not initialized");
+                Lg.w(TAG, "BluetoothAdapter not initialized");
                 return;
             }
             mBluetoothGatt.readRemoteRssi();
@@ -182,7 +183,7 @@ public class BleConnection {
                 // ignore
             }
             byte[] data = characteristic.getValue();
-            Log.d("BleData", "read data [" + toHex(data) + "]");
+            Lg.d("BleData", "read data [" + toHex(data) + "]");
             return data;
         }
     }
@@ -191,7 +192,7 @@ public class BleConnection {
         synchronized (mObject) {
             characteristic.setValue(data);
             boolean r = mBluetoothGatt.writeCharacteristic(characteristic);
-            Log.d("BleData", "write data " + (r ? "success " : "failed ") + "[" + toHex(data) + "]");
+            Lg.d("BleData", "write data " + (r ? "success " : "failed ") + "[" + toHex(data) + "]");
             try {
                 mObject.wait(TIMEOUT_MILLIS);
             } catch (InterruptedException e) {
@@ -217,7 +218,7 @@ public class BleConnection {
         byte[] data = characteristic.getValue();
         if (data != null && data.length > 0) {
             intent.putExtra(EXTRA_DATA, data);
-            Log.i("BleData", "data:[" + BleConnection.toHex(data) + "]");
+            Lg.i("BleData", "data:[" + BleConnection.toHex(data) + "]");
         }
         intent.putExtra(EXTRA_UUID, characteristic.getUuid().toString());
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
@@ -234,7 +235,7 @@ public class BleConnection {
     }
 
     private synchronized void setState(int state) {
-        Log.d(TAG, "setState() " + mState + " -> " + state);
+        Lg.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
     }
 
@@ -244,7 +245,7 @@ public class BleConnection {
 
     public synchronized void connect(BluetoothDevice device) {
         if (getState() == STATE_NONE) {
-            Log.d(TAG, "connect to: " + device + " tid:" + Thread.currentThread().getId());
+            Lg.d(TAG, "connect to: " + device + " tid:" + Thread.currentThread().getId());
             setState(STATE_CONNECTING);
             mmDevice = device;
             broadcastUpdate(ACTION_GATT_CONNECTING);
@@ -267,7 +268,7 @@ public class BleConnection {
     }
 
     public synchronized void disconnect() {
-        Log.i(TAG, "disconnect");
+        Lg.i(TAG, "disconnect");
         connectFailed(true);
     }
 

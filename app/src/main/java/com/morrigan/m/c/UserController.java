@@ -10,6 +10,7 @@ import com.github.yzeaho.log.Lg;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.ble.db.DBHelper;
 import com.morrigan.m.historyrecord.TodayRecord;
 import com.morrigan.m.login.UserInfo;
 
@@ -44,6 +45,11 @@ public class UserController {
 
     private SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences("user", Context.MODE_PRIVATE);
+    }
+
+    public void clear(Context context) {
+        getSharedPreferences(context).edit().clear().apply();
+        DBHelper.getInstance(context).clear();
     }
 
     public void setUserId(Context context, String userId) {
@@ -217,6 +223,26 @@ public class UserController {
             uiResult.message = r.retMsg;
         } catch (Exception e) {
             Lg.w("user", "failed to modify user info", e);
+            uiResult.message = e.getMessage();
+        }
+        return uiResult;
+    }
+
+    public UiResult<Void> logout(Context context) {
+        UiResult<Void> uiResult = new UiResult<>();
+        try {
+            String url = context.getString(R.string.host) + "/rest/moli/cancel";
+            FormBody.Builder b = new FormBody.Builder();
+            b.add("userId", UserController.getInstance().getUserId(context));
+            Request.Builder builder = new Request.Builder();
+            builder.url(url);
+            builder.post(b.build());
+            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
+            HttpResult r = result.parse(HttpResult.class);
+            uiResult.success = r.isSuccessful();
+            uiResult.message = r.retMsg;
+        } catch (Exception e) {
+            Lg.w("user", "failed to logout user", e);
             uiResult.message = e.getMessage();
         }
         return uiResult;

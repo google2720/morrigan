@@ -6,7 +6,7 @@ package com.github.yzeaho.log;
  */
 public class Lg {
 
-    private static LgInterface sImpl = new JavaLgImpl();
+    private static LgInterface sImpl = new AndroidLgImpl();
 
     public static void setLg(LgInterface impl) {
         sImpl = impl;
@@ -22,6 +22,10 @@ public class Lg {
 
     public static void w(String tag, String msg, Throwable e) {
         sImpl.w(tag, msg, e);
+    }
+
+    public static void w(String tag, String msg) {
+        sImpl.w(tag, msg);
     }
 
     public static void e(String tag, String msg, Throwable e) {

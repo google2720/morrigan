@@ -68,6 +68,10 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         return start;
     }
 
+    public byte getGear() {
+        return (byte) gear;
+    }
+
     private class RenderThread extends Thread {
 
         private Paint paint = new Paint();
@@ -204,14 +208,20 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public void addGear() {
+    public boolean addGear() {
+        if (gear == MAX_GEAR) {
+            return false;
+        }
         gear = Math.min(MAX_GEAR, ++gear);
-        // ViewCompat.postInvalidateOnAnimation(this);
+        return true;
     }
 
-    public void deleteGear() {
+    public boolean deleteGear() {
+        if (gear == MIN_GEAR) {
+            return false;
+        }
         gear = Math.max(MIN_GEAR, --gear);
-        // ViewCompat.postInvalidateOnAnimation(this);
+        return true;
     }
 
     @Keep
