@@ -50,7 +50,7 @@ public class BleController extends AbstractBleController {
         editor.apply();
     }
 
-    public void connectAsync(Context _context, final String address) {
+    public void connectAndBindAsync(Context _context, final String address) {
         final Context context = _context.getApplicationContext();
         EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
             @Override

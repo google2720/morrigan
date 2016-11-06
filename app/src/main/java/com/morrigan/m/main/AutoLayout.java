@@ -31,11 +31,13 @@ public class AutoLayout extends FrameLayout {
     private View massage4View;
     private View massage5View;
     private boolean start;
-    private int startColor = 0xff7128bd;
+    private int bgColor = 0xff7128bd;
     private String startTip;
     private Rect boundText = new Rect();
     private Drawable drawable;
     private Rect rect = new Rect();
+    private long startSystemTime;
+    private long stopSystemTime;
 
     public AutoLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -46,7 +48,6 @@ public class AutoLayout extends FrameLayout {
         paint.setStrokeWidth(strokeWidth);
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setTextSize(64);
         textPaint.setColor(Color.WHITE);
         startTip = getResources().getString(R.string.massage_ready);
         textPaint.getTextBounds(startTip, 0, startTip.length(), boundText);
@@ -91,8 +92,8 @@ public class AutoLayout extends FrameLayout {
         */
         vw = massage1View.getMeasuredWidth();
         vh = massage1View.getMeasuredHeight();
-        int x = cx + (int) Math.round(radius * Math.cos(160 * Math.PI / 180));
-        int y = cy + (int) Math.round(radius * Math.sin(160 * Math.PI / 180));
+        int x = cx + (int) Math.round(radius * Math.cos(165 * Math.PI / 180));
+        int y = cy + (int) Math.round(radius * Math.sin(165 * Math.PI / 180));
         l = x - vw / 2 + strokeWidth / 2;
         t = y - vh / 2;
         r = l + vw;
@@ -101,8 +102,8 @@ public class AutoLayout extends FrameLayout {
 
         vw = massage2View.getMeasuredWidth();
         vh = massage2View.getMeasuredHeight();
-        x = cx + (int) Math.round(radius * Math.cos(210 * Math.PI / 180));
-        y = cy + (int) Math.round(radius * Math.sin(210 * Math.PI / 180));
+        x = cx + (int) Math.round(radius * Math.cos(215 * Math.PI / 180));
+        y = cy + (int) Math.round(radius * Math.sin(215 * Math.PI / 180));
         l = x - vw / 2 + strokeWidth / 2;
         t = y - vh / 2;
         r = l + vw;
@@ -119,8 +120,8 @@ public class AutoLayout extends FrameLayout {
 
         vw = massage4View.getMeasuredWidth();
         vh = massage4View.getMeasuredHeight();
-        x = cx + (int) Math.round(radius * Math.cos(330 * Math.PI / 180));
-        y = cy + (int) Math.round(radius * Math.sin(330 * Math.PI / 180));
+        x = cx + (int) Math.round(radius * Math.cos(325 * Math.PI / 180));
+        y = cy + (int) Math.round(radius * Math.sin(325 * Math.PI / 180));
         l = x - vw / 2 - strokeWidth / 2;
         t = y - vh / 2;
         r = l + vw;
@@ -129,8 +130,8 @@ public class AutoLayout extends FrameLayout {
 
         vw = massage5View.getMeasuredWidth();
         vh = massage5View.getMeasuredHeight();
-        x = cx + (int) Math.round(radius * Math.cos(20 * Math.PI / 180));
-        y = cy + (int) Math.round(radius * Math.sin(20 * Math.PI / 180));
+        x = cx + (int) Math.round(radius * Math.cos(15 * Math.PI / 180));
+        y = cy + (int) Math.round(radius * Math.sin(15 * Math.PI / 180));
         l = x - vw / 2 - strokeWidth / 2;
         t = y - vh / 2;
         r = l + vw;
@@ -147,7 +148,7 @@ public class AutoLayout extends FrameLayout {
         final int cy = generateCenterY(w, h);
 
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(startColor);
+        paint.setColor(bgColor);
         canvas.drawCircle(cx, cy, radius, paint);
 
         paint.setStyle(Paint.Style.STROKE);
@@ -177,6 +178,7 @@ public class AutoLayout extends FrameLayout {
             drawable.draw(canvas);
             // canvas.drawRect(rect, paint);
         } else {
+            textPaint.setTextSize(w / 20);
             canvas.drawText(startTip, cx, cy - boundText.height(), textPaint);
         }
 
@@ -190,7 +192,7 @@ public class AutoLayout extends FrameLayout {
         if (h <= w) {
             return (h - massage3View.getHeight() / 2f) * 50 / 100;
         } else {
-            return w * 40 / 100f;
+            return w * 50 / 100f;
         }
     }
 
@@ -208,13 +210,27 @@ public class AutoLayout extends FrameLayout {
 
     public void start() {
         start = true;
-        startColor = 0xff9438ca;
+        bgColor = 0xff9438ca;
+        startSystemTime = System.currentTimeMillis();
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
     public void stop() {
         start = false;
-        startColor = 0xff7128bd;
+        bgColor = 0xff7128bd;
+        stopSystemTime = System.currentTimeMillis();
         ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+    public long getStartSystemTime() {
+        return startSystemTime;
+    }
+
+    public long getStopSystemTime() {
+        return stopSystemTime;
+    }
+
+    public boolean isStart() {
+        return start;
     }
 }

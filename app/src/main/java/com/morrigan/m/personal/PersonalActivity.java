@@ -1,28 +1,22 @@
 package com.morrigan.m.personal;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.os.AsyncTaskCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Base64OutputStream;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.model.ItemBean;
@@ -31,6 +25,7 @@ import com.github.yzeaho.file.Closeables;
 import com.github.yzeaho.file.FileApi;
 import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
+import com.morrigan.m.Dirs;
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
@@ -88,9 +83,11 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     }
 
     private void loadImg(String imgUrl) {
-        Picasso.with(this).load(imgUrl)
-                .placeholder(R.drawable.default_avatar)
-                .error(R.drawable.default_avatar).into(avatarView);
+        if (TextUtils.isEmpty(imgUrl)) {
+            Picasso.with(this).load(R.drawable.default_avatar).into(avatarView);
+        } else {
+            Picasso.with(this).load(imgUrl).placeholder(R.drawable.default_avatar).error(R.drawable.default_avatar).into(avatarView);
+        }
     }
 
     private void setViewState() {
@@ -297,11 +294,12 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                startPhotoZoom(data.getData(), 144);
+                startPhotoZoom(data.getData(), getResources().getDimensionPixelSize(R.dimen.avatar_width));
             }
         } else if (requestCode == REQUEST_CODE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                startPhotoZoom(Uri.fromFile(captureOutFile), 144);
+                Uri outputUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", captureOutFile);
+                startPhotoZoom(outputUri, getResources().getDimensionPixelSize(R.dimen.avatar_width));
             }
         } else if (requestCode == REQUEST_CODE_CUT) {
             if (resultCode == RESULT_OK) {
@@ -324,6 +322,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     private void startPhotoZoom(Uri uri, int size) {
         Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setDataAndType(uri, "image/*");
         // crop为true是设置在开启的intent中设置显示的view可以剪裁
         intent.putExtra("crop", "true");
@@ -426,52 +425,19 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     @Override
     public void onClickCapture() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestExternalStoragePermission();
-        } else {
-            try {
-                File dir = getExternalCacheDir();
-                FileApi.checkDir(dir);
-                captureOutFile = new File(dir, "tmp.png");
-                //noinspection ResultOfMethodCallIgnored
-                captureOutFile.createNewFile();
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(captureOutFile));
-                startActivityForResult(intent, REQUEST_CODE_CAPTURE);
-            } catch (IOException e) {
-                Lg.w(TAG, "", e);
-            }
-        }
-    }
-
-    private void requestExternalStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.capture_permission);
-            builder.setNegativeButton(R.string.action_cancel, null);
-            builder.setPositiveButton(R.string.action_setting, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    requestExternalStoragePermissionImpl();
-                }
-            });
-            builder.show();
-        } else {
-            requestExternalStoragePermissionImpl();
-        }
-    }
-
-    private void requestExternalStoragePermissionImpl() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            onClickCapture();
-        } else {
-            ToastUtils.show(this, R.string.capture_permission, Toast.LENGTH_LONG);
+        try {
+            File dir = Dirs.getCaptureDir(this);
+            FileApi.checkDir(dir);
+            captureOutFile = new File(dir, "tmp.png");
+            // noinspection ResultOfMethodCallIgnored
+            captureOutFile.createNewFile();
+            Uri outputUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", captureOutFile);
+            Lg.i(TAG, "capture:" + outputUri.toString());
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+            startActivityForResult(intent, REQUEST_CODE_CAPTURE);
+        } catch (IOException e) {
+            Lg.w(TAG, "", e);
         }
     }
 }

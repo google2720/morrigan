@@ -12,6 +12,7 @@ import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
+import com.morrigan.m.ble.BleError;
 import com.morrigan.m.ble.SimpleBleCallback;
 import com.squareup.picasso.Picasso;
 
@@ -41,7 +42,14 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         }
 
         @Override
+        public void onGattServicesNoFound(BluetoothDevice device) {
+            onBindDeviceFailed(BleError.SYSTEM);
+        }
+
+        @Override
         public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
+            ble.setAutoConnect(true);
+            ble.setAutoReconnect(true);
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
             startActivity(intent);
             finish();
@@ -87,9 +95,12 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
 
     @Override
     public void onListItemClick(View v, Device device) {
-        ble.setAutoConnect(false);
-        ble.setAutoReconnect(false);
-        ble.disconnect();
-        ble.connectAsync(this, device.mac);
+        if (connectStateView.getVisibility() == View.GONE) {
+            ble.setAutoConnect(false);
+            ble.setAutoReconnect(false);
+            ble.disconnect();
+            ble.connectAndBindAsync(this, device.mac);
+            connectStateView.setVisibility(View.VISIBLE);
+        }
     }
 }

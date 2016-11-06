@@ -133,6 +133,7 @@ public class MainFragment extends Fragment {
                 RankResult r = result.parse(RankResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
+                uiResult.t = r;
             } catch (Exception e) {
                 Lg.w("user", "failed to modify user info", e);
                 uiResult.message = e.getMessage();

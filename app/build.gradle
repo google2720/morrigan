@@ -22,11 +22,13 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.config
+            buildConfigField "boolean", "WAVE_ON", "false"
         }
         release {
             signingConfig signingConfigs.config
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "WAVE_ON", "false"
         }
     }
 }

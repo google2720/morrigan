@@ -114,7 +114,6 @@ public abstract class AbstractBleController {
         } else if (BleConnection.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
             mDefaultGattService = mBleConnection.getService(UUID_DATA_SERVICE);
             if (mDefaultGattService == null) {
-                // TODO 设备没有该服务？
                 Log.i(TAG, "It find no gatt service");
                 disconnect();
                 mCallbacks.onGattServicesNoFound(mBleConnection.getDevice());
@@ -122,7 +121,6 @@ public abstract class AbstractBleController {
             }
             mDataCharacteristic = mDefaultGattService.getCharacteristic(UUID_DATA_CHARACTERISTIC);
             if (mDataCharacteristic == null) {
-                // TODO 设备没有该特征？
                 Log.i(TAG, "It find no characteristic");
                 disconnect();
                 mCallbacks.onGattServicesNoFound(mBleConnection.getDevice());

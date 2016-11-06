@@ -15,6 +15,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.animation.LinearInterpolator;
 
+import com.morrigan.m.BuildConfig;
+
 /**
  * 手动按摩控件
  * Created by y on 2016/10/15.
@@ -60,6 +62,10 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         drawCreated = false;
+    }
+
+    public boolean isStart() {
+        return start;
     }
 
     private class RenderThread extends Thread {
@@ -109,10 +115,11 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         private void draw(Canvas canvas, int cx, int cy, float initRadius, float maxRadius) {
+            final float totalTime = (time - gear * 6);
             paint.setAlpha(Math.min(alpha, 0xff));
             canvas.drawCircle(cx, cy, initRadius + v, paint);
-            v += (maxRadius / (time - gear * 6));
-            alpha -= (maxAlpha / (time - gear * 6));
+            v += (maxRadius / totalTime);
+            alpha -= (maxAlpha / totalTime);
             if (alpha <= 0 || v >= maxRadius) {
                 v = 0;
                 alpha = maxAlpha;
@@ -152,7 +159,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
-        paint.setTextSize(96);
+        paint.setTextSize(w / 12);
         paint.setTextAlign(Paint.Align.CENTER);
         final String text;
         if (start) {
@@ -162,10 +169,10 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         }
         canvas.drawText(text, cx, cy + radius * 3 / 5, paint);
 
-        paint.setTextSize(256);
+        paint.setTextSize(w / 6);
         paint.setTextAlign(Paint.Align.RIGHT);
         canvas.drawText(String.valueOf(gear), cx, cy, paint);
-        paint.setTextSize(96);
+        paint.setTextSize(w / 16);
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("gear", cx, cy, paint);
 
@@ -192,7 +199,9 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
             paint.setColor(0x7f9c47d3);
             canvas.drawLine(i, sy, i, ey, paint);
         }
-        p += (w / (60 - gear * 2));
+        if (BuildConfig.WAVE_ON) {
+            p += (w / (60 - gear * 2));
+        }
     }
 
     public void addGear() {

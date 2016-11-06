@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.ble.BleController;
 import com.morrigan.m.c.MassageController;
 
 /**
@@ -46,13 +47,26 @@ public class ManualActivity extends BaseActivity {
         boolean a = view.isActivated();
         if (a) {
             manualView.stop();
-            String address = "";
-            long startTime = manualView.getStartSystemTime();
-            long endTime = manualView.getStopSystemTime();
-            MassageController.getInstance().save(this, address, startTime, endTime);
+            saveRecord();
         } else {
             manualView.start();
         }
         view.setActivated(!a);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (manualView.isStart()) {
+            manualView.stop();
+            saveRecord();
+        }
+        super.onBackPressed();
+    }
+
+    private void saveRecord() {
+        String address = BleController.getInstance().getBindDeviceAddress();
+        long startTime = manualView.getStartSystemTime();
+        long endTime = manualView.getStopSystemTime();
+        MassageController.getInstance().save(this, address, startTime, endTime);
     }
 }

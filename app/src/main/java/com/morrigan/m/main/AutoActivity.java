@@ -6,6 +6,8 @@ import android.view.View;
 
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.ble.BleController;
+import com.morrigan.m.c.MassageController;
 
 /**
  * 自动按摩界面
@@ -28,17 +30,33 @@ public class AutoActivity extends BaseActivity {
     }
 
     public void onClickBack(View view) {
-        finish();
+        onBackPressed();
     }
 
     public void onClickStart(View view) {
         boolean a = view.isActivated();
         if (a) {
             autoLayout.stop();
-            UploadHistoryDataService.startAction(this);
+            saveRecord();
         } else {
             autoLayout.start();
         }
         view.setActivated(!a);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (autoLayout.isStart()) {
+            autoLayout.stop();
+            saveRecord();
+        }
+        super.onBackPressed();
+    }
+
+    private void saveRecord() {
+        String address = BleController.getInstance().getBindDeviceAddress();
+        long startTime = autoLayout.getStartSystemTime();
+        long endTime = autoLayout.getStopSystemTime();
+        MassageController.getInstance().save(this, address, startTime, endTime);
     }
 }

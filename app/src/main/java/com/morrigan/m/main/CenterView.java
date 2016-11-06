@@ -1,14 +1,13 @@
 package com.morrigan.m.main;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -25,7 +24,6 @@ import java.util.Locale;
  */
 public class CenterView extends View {
 
-    private Bitmap dial1Bitmap;
     private float density;
     private Paint paint = new Paint();
     private Paint textPaint1 = new Paint();
@@ -52,15 +50,11 @@ public class CenterView extends View {
         paint.setAntiAlias(true);
         textPaint1.setAntiAlias(true);
         textPaint1.setColor(Color.WHITE);
-        textPaint1.setTextSize(256);
         textPaint2.setAntiAlias(true);
         textPaint2.setColor(Color.WHITE);
-        textPaint2.setTextSize(72);
         textPaint3.setAntiAlias(true);
         textPaint3.setColor(0xfff0f0f0);
-        textPaint3.setTextSize(56);
-        dial1Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.dial1);
-        drawable = getResources().getDrawable(R.drawable.dial1);
+        drawable = ContextCompat.getDrawable(context, R.drawable.dial1);
     }
 
     @Override
@@ -86,7 +80,9 @@ public class CenterView extends View {
         int bottom = Math.round(cy + radius);
         drawDynamicWave(canvas, left, right, bottom, top, w, radius, cx, cy);
 
+        textPaint1.setTextSize(w / 5);
         textPaint1.getTextBounds(goal, 0, goal.length(), boundText1);
+        textPaint2.setTextSize(w / 10);
         textPaint2.getTextBounds("min", 0, "min".length(), boundText2);
         int x = (w - boundText1.width() - boundText2.width() + textPadding) / 2;
         int y = cy;
@@ -95,6 +91,8 @@ public class CenterView extends View {
         canvas.drawText("min", x, y, textPaint2);
 
         String date = createDate();
+        textPaint2.setTextSize(w / 12);
+        textPaint3.setTextSize(w / 14);
         textPaint3.getTextBounds(date, 0, date.length(), boundText1);
         textPaint2.getTextBounds("PM", 0, "PM".length(), boundText2);
         x = (w - boundText1.width() - boundText2.width() - textPadding) / 2;

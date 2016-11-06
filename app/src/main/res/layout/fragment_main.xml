@@ -27,30 +27,22 @@
 
         <com.morrigan.m.main.MainLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:layout_height="match_parent">
 
             <com.morrigan.m.main.BatteryView
                 android:id="@+id/battery"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="top|end"
-                android:layout_marginTop="10dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <com.morrigan.m.main.CenterView
                 android:id="@+id/center"
-                android:layout_width="210dp"
-                android:layout_height="210dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <com.morrigan.m.main.StarView
                 android:id="@+id/star"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginBottom="2dp"
-                android:layout_marginEnd="60dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </com.morrigan.m.main.MainLayout>
 

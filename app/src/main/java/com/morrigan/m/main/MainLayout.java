@@ -2,13 +2,10 @@ package com.morrigan.m.main;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -32,8 +29,7 @@ public class MainLayout extends FrameLayout {
     private Path path = new Path();
     private Point point = new Point();
     private int pathOffset = 8;
-//    private Drawable drawableBg;
-//    private Rect bounds = new Rect();
+    private int batteryPadding = 20;
 
     public MainLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,6 +38,7 @@ public class MainLayout extends FrameLayout {
         bOutlineSize *= density;
         pathOffset *= density;
         offset *= density;
+        batteryPadding *= density;
         paint.setAntiAlias(true);
         // drawableBg = getResources().getDrawable(R.drawable.dial_bg);
     }
@@ -52,6 +49,56 @@ public class MainLayout extends FrameLayout {
         batteryView = (BatteryView) findViewById(R.id.battery);
         centerView = (CenterView) findViewById(R.id.center);
         startView = (StarView) findViewById(R.id.star);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        final int w = getMeasuredWidth();
+        final int h = getMeasuredHeight();
+        final int side = Math.min(w, h);
+        int widthSpec = MeasureSpec.makeMeasureSpec(side * 60 / 100, MeasureSpec.EXACTLY);
+        int heightSpec = MeasureSpec.makeMeasureSpec(side * 60 / 100, MeasureSpec.EXACTLY);
+        centerView.measure(widthSpec, heightSpec);
+
+        widthSpec = MeasureSpec.makeMeasureSpec(side / 5, MeasureSpec.EXACTLY);
+        heightSpec = MeasureSpec.makeMeasureSpec(side / 5, MeasureSpec.EXACTLY);
+        batteryView.measure(widthSpec, heightSpec);
+
+        widthSpec = MeasureSpec.makeMeasureSpec(side / 4, MeasureSpec.EXACTLY);
+        heightSpec = MeasureSpec.makeMeasureSpec(side / 4, MeasureSpec.EXACTLY);
+        startView.measure(widthSpec, heightSpec);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        final int w = getWidth();
+        final int h = getHeight();
+
+        int vw = centerView.getMeasuredWidth();
+        int vh = centerView.getMeasuredHeight();
+        int l = w / 2 - vw / 2;
+        int t = h / 2 - vh / 2 - batteryPadding;
+        int r = l + vw;
+        int b = t + vh;
+        centerView.layout(l, t, r, b);
+
+        vw = batteryView.getMeasuredWidth();
+        vh = batteryView.getMeasuredHeight();
+        l = w - vw - batteryPadding;
+        t = batteryPadding;
+        r = l + vw;
+        b = t + vh;
+        batteryView.layout(l, t, r, b);
+
+        vw = startView.getMeasuredWidth();
+        vh = startView.getMeasuredHeight();
+        l = w - vw - batteryView.getMeasuredWidth() / 2;
+        t = h - vh - batteryPadding;
+        r = l + vw;
+        b = t + vh;
+        startView.layout(l, t, r, b);
     }
 
     @Override
