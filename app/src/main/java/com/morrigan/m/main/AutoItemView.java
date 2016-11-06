@@ -61,16 +61,43 @@ public class AutoItemView extends ImageButton implements View.OnDragListener, Vi
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN && autoItem != null) {
-            Intent intent = new Intent();
-            intent.putExtra("data", autoItem);
-            ClipData data = ClipData.newIntent("", intent);
-            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-            v.startDrag(data, shadowBuilder, v, 0);
-            setImageResource(R.drawable.massage_empty);
-            autoItem = null;
-            return true;
-        } else {
-            return false;
+            AutoActivity activity = (AutoActivity) getContext();
+            if (activity != null) {
+                if (!activity.onTouchDown()) {
+                    Intent intent = new Intent();
+                    intent.putExtra("data", autoItem);
+                    ClipData data = ClipData.newIntent("", intent);
+                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                    v.startDrag(data, shadowBuilder, v, 0);
+                    setImageResource(R.drawable.massage_empty);
+                    autoItem = null;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isModeFill() {
+        return autoItem != null;
+    }
+
+    public byte getMode() {
+        if (autoItem == null) {
+            return 0;
+        }
+        switch (autoItem.type) {
+            case AutoItem.TYPE_WAVE:
+                return 0x02;
+            case AutoItem.TYPE_DYNAMIC:
+                return 0x05;
+            case AutoItem.TYPE_GENTLY:
+                return 0x03;
+            case AutoItem.TYPE_INTENSE:
+                return 0x04;
+            case AutoItem.TYPE_SOFT:
+            default:
+                return 0x01;
         }
     }
 }

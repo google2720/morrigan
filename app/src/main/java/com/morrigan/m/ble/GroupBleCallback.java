@@ -84,6 +84,34 @@ public class GroupBleCallback implements BleCallback {
     }
 
     @Override
+    public void onFetchBatterySuccess(int value) {
+        for (BleCallback l : listeners) {
+            l.onFetchBatterySuccess(value);
+        }
+    }
+
+    @Override
+    public void onFetchBatteryFailed(int error) {
+        for (BleCallback l : listeners) {
+            l.onFetchBatteryFailed(error);
+        }
+    }
+
+    @Override
+    public void onMassageFailed(int error) {
+        for (BleCallback l : listeners) {
+            l.onMassageFailed(error);
+        }
+    }
+
+    @Override
+    public void onMassageSuccess() {
+        for (BleCallback l : listeners) {
+            l.onMassageSuccess();
+        }
+    }
+
+    @Override
     public void onBluetoothOff() {
         for (BleCallback l : listeners) {
             l.onBluetoothOff();

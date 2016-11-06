@@ -8,6 +8,7 @@ import android.bluetooth.le.ScanResult;
 import android.os.Build;
 import android.util.Log;
 
+import com.github.yzeaho.log.Lg;
 import com.morrigan.m.ble.AbstractBleController;
 
 /**
@@ -24,13 +25,13 @@ public class BleScannerLollipop implements BleScanner {
 
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            Log.i(TAG, "onLeScan " + result.getDevice().getName() + " " + result.getDevice().getAddress() + " " + result.getRssi());
+            Lg.i(TAG, "onLeScan " + result.getDevice().getName() + " " + result.getDevice().getAddress() + " " + result.getRssi());
             mBle.getCallbacks().onLeScan(result.getDevice());
         }
 
         @Override
         public void onScanFailed(int errorCode) {
-            Log.w(TAG, "onScanFailed:" + errorCode);
+            Lg.w(TAG, "onScanFailed:" + errorCode);
             mBle.getCallbacks().onLeScanFailed(errorCode);
         }
     };

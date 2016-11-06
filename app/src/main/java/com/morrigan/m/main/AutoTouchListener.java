@@ -11,23 +11,24 @@ import android.view.View;
  */
 public class AutoTouchListener implements View.OnTouchListener {
 
+    private AutoActivity activity;
     private AutoItem item;
 
-    public AutoTouchListener(AutoItem item) {
+    public AutoTouchListener(AutoActivity activity, AutoItem item) {
+        this.activity = activity;
         this.item = item;
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN && !activity.onTouchDown()) {
             Intent intent = new Intent();
             intent.putExtra("data", item);
             ClipData data = ClipData.newIntent("", intent);
             View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
             v.startDrag(data, shadowBuilder, v, 0);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }

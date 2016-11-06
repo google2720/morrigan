@@ -46,6 +46,10 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void clear() {
+        getWritableDatabase().execSQL("DELETE FROM " + TABLE_MASSAGE);
+    }
+
     private void upgradeTo(SQLiteDatabase db, int version) {
         switch (version) {
             case 1:

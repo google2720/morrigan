@@ -166,7 +166,7 @@ public class DeviceController {
         }
     }
 
-    public UiResult<Boolean> checkDevice(Context context, String address) {
+    public UiResult<Boolean> check(Context context, String address) {
         UiResult<Boolean> uiResult = new UiResult<>();
         try {
             String url = context.getString(R.string.host) + "/rest/moli/bind-check";
@@ -181,6 +181,28 @@ public class DeviceController {
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             uiResult.t = (r.isbinded == 1);
+        } catch (Exception e) {
+            Lg.w(TAG, "failed to check device", e);
+            uiResult.message = e.getMessage();
+        }
+        return uiResult;
+    }
+
+    public UiResult<Void> bind(Context context, String address, String deviceName) {
+        UiResult<Void> uiResult = new UiResult<>();
+        try {
+            String url = context.getString(R.string.host) + "/rest/moli/bind";
+            FormBody.Builder b = new FormBody.Builder();
+            b.add("userId", UserController.getInstance().getUserId(context));
+            b.add("deviceName", deviceName);
+            b.add("mac", address);
+            Request.Builder builder = new Request.Builder();
+            builder.url(url);
+            builder.post(b.build());
+            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
+            HttpResult r = result.parse(HttpResult.class);
+            uiResult.success = r.isSuccessful();
+            uiResult.message = r.retMsg;
         } catch (Exception e) {
             Lg.w(TAG, "failed to check device", e);
             uiResult.message = e.getMessage();

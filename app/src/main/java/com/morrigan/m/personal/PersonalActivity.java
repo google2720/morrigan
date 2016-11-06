@@ -2,6 +2,7 @@ package com.morrigan.m.personal;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v4.os.AsyncTaskCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Base64OutputStream;
@@ -314,10 +316,20 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     }
 
     public void onClickQuit(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("您确定退出当前账号");
+        builder.setNegativeButton(R.string.action_cancel, null);
+        builder.setPositiveButton(R.string.action_confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                UserController.getInstance().setAutoLogin(PersonalActivity.this, false);
+                Intent intent = new Intent(PersonalActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+        builder.show();
     }
 
     private void startPhotoZoom(Uri uri, int size) {

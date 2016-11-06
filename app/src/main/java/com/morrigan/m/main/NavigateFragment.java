@@ -1,10 +1,15 @@
 package com.morrigan.m.main;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.os.AsyncTaskCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.FeedbackActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.UiResult;
 import com.morrigan.m.about.AboutActivity;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.device.DeviceActivity;
@@ -81,11 +88,7 @@ public class NavigateFragment extends Fragment {
         view.findViewById(R.id.quit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserController.getInstance().setAutoLogin(getContext(), false);
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                showQuitDialog();
             }
         });
         view.findViewById(R.id.history).setOnClickListener(new View.OnClickListener() {
@@ -95,6 +98,57 @@ public class NavigateFragment extends Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+    private void showQuitDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("注销用户信息");
+        builder.setMessage("注销后此账号将删除所有有关信息，只能通过重新注册才能登录");
+        builder.setNegativeButton(R.string.action_cancel, null);
+        builder.setPositiveButton(R.string.action_logout, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                quit();
+            }
+        });
+        builder.show();
+    }
+
+    private void quit() {
+        AsyncTask<Void, Void, UiResult<Void>> task = new AsyncTask<Void, Void, UiResult<Void>>() {
+
+            private ProgressDialog dialog;
+
+            @Override
+            protected void onPreExecute() {
+                dialog = new ProgressDialog(getActivity());
+                dialog.setMessage(getActivity().getString(R.string.changing));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+
+            @Override
+            protected UiResult<Void> doInBackground(Void... voids) {
+                return UserController.getInstance().logout(getActivity());
+            }
+
+            @Override
+            protected void onPostExecute(UiResult<Void> result) {
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                if (result.success) {
+                    UserController.getInstance().clear(getContext());
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                } else {
+                    ToastUtils.show(getContext(), result.message);
+                }
+            }
+        };
+        AsyncTaskCompat.executeParallel(task);
     }
 
     @Override

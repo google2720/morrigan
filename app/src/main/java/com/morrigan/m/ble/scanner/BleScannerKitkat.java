@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
+import com.github.yzeaho.log.Lg;
 import com.morrigan.m.ble.AbstractBleController;
 
 /**
@@ -19,7 +20,7 @@ public class BleScannerKitkat implements BleScanner {
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
             String name = device.getName();
             String address = device.getAddress();
-            Log.i(TAG, "onLeScan " + name + " " + address + " " + rssi);
+            Lg.i(TAG, "onLeScan " + name + " " + address + " " + rssi);
             mBle.getCallbacks().onLeScan(device);
         }
     };

@@ -25,11 +25,11 @@ public class AutoLayout extends FrameLayout {
     private RectF rectF = new RectF();
     private int strokeWidth = 5;
     private View startView;
-    private View massage1View;
-    private View massage2View;
-    private View massage3View;
-    private View massage4View;
-    private View massage5View;
+    private AutoItemView massage1View;
+    private AutoItemView massage2View;
+    private AutoItemView massage3View;
+    private AutoItemView massage4View;
+    private AutoItemView massage5View;
     private boolean start;
     private int bgColor = 0xff7128bd;
     private String startTip;
@@ -50,7 +50,6 @@ public class AutoLayout extends FrameLayout {
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setColor(Color.WHITE);
         startTip = getResources().getString(R.string.massage_ready);
-        textPaint.getTextBounds(startTip, 0, startTip.length(), boundText);
         drawable = getResources().getDrawable(R.drawable.massage_soft_ing);
     }
 
@@ -58,11 +57,11 @@ public class AutoLayout extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         startView = findViewById(R.id.start);
-        massage1View = findViewById(R.id.massage1);
-        massage2View = findViewById(R.id.massage2);
-        massage3View = findViewById(R.id.massage3);
-        massage4View = findViewById(R.id.massage4);
-        massage5View = findViewById(R.id.massage5);
+        massage1View = (AutoItemView) findViewById(R.id.massage1);
+        massage2View = (AutoItemView) findViewById(R.id.massage2);
+        massage3View = (AutoItemView) findViewById(R.id.massage3);
+        massage4View = (AutoItemView) findViewById(R.id.massage4);
+        massage5View = (AutoItemView) findViewById(R.id.massage5);
     }
 
     @Override
@@ -179,6 +178,7 @@ public class AutoLayout extends FrameLayout {
             // canvas.drawRect(rect, paint);
         } else {
             textPaint.setTextSize(w / 20);
+            textPaint.getTextBounds(startTip, 0, startTip.length(), boundText);
             canvas.drawText(startTip, cx, cy - boundText.height(), textPaint);
         }
 
@@ -232,5 +232,20 @@ public class AutoLayout extends FrameLayout {
 
     public boolean isStart() {
         return start;
+    }
+
+    public byte[] getMode() {
+        byte[] bytes = new byte[5];
+        bytes[0] = massage1View.getMode();
+        bytes[1] = massage2View.getMode();
+        bytes[2] = massage3View.getMode();
+        bytes[3] = massage4View.getMode();
+        bytes[4] = massage5View.getMode();
+        return bytes;
+    }
+
+    public boolean isModeEmpty() {
+        return !massage1View.isModeFill() && !massage2View.isModeFill() && !massage3View.isModeFill()
+                && !massage4View.isModeFill() && !massage5View.isModeFill();
     }
 }
