@@ -12,10 +12,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,15 +81,11 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         seekBar.setOnSeekBarChangeListener(this);
 
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnCompletionListener(this);
+        mediaPlayer.setOnErrorListener(this);
         setupVisualizerFxAndUI();
         visualizer.setEnabled(true);
         iv_up = (FlingUpImageView) this.findViewById(R.id.iv_up);
-        iv_up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupWindow.showAtLocation(MusicActivity.this.getWindow().getDecorView(), Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-            }
-        });
         popupWindow = new MusicsPopupWindow(activity);
         iv_up.setOpenPopup(this);
         initMusic();
@@ -136,6 +130,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     //开始播放
     private void start() {
         if (musics != null && musics.size() > 0) {
+            visualizer.setEnabled(true);
             MusicInfo info = musics.get(currIndex);
             mediaPlayer.reset();
             try {

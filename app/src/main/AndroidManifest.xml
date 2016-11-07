@@ -68,9 +68,6 @@
             android:name=".main.AutoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MusicActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".personal.PersonalActivity"
             android:label="@string/personal_title"
             android:screenOrientation="portrait" />
