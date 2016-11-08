@@ -102,6 +102,9 @@
     <!-- 手动按摩界面-->
     <string name="bra_left">"左胸"</string>
     <string name="bra_right">"右胸"</string>
+    <string name="bra_empty_tip">"同步操作开关至少一个被选中"</string>
+    <string name="device_no_connect">"设备未连接"</string>
+    <string name="device_no_connect_tip">"请先连接设备再来开始按摩吧"</string>
     <!-- 自动按摩界面 -->
     <string name="massage_intense">"强震"</string>
     <string name="massage_gently">"微按"</string>
@@ -111,6 +114,8 @@
     <string name="massage_tip1">"向上拖动 任意模式按钮"</string>
     <string name="massage_tip2">"进行自由组合按摩 点START开始按摩"</string>
     <string name="massage_ready">"准备按摩吧!"</string>
+    <string name="massage_no_drag_tip">"正在按摩，不能拖动"</string>
+    <string name="massage_start_tip">"请先选择组合模式"</string>
     <!-- 历史记录 -->
     <string name="history_title_today">"今天一览"</string>
     <string name="history_title_week">"本周一阅"</string>

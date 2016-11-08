@@ -7,9 +7,17 @@ android {
         applicationId "com.morrigan.m"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        if (project.hasProperty('version_code')) {
+            versionCode Integer.parseInt(version_code)
+        } else {
+            versionCode 1
+        }
+        if (project.hasProperty('version_name')) {
+            versionName version_name
+        } else {
+            versionName "9.9.9"
+        }
     }
     signingConfigs {
         config {
@@ -23,14 +31,31 @@ android {
         debug {
             signingConfig signingConfigs.config
             buildConfigField "boolean", "WAVE_ON", "false"
+            buildConfigField "int", "LOG_LEVEL", "2"
         }
         release {
             signingConfig signingConfigs.config
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "WAVE_ON", "false"
+            buildConfigField "int", "LOG_LEVEL", "6"
         }
     }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            if ("release".equals(variant.buildType.name)) {
+                def oldFile = output.outputFile
+                def apkName = 'morragan-' + variant.buildType.name + "-" + defaultConfig.versionName + '-' + getCurrentDate() + '.apk'
+                output.outputFile = new File(oldFile.parent, apkName)
+            }
+        }
+    }
+}
+
+def getCurrentDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmmss')
+    return formattedDate
 }
 
 dependencies {

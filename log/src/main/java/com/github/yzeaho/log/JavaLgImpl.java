@@ -7,6 +7,10 @@ package com.github.yzeaho.log;
 public class JavaLgImpl implements LgInterface {
 
     @Override
+    public void setLevel(int level) {
+    }
+
+    @Override
     public void d(String tag, String msg) {
         System.out.println(tag + " " + msg);
     }

@@ -6,6 +6,8 @@ package com.github.yzeaho.log;
  */
 public interface LgInterface {
 
+    void setLevel(int level);
+
     void d(String tag, String msg);
 
     void i(String tag, String msg);

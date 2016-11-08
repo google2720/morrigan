@@ -6,7 +6,7 @@ import java.io.IOException;
 public class Closeables {
 
     public static void close(Closeable c) {
-        if (c != null) {
+        if (c != null && Closeable.class.isInstance(c)) {
             try {
                 c.close();
             } catch (IOException e) {

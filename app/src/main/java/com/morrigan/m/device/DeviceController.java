@@ -168,6 +168,20 @@ public class DeviceController {
 
     public UiResult<Boolean> check(Context context, String address) {
         UiResult<Boolean> uiResult = new UiResult<>();
+        synchronized (this) {
+            for (DeviceInfo d : deviceInfoList) {
+                if (d.mac.equals(address)) {
+                    uiResult.success = true;
+                    uiResult.t = false;
+                    return uiResult;
+                }
+            }
+        }
+        return bindCheck(context, address);
+    }
+
+    private UiResult<Boolean> bindCheck(Context context, String address) {
+        UiResult<Boolean> uiResult = new UiResult<>();
         try {
             String url = context.getString(R.string.host) + "/rest/moli/bind-check";
             FormBody.Builder b = new FormBody.Builder();

@@ -1,7 +1,6 @@
 package com.morrigan.m.main;
 
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.github.yzeaho.common.ToastUtils;
@@ -54,7 +53,7 @@ public class ManualActivity extends BaseActivity {
     public void onClickLeftBra(View view) {
         boolean activated = view.isActivated();
         if (activated && !braRightView.isActivated()) {
-            ToastUtils.show(this, "同步操作开关至少一个被选中");
+            ToastUtils.show(this, R.string.bra_empty_tip);
         } else {
             view.setActivated(!activated);
             if (manualView.isStart()) {
@@ -66,7 +65,7 @@ public class ManualActivity extends BaseActivity {
     public void onClickRightBra(View view) {
         boolean activated = view.isActivated();
         if (activated && !braLeftView.isActivated()) {
-            ToastUtils.show(this, "同步操作开关至少一个被选中");
+            ToastUtils.show(this, R.string.bra_empty_tip);
         } else {
             view.setActivated(!activated);
             if (manualView.isStart()) {
@@ -97,11 +96,12 @@ public class ManualActivity extends BaseActivity {
     }
 
     private void showNoDeviceReady() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("设备未连接");
-        builder.setMessage("请先连接设备再来开始按摩吧");
-        builder.setPositiveButton(R.string.action_confirm, null);
-        builder.show();
+        ToastUtils.show(this, R.string.device_no_connect_tip);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle(R.string.device_no_connect);
+//        builder.setMessage(R.string.device_no_connect_tip);
+//        builder.setPositiveButton(R.string.action_confirm, null);
+//        builder.show();
     }
 
     private byte getBar() {

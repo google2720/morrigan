@@ -24,6 +24,7 @@ import com.morrigan.m.R;
 public class GoalView extends View implements GestureDetector.OnGestureListener {
 
     private static final String TAG = "GoalView";
+    private static final long DELAY_MILLIS = 50;
     private ScrollerCompat scroller;
     private GestureDetector detector;
     private Paint paint;
@@ -36,6 +37,9 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
     private int divideGroup = divide * 5;
     private int triangleGap = 3;
     private int minValueHeight = 64;
+    private int minValueWidth = 128;
+    private int bottomPadding = 10;
+    private int textPadding = 20;
     private String unit;
     private int minValue = 0;
     private int maxValue = 300;
@@ -45,18 +49,20 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
             boolean a = scroller.computeScrollOffset();
             if (!scroller.isFinished()) {
                 Log.i(TAG, String.format("computeScroll2 %s/%s", false, a));
-                postDelayed(runnable, 150);
+                postDelayed(runnable, DELAY_MILLIS);
             } else {
                 int sx = getScrollX();
                 int mode = sx % divide;
                 if (mode != 0) {
-                    scroller.abortAnimation();
+                    // scroller.abortAnimation();
                     if (mode >= divide / 2) {
-                        scroller.startScroll(sx, 0, divide - mode, 0, 150);
+                        scrollBy(divide - mode, 0);
+                        // scroller.startScroll(sx, 0, divide - mode, 0, 150);
                     } else {
-                        scroller.startScroll(sx, 0, -mode, 0, 150);
+                        scrollBy(-mode, 0);
+                        // scroller.startScroll(sx, 0, -mode, 0, 150);
                     }
-                    ViewCompat.postInvalidateOnAnimation(GoalView.this);
+                    //ViewCompat.postInvalidateOnAnimation(GoalView.this);
                 }
                 Log.i(TAG, String.format("computeScroll2 %s/%s", mode, a));
             }
@@ -75,6 +81,9 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         divideGroup = divide * 5;
         triangleGap *= density;
         minValueHeight *= density;
+        bottomPadding *= density;
+        textPadding *= density;
+        minValueWidth *= density;
         unit = context.getString(R.string.minute);
     }
 
@@ -82,31 +91,24 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         paint = new Paint();
         paint.setColor(0xff999999);
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(3);
 
         paint2 = new Paint();
         paint2.setColor(0xff666666);
         paint2.setAntiAlias(true);
         paint2.setTextAlign(Paint.Align.CENTER);
-        paint2.setTextSize(48);
-        paint2.setStrokeWidth(3);
 
         paint3 = new Paint();
         paint3.setColor(0xff7d1db6);
         paint3.setAntiAlias(true);
-        paint3.setStrokeWidth(3);
 
         paint4 = new Paint();
         paint4.setColor(0xff7d1db6);
         paint4.setAntiAlias(true);
-        paint4.setTextAlign(Paint.Align.CENTER);
-        paint4.setTextSize(256);
-        paint4.setStrokeWidth(1);
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
         if (value != 0) {
             scrollTo(value * divide, 0);
         }
@@ -124,7 +126,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                postDelayed(runnable, 150);
+                postDelayed(runnable, DELAY_MILLIS);
                 break;
             default:
                 break;
@@ -140,9 +142,10 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         final int w = getWidth();
         final int h = getHeight();
         final int sx = getScrollX();
+        paint2.setTextSize(h / 15);
         paint2.getTextBounds("0", 0, "0".length(), boundText);
         final int th = boundText.height();
-        final int lineBottom = h - th - divide * 2;
+        final int lineBottom = h - th - bottomPadding - textPadding;
         final int offset = w / 2;
         int v;
         for (int i = sx; i <= sx + w; i++) {
@@ -155,7 +158,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
             v = i - offset;
             if (v % divideGroup == 0) {
                 canvas.drawLine(i, lineBottom, i, lineBottom - divide * 3, paint2);
-                canvas.drawText(String.valueOf(v / divide), i, h - divide, paint2);
+                canvas.drawText(String.valueOf(v / divide), i, h - bottomPadding, paint2);
             } else if (v % divide == 0) {
                 canvas.drawLine(i, lineBottom, i, lineBottom - divide * 2, paint);
             }
@@ -170,11 +173,15 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         path.close();
         canvas.drawPath(path, paint3);
 
-        final int vBottom = lineBottom - divide * 5;
+        final int vBottom = lineBottom - divide * 8;
         final String valueStr = String.valueOf((sx + w / 2 - offset) / divide);
-        canvas.drawText(valueStr, centerX, vBottom, paint4);
+        paint4.setTextSize(h / 3);
         paint4.getTextBounds(valueStr, 0, valueStr.length(), boundText);
-        canvas.drawText(unit, centerX + boundText.width() / 2 + divide * 2, vBottom, paint2);
+        final int valueX = sx + (w - boundText.width()) / 2;
+        canvas.drawText(valueStr, valueX, vBottom, paint4);
+        paint2.setTextSize(h / 10);
+        final int unitX = centerX + Math.max(minValueWidth, boundText.width()) / 2 + divide * 2;
+        canvas.drawText(unit, unitX, vBottom, paint2);
 
         final int top = vBottom - Math.max(minValueHeight, boundText.height()) - divide;
         path.reset();
@@ -205,8 +212,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        overScrollByCompat(Math.round(distanceX), Math.round(distanceY), getScrollX(), getScrollY(),
-                getHorizontalScrollRange(), 0, 0, 0, true);
+        overScrollByCompat(Math.round(distanceX), Math.round(distanceY), getScrollX(), getScrollY(), getHorizontalScrollRange(), 0, 0, 0, true);
         return true;
     }
 

@@ -28,6 +28,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint paint;
     private int offset = 2;
     private int gear = 1;
+    private int wave = 1;
     private boolean start;
     private long startTime;
     private Duration duration = new Duration();
@@ -41,18 +42,21 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         super(context, attrs);
         float density = getResources().getDisplayMetrics().density;
         offset *= density;
+        wave *= density;
         paint = new Paint();
         paint.setAntiAlias(true);
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         getHolder().addCallback(this);
-        renderThread = new RenderThread();
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         drawCreated = true;
-        renderThread.start();
+        if (renderThread == null) {
+            renderThread = new RenderThread();
+            renderThread.start();
+        }
     }
 
     @Override
@@ -62,6 +66,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         drawCreated = false;
+        renderThread = null;
     }
 
     public boolean isStart() {
@@ -104,15 +109,12 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     private class Halo {
 
         private Paint paint;
-        private float time;
-        private int maxAlpha;
-        private int alpha;
+        private float time = 60f;
+        private int alpha = 0xff;
         private float v;
 
-        private Halo(float time, int maxAlpha) {
+        private Halo(float time) {
             this.time = time;
-            this.maxAlpha = maxAlpha;
-            this.alpha = maxAlpha;
             paint = new Paint();
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(Color.WHITE);
@@ -123,15 +125,15 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
             paint.setAlpha(Math.min(alpha, 0xff));
             canvas.drawCircle(cx, cy, initRadius + v, paint);
             v += (maxRadius / totalTime);
-            alpha -= (maxAlpha / totalTime);
+            alpha -= (0xff / totalTime);
             if (alpha <= 0 || v >= maxRadius) {
                 v = 0;
-                alpha = maxAlpha;
+                alpha = 0xff;
             }
         }
     }
 
-    private Halo halo = new Halo(60f, 255);
+    private Halo halo = new Halo(90f);
 
     private void drawImpl(Canvas canvas) {
         final int w = getWidth();
@@ -150,11 +152,14 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawCircle(cx, cy, radius, paint);
 
         int left = Math.round(cx - radius);
-        int top = cy;
+        int top = Math.round(cy + radius / 4);
         int right = Math.round(cx + radius);
         int bottom = Math.round(cy + radius);
-        int os = Math.round(radius / 5);
-        drawDynamicWave(canvas, left, right, bottom, top, w, radius, cx, cy, os);
+        if (BuildConfig.WAVE_ON) {
+            drawDynamicWave(canvas, left, right, bottom, top, w, radius, cx, cy);
+        } else {
+            drawStaticWave(canvas, left, right, bottom, top, w, radius, cx, cy);
+        }
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(offset);
@@ -178,33 +183,49 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawText(String.valueOf(gear), cx, cy, paint);
         paint.setTextSize(w / 16);
         paint.setTextAlign(Paint.Align.LEFT);
+        paint.setStrokeWidth(1);
         canvas.drawText("gear", cx, cy, paint);
-
-        // postInvalidateDelayed(1000 / 60);
     }
 
-    private long p;
+    private long waveProgress;
 
-    private void drawDynamicWave(Canvas canvas, int startX, int endX, int startY, int endY, int w, float radius, int cx, int cy, int os) {
+    private void drawDynamicWave(Canvas canvas, int startX, int endX, int startY, int endY, int w, float radius, int cx, int cy) {
         int sy, ey;
         float period = (float) (2 * Math.PI / w);
         float a = av * (startY - endY) / (10 - gear - 1);
         for (int i = startX; i < endX; i++) {
             // (x-a)^2+(y-b)^2=c^2 其中(a,b)为圆心，c为半径。
-            sy = (int) Math.round(endY + Math.sqrt(radius * radius - Math.pow(i - cx, 2)));
-            // y = Asin(wx+b)+h ，这个公式里：w影响周期，A影响振幅，h影响y位置，b为初相；
-            ey = (int) Math.round(a * (Math.sin(period * (p + i)) + 1) / 2f) + endY;
+            sy = (int) Math.round(cy + Math.sqrt(radius * radius - Math.pow(i - cx, 2)));
+            // y = a * sin(wx+b)+h ，这个公式里：w影响周期，a影响振幅，h影响y位置，b为初相；
+            ey = (int) Math.round(a * Math.sin(period * (waveProgress + i)) + endY);
             ey = Math.min(sy, ey);
             paint.setColor(0x7f9147dd);
             canvas.drawLine(i, sy, i, ey, paint);
 
-            ey = (int) Math.round(a * (Math.cos(period * (p + i)) + 1) / 2f) + endY;
+            ey = (int) Math.round(a * Math.cos(period * (waveProgress + i)) + endY);
             ey = Math.min(sy, ey);
             paint.setColor(0x7f9c47d3);
             canvas.drawLine(i, sy, i, ey, paint);
         }
-        if (BuildConfig.WAVE_ON) {
-            p += (w / (60 - gear * 2));
+        waveProgress += (wave * Math.sqrt(gear));
+    }
+
+    private void drawStaticWave(Canvas canvas, int startX, int endX, int startY, int endY, int w, float radius, int cx, int cy) {
+        waveProgress = w / 2;
+        int sy, ey;
+        float period = (float) (2 * Math.PI / w);
+        float a = (startY - endY) / 10;
+        for (int i = startX; i < endX; i++) {
+            sy = (int) Math.round(cy + Math.sqrt(radius * radius - Math.pow(i - cx, 2)));
+            ey = (int) Math.round(a * Math.sin(period * (waveProgress + i)) + endY);
+            ey = Math.min(sy, ey);
+            paint.setColor(0x7f9147dd);
+            canvas.drawLine(i, sy, i, ey, paint);
+
+            ey = (int) Math.round(a * Math.cos(period * (waveProgress + i)) + endY);
+            ey = Math.min(sy, ey);
+            paint.setColor(0x7f9c47d3);
+            canvas.drawLine(i, sy, i, ey, paint);
         }
     }
 

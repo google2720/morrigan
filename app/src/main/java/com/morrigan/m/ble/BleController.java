@@ -83,6 +83,7 @@ public class BleController extends AbstractBleController {
                 UiResult<Boolean> result = DeviceController.getInstance().check(mContext, address);
                 if (result.t) {
                     mCallbacks.onBindDeviceFailed(BleError.BIND_BY_OTHER);
+                    return;
                 }
                 BluetoothDevice device;
                 synchronized (deviceMap) {

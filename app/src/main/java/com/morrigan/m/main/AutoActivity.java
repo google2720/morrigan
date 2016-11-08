@@ -3,7 +3,6 @@ package com.morrigan.m.main;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.github.yzeaho.common.ToastUtils;
@@ -66,7 +65,7 @@ public class AutoActivity extends BaseActivity {
             return;
         }
         if (autoLayout.isModeEmpty()) {
-            ToastUtils.show(this, "请先选择组合模式");
+            ToastUtils.show(this, R.string.massage_start_tip);
             return;
         }
         boolean a = view.isActivated();
@@ -79,11 +78,12 @@ public class AutoActivity extends BaseActivity {
     }
 
     private void showNoDeviceReady() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("设备未连接");
-        builder.setMessage("请先连接设备再来开始按摩吧");
-        builder.setPositiveButton(R.string.action_confirm, null);
-        builder.show();
+        ToastUtils.show(this, R.string.device_no_connect_tip);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle(R.string.device_no_connect);
+//        builder.setMessage(R.string.device_no_connect_tip);
+//        builder.setPositiveButton(R.string.action_confirm, null);
+//        builder.show();
     }
 
     private void start() {
@@ -114,10 +114,11 @@ public class AutoActivity extends BaseActivity {
 
     public boolean onTouchDown() {
         if (autoLayout.isStart()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("正在按摩，不能拖动");
-            builder.setPositiveButton(R.string.action_confirm, null);
-            builder.show();
+            ToastUtils.show(this, R.string.massage_no_drag_tip);
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setMessage(R.string.massage_no_drag_tip);
+//            builder.setPositiveButton(R.string.action_confirm, null);
+//            builder.show();
             return true;
         }
         return false;
