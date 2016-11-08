@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
 import android.util.Log;
 
@@ -20,7 +21,7 @@ public class MusicLoader {
 	
 	private static ContentResolver contentResolver;
 	//Uri，指向external的database
-	private Uri contentUri = Media.EXTERNAL_CONTENT_URI;	
+	private Uri contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 	//projection：选择的列; where：过滤条件; sortOrder：排序。
 	private String[] projection = {
 			Media._ID,
@@ -31,7 +32,9 @@ public class MusicLoader {
 			Media.DURATION,			
 			Media.SIZE
 	};
-	private String where =  "mime_type in ('audio/mpeg','audio/x-ms-wma') and bucket_display_name <> 'audio' and is_music > 0 " ;
+//	private String where =  "mime_type in ('audio/mpeg','audio/x-ms-wma') and bucket_display_name <> 'audio' and is_music > 0 " ;
+//private String where =  "mime_type in ('audio/mpeg','audio/x-ms-wma')  and is_music > 0 " ;
+
 	private String sortOrder = Media.DATA;
 	
 	public static MusicLoader instance(ContentResolver pContentResolver){
@@ -43,7 +46,7 @@ public class MusicLoader {
 	}
 	
 	private MusicLoader(){		                                                                                                       //利用ContentResolver的query函数来查询数据，然后将得到的结果放到MusicInfo对象中，最后放到数组中
-		Cursor cursor = contentResolver.query(contentUri, projection, where, null, sortOrder);
+		Cursor cursor = contentResolver.query(contentUri, projection, null, null, sortOrder);
 		if(cursor == null){
 			Log.v(TAG,"Line(37	)	Music Loader cursor == null.");
 		}else if(!cursor.moveToFirst()){

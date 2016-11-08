@@ -54,6 +54,14 @@ public class WelcomeActivity extends BaseActivity {
         if (p != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.RECORD_AUDIO);
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
         if (permissions.isEmpty()) {
             doIt();
         } else {
@@ -76,8 +84,16 @@ public class WelcomeActivity extends BaseActivity {
                     if (Manifest.permission.ACCESS_COARSE_LOCATION.equals(permission)) {
                         sb.append(getString(R.string.permission_explain_location));
                     }
+
+                    if (Manifest.permission.RECORD_AUDIO.equals(permission)) {
+                        sb.append(getString(R.string.permission_explain_record));
+                    }
+                    if (Manifest.permission.READ_EXTERNAL_STORAGE.equals(permission)) {
+                        sb.append(getString(R.string.permission_explain_retad_external_storage));
+                    }
                     break;
                 }
+
             }
             if (allGranted) {
                 doIt();

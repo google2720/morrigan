@@ -84,7 +84,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnErrorListener(this);
         setupVisualizerFxAndUI();
-        visualizer.setEnabled(true);
+//        visualizer.setEnabled(true);
         iv_up = (FlingUpImageView) this.findViewById(R.id.iv_up);
         popupWindow = new MusicsPopupWindow(activity);
         iv_up.setOpenPopup(this);
@@ -155,7 +155,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
 
     public void updateSeek(int delay) {
         if (flag) {
-            if (mediaPlayer.getCurrentPosition() <=seekBar.getMax()) {
+            if (mediaPlayer.getCurrentPosition() <= seekBar.getMax()) {
                 seekBar.setProgress(mediaPlayer.getCurrentPosition());
                 Message msg = hander.obtainMessage(CURR_TIME_VALUE, loader.toTime(mediaPlayer.getCurrentPosition()));
                 hander.sendMessageDelayed(msg, delay);
@@ -176,20 +176,26 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     private void setupVisualizerFxAndUI() {
-        visualizerView = (VisualizerView) findViewById(R.id.visualizer);
-        visualizer = new Visualizer(mediaPlayer.getAudioSessionId());
-        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
-        visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
-            @Override
-            public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-                Log.i("music", "onWaveFormDataCapture " + bytes.length);
-                visualizerView.updateVisualizer(bytes);
-            }
+        try{
+            visualizerView = (VisualizerView) findViewById(R.id.visualizer);
+            visualizer = new Visualizer(mediaPlayer.getAudioSessionId());
+            visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
+            visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+                @Override
+                public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+                    Log.i("music", "onWaveFormDataCapture " + bytes.length);
+                    visualizerView.updateVisualizer(bytes);
+                }
 
-            @Override
-            public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-            }
-        }, Visualizer.getMaxCaptureRate() / 2, true, false);
+                @Override
+                public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+                }
+            }, Visualizer.getMaxCaptureRate() / 2, true, false);
+        }catch (Throwable e){
+            Log.e("e",e.getMessage());
+        }
+
+
     }
 
     public void onClickBack(View view) {
@@ -262,6 +268,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
 
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+        visualizer.setEnabled(false);
         mediaPlayer.reset();
         return false;
     }
