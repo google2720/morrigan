@@ -21,11 +21,10 @@ import android.widget.Toast;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.main.VisualizerView;
+import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 import java.io.IOException;
 import java.util.List;
-
-import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 /**
  * 音乐跟随界面
@@ -154,18 +153,18 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     public void updateSeek(int delay) {
+        if (isFinishing()) {
+            return;
+        }
         if (flag) {
             if (mediaPlayer.getCurrentPosition() <= seekBar.getMax()) {
                 seekBar.setProgress(mediaPlayer.getCurrentPosition());
                 Message msg = hander.obtainMessage(CURR_TIME_VALUE, loader.toTime(mediaPlayer.getCurrentPosition()));
                 hander.sendMessageDelayed(msg, delay);
-
             } else {
                 flag = false;
             }
         }
-
-
     }
 
     //初始化SeekBar
@@ -176,10 +175,10 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     private void setupVisualizerFxAndUI() {
-        try{
+        try {
             visualizerView = (VisualizerView) findViewById(R.id.visualizer);
             visualizer = new Visualizer(mediaPlayer.getAudioSessionId());
-            visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
+            visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
             visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
                 @Override
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
@@ -191,8 +190,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
                 }
             }, Visualizer.getMaxCaptureRate() / 2, true, false);
-        }catch (Throwable e){
-            Log.e("e",e.getMessage());
+        } catch (Throwable e) {
+            Log.e("e", e.getMessage());
         }
 
 

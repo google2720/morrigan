@@ -10,6 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.morrigan.m.R;
@@ -22,9 +24,8 @@ import java.util.Locale;
  * 中心view
  * Created by y on 2016/10/22.
  */
-public class CenterView extends View {
+public class CenterView extends View implements GestureDetector.OnGestureListener {
 
-    private float density;
     private Paint paint = new Paint();
     private Paint textPaint1 = new Paint();
     private Paint textPaint2 = new Paint();
@@ -32,18 +33,21 @@ public class CenterView extends View {
     private Rect boundText1 = new Rect();
     private Rect boundText2 = new Rect();
     private RectF rectF = new RectF();
-    private float offset = 5;
     private int textPadding = 10;
     private int strokeWidth = 9;
     private String goal = "60";
     private int roundRectRadius = 5;
     private Rect bounds = new Rect();
     private Drawable drawable;
+    private Date date = new Date();
+    private String dateStr = createDateStr(date);
+    private boolean am = true;
+    private GestureDetector detector;
 
     public CenterView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        density = getResources().getDisplayMetrics().density;
-        offset *= density;
+        detector = new GestureDetector(context, this);
+        float density = getResources().getDisplayMetrics().density;
         textPadding *= density;
         strokeWidth *= density;
         roundRectRadius *= density;
@@ -75,10 +79,10 @@ public class CenterView extends View {
         canvas.drawCircle(cx, cy, radius, paint);
 
         int left = Math.round(cx - radius);
-        int top = cy;
+        int top = Math.round(cy + radius / 4);
         int right = Math.round(cx + radius);
         int bottom = Math.round(cy + radius);
-        drawDynamicWave(canvas, left, right, bottom, top, w, radius, cx, cy);
+        drawStaticWave(canvas, left, right, bottom, top, w, radius, cx, cy);
 
         textPaint1.setTextSize(w / 4);
         textPaint1.getTextBounds(goal, 0, goal.length(), boundText1);
@@ -90,28 +94,29 @@ public class CenterView extends View {
         x = x + boundText1.width() + textPadding;
         canvas.drawText("min", x, y, textPaint2);
 
-        String date = createDate();
         textPaint2.setTextSize(w / 12);
         textPaint3.setTextSize(w / 14);
-        textPaint3.getTextBounds(date, 0, date.length(), boundText1);
-        textPaint2.getTextBounds("PM", 0, "PM".length(), boundText2);
+        textPaint3.getTextBounds(dateStr, 0, dateStr.length(), boundText1);
+        String amStr = am ? "AM" : "PM";
+        textPaint2.getTextBounds(amStr, 0, amStr.length(), boundText2);
         x = (w - boundText1.width() - boundText2.width() - textPadding) / 2;
-        y = Math.round(cy + radius / 2); // cy + boundText1.height() + textPadding
-        canvas.drawText(date, x, y, textPaint3);
+        y = Math.round(cy + radius * 3 / 5);
+        canvas.drawText(dateStr, x, y, textPaint3);
         x = x + boundText1.width() + textPadding;
-        canvas.drawText("PM", x, y, textPaint2);
+        canvas.drawText(amStr, x, y, textPaint2);
 
         rectF.left = cx - textPadding - textPadding / 2;
-        rectF.top = y + textPadding + textPadding;
+        rectF.top = y + textPadding + textPadding / 2;
         rectF.right = rectF.left + textPadding;
         rectF.bottom = rectF.top + textPadding / 3;
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(am ? Paint.Style.FILL : Paint.Style.STROKE);
         paint.setColor(0xffee7bb1);
+        paint.setStrokeWidth(1);
         canvas.drawRoundRect(rectF, roundRectRadius, roundRectRadius, paint);
 
         rectF.left = cx + textPadding / 2;
         rectF.right = rectF.left + textPadding;
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setStyle(am ? Paint.Style.STROKE : Paint.Style.FILL);
         paint.setColor(0xffee7bb1);
         paint.setStrokeWidth(1);
         canvas.drawRoundRect(rectF, roundRectRadius, roundRectRadius, paint);
@@ -124,33 +129,75 @@ public class CenterView extends View {
         drawable.draw(canvas);
     }
 
-    private String createDate() {
+    private String createDateStr(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
-        return sdf.format(new Date());
+        return sdf.format(date);
     }
 
-    private float av = 1;
-    private int gear = 2;
-
-    private void drawDynamicWave(Canvas canvas, int startX, int endX, int startY, int endY, int w, float radius, int cx, int cy) {
-        int p = w / 2;
-        int y;
+    private void drawStaticWave(Canvas canvas, int startX, int endX, int startY, int endY, int w, float radius, int cx, int cy) {
+        long waveProgress = w / 2;
+        int sy, ey;
         float period = (float) (2 * Math.PI / w);
-        float offset = av * (startY - endY) / (10 - gear - 1);
+        float a = (startY - endY) / 10;
         for (int i = startX; i < endX; i++) {
-            // (x-a)^2+(y-b)^2=c^2 其中(a,b)为圆心，c为半径。
-            startY = (int) Math.round(endY + Math.sqrt(radius * radius - Math.pow(i - cx, 2)));
-            // y = Asin(wx+b)+h ，这个公式里：w影响周期，A影响振幅，h影响y位置，b为初相；
-            y = endY + (int) Math.round(offset * (Math.sin(period * (p + i)) + 1) / 2f);
+            sy = (int) Math.round(cy + Math.sqrt(radius * radius - Math.pow(i - cx, 2)));
+            ey = (int) Math.round(a * Math.sin(period * (waveProgress + i)) + endY);
+            ey = Math.min(sy, ey);
+            paint.setColor(0x7f9147dd);
+            canvas.drawLine(i, sy, i, ey, paint);
 
-            paint.setColor(0xff8c3eda);
-            canvas.drawLine(i, startY, i, y, paint);
+            ey = (int) Math.round(a * Math.cos(period * (waveProgress + i)) + endY);
+            ey = Math.min(sy, ey);
+            paint.setColor(0x7f9c47d3);
+            canvas.drawLine(i, sy, i, ey, paint);
         }
-        // p += density * 10;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+        super.onTouchEvent(event);
+        return true;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        am = velocityX > 0;
+        ViewCompat.postInvalidateOnAnimation(this);
+        return true;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+        this.dateStr = createDateStr(date);
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 
     public void setGoal(String target) {
-        goal = target;
+        this.goal = target;
         ViewCompat.postInvalidateOnAnimation(this);
     }
 }

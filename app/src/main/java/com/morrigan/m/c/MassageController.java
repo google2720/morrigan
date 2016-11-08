@@ -30,15 +30,16 @@ public class MassageController {
 
     public void save(Context _context, final String address, final long startTime, final long endTime) {
         final Context context = _context.getApplicationContext();
+        final String userId = UserController.getInstance().getUserId(context);
         BackgroundHandler.post(new Runnable() {
             @Override
             public void run() {
-                saveImpl(context, address, startTime, endTime);
+                saveImpl(context, userId, address, startTime, endTime);
             }
         });
     }
 
-    private void saveImpl(Context context, String address, long startTime, long endTime) {
+    private void saveImpl(Context context, String userId, String address, long startTime, long endTime) {
         Lg.d(TAG, "save " + startTime + " " + endTime);
         Calendar c1 = Calendar.getInstance();
         c1.setTimeInMillis(startTime);
@@ -49,6 +50,7 @@ public class MassageController {
         c2.set(Calendar.MILLISECOND, 999);
         if (c2.getTimeInMillis() >= endTime) {
             Massage massage = new Massage();
+            massage.userId = userId;
             massage.address = address;
             massage.startTime = startTime;
             massage.endTime = endTime;
@@ -58,13 +60,14 @@ public class MassageController {
             UploadHistoryDataService.startAction(context);
         } else {
             Massage massage = new Massage();
+            massage.userId = userId;
             massage.address = address;
             massage.startTime = startTime;
             massage.endTime = c2.getTimeInMillis();
             massage.hour = String.valueOf(c2.get(Calendar.HOUR_OF_DAY));
             massage.date = new SimpleDateFormat("yyyy-MM-DD", Locale.CHINA).format(c2.getTime());
             massage.save(context);
-            saveImpl(context, address, c2.getTimeInMillis() + 1, endTime);
+            saveImpl(context, userId, address, c2.getTimeInMillis() + 1, endTime);
         }
     }
 }

@@ -168,7 +168,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
-        paint.setTextSize(w / 12);
+        paint.setTextSize(w / 14);
         paint.setTextAlign(Paint.Align.CENTER);
         final String text;
         if (start) {
@@ -181,7 +181,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setTextSize(w / 6);
         paint.setTextAlign(Paint.Align.RIGHT);
         canvas.drawText(String.valueOf(gear), cx, cy, paint);
-        paint.setTextSize(w / 16);
+        paint.setTextSize(w / 18);
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setStrokeWidth(1);
         canvas.drawText("gear", cx, cy, paint);

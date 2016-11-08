@@ -3,7 +3,7 @@
     package="com.github.yzeaho.log">
 
     <application>
-        <!-- 记录日志服务 -->
+        <!-- 璁板綍鏃ュ織鏈嶅姟 -->
         <service
             android:name=".LogService"
             android:enabled="true"

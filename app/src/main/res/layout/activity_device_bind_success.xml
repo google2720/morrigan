@@ -49,7 +49,7 @@
                 android:layout_gravity="center"
                 android:drawablePadding="10dp"
                 android:drawableTop="@drawable/ic_wonder"
-                android:text="@string/device_connect_failed"
+                android:text="@string/device_connect_success"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#fff" />
         </com.github.yzeaho.common.CircleFrameLayout>
@@ -71,7 +71,7 @@
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/ic_reconnect"
             android:gravity="center"
-            android:text="开始养护"
+            android:text="@string/device_massage_start_tip"
             android:textAppearance="?android:attr/textAppearanceButton"
             android:textColor="#a361ea" />
     </FrameLayout>

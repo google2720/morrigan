@@ -27,6 +27,8 @@ import okhttp3.Request;
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LoginActivity";
+    private static final int REQUEST_CODE_FORGET_PW = 1;
+    private static final int REQUEST_CODE_REGISTER = 2;
     private EditText phoneView;
     private EditText pwView;
 
@@ -61,14 +63,14 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, REQUEST_CODE_FORGET_PW);
             }
         });
         findViewById(R.id.register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, REQUEST_CODE_REGISTER);
             }
         });
         findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
@@ -77,6 +79,18 @@ public class LoginActivity extends BaseActivity {
                 login();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_REGISTER) {
+            if (resultCode == RESULT_OK) {
+                phoneView.setText(UserController.getInstance().getMobile(this));
+                pwView.setText(UserController.getInstance().getPassword(this));
+                login();
+            }
+        }
     }
 
     private void login() {

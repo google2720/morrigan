@@ -27,7 +27,7 @@ public class VisualizerView extends View {
 
     private void init() {
         mBytes = null;
-        // mForePaint.setStrokeWidth(1f);
+        mForePaint.setStrokeWidth(1f);
         mForePaint.setAntiAlias(true);
         mForePaint.setColor(Color.WHITE);
     }
@@ -46,16 +46,15 @@ public class VisualizerView extends View {
         if (mPoints == null || mPoints.length < mBytes.length * 4) {
             mPoints = new float[mBytes.length * 4];
         }
-        final int cy = getHeight() / 2;
         mRect.set(0, 0, getWidth(), getHeight());
-        mForePaint.setStrokeWidth(mRect.width() / mBytes.length);
         for (int i = 0; i < mBytes.length - 1; i++) {
             mPoints[i * 4] = mRect.width() * i / (mBytes.length - 1);
-            mPoints[i * 4 + 1] = cy;
-            mPoints[i * 4 + 2] = mPoints[i * 4];
-            mPoints[i * 4 + 3] = cy - cy * Math.abs(mBytes[i]) / 128f;
+            mPoints[i * 4 + 1] = mRect.height() / 2
+                    + ((byte) (mBytes[i] + 128)) * (mRect.height() / 2) / 128;
+            mPoints[i * 4 + 2] = mRect.width() * (i + 1) / (mBytes.length - 1);
+            mPoints[i * 4 + 3] = mRect.height() / 2
+                    + ((byte) (mBytes[i + 1] + 128)) * (mRect.height() / 2) / 128;
         }
         canvas.drawLines(mPoints, mForePaint);
-        canvas.drawLine(0, cy, getWidth(), cy, mForePaint);
     }
 }

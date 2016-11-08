@@ -17,6 +17,8 @@ import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
 
+import java.util.Date;
+
 import okhttp3.FormBody;
 import okhttp3.Request;
 
@@ -100,6 +102,7 @@ public class MainFragment extends Fragment {
         task = new RankTask(getContext());
         AsyncTaskCompat.executeParallel(task);
         centerView.setGoal(UserController.getInstance().getTarget(getContext()));
+        centerView.setDate(new Date());
     }
 
     @Override

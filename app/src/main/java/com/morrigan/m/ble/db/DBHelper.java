@@ -14,7 +14,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * 数据库名称
      */
-    public static String DATABASE_NAME = "db.db";
+    public static String DATABASE_NAME = "db001.db";
 
     /**
      * 数据库版本号

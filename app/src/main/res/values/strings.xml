@@ -86,9 +86,11 @@
     <string name="device_name_update_title">"修改设备名称"</string>
     <string name="device_name_input_hint">"请输入设备名称"</string>
     <string name="device_connect_failed">"连接失败"</string>
+    <string name="device_connect_success">"连接失败"</string>
     <string name="device_reseach">"重新搜索"</string>
     <string name="device_remove">"解除绑定"</string>
     <string name="device_remove_msg">"是否需要解绑"</string>
+    <string name="device_massage_start_tip">"开始养护"</string>
     <!-- 关于界面 -->
     <string name="about_title">"关于摩莉"</string>
     <string name="about_product_team">"产品团队"</string>
