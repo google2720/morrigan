@@ -79,7 +79,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         super.onCreate(savedInstanceState);
         ble.addCallback(cb);
         @SuppressWarnings("unchecked")
-        ArrayList<Device> devices = (ArrayList<Device>) getIntent().getSerializableExtra("data");
+        ArrayList<UiData> devices = (ArrayList<UiData>) getIntent().getSerializableExtra("data");
         setContentView(R.layout.activity_device_scan_result);
         connectStateView = findViewById(R.id.connectState);
         ImageView iconView = (ImageView) findViewById(R.id.icon);
@@ -106,13 +106,13 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
     }
 
     @Override
-    public void onListItemClick(View v, Device device) {
+    public void onListItemClick(View v, UiData device) {
         if (connectStateView.getVisibility() == View.GONE) {
-            connectAddress = device.mac;
+            connectAddress = device.address;
             ble.setAutoConnect(false);
             ble.setAutoReconnect(false);
             ble.disconnect();
-            ble.connectAndBindAsync(device.name, device.mac);
+            ble.connectAndBindAsync(device.name, device.address);
             connectStateView.setVisibility(View.VISIBLE);
         }
     }

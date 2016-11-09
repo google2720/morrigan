@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawablePadding="10dp"
-                android:drawableTop="@drawable/ic_wonder"
+                android:drawableTop="@drawable/ic_ok"
                 android:text="@string/device_connect_success"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#fff" />

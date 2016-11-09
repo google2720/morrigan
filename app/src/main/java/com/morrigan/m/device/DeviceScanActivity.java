@@ -31,7 +31,7 @@ public class DeviceScanActivity extends BaseActivity {
             finish();
         }
     };
-    private ArrayList<Device> devices = new ArrayList<>();
+    private ArrayList<UiData> devices = new ArrayList<>();
     private HashSet<String> addresses = new HashSet<>();
     private BleController ble = BleController.getInstance();
     private BleCallback cb = new SimpleBleCallback() {
@@ -39,9 +39,9 @@ public class DeviceScanActivity extends BaseActivity {
         public void onLeScan(BluetoothDevice device) {
             if (!TextUtils.isEmpty(device.getName())) {
                 if (!addresses.contains(device.getAddress())) {
-                    Device d = new Device();
+                    UiData d = new UiData();
                     d.name = device.getName();
-                    d.mac = device.getAddress();
+                    d.address = device.getAddress();
                     devices.add(d);
                     addresses.add(device.getAddress());
                 }

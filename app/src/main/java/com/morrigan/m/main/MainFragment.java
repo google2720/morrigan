@@ -16,6 +16,7 @@ import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
+import com.morrigan.m.device.DeviceScanActivity;
 
 import java.util.Date;
 
@@ -55,6 +56,13 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 listener.onMenuClick();
+            }
+        });
+        view.findViewById(R.id.connect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
+                startActivity(intent);
             }
         });
         view.findViewById(R.id.knead_manual).setOnClickListener(new View.OnClickListener() {
@@ -138,7 +146,7 @@ public class MainFragment extends Fragment {
                 uiResult.message = r.retMsg;
                 uiResult.t = r;
             } catch (Exception e) {
-                Lg.w("user", "failed to modify user info", e);
+                Lg.w("user", "failed to get user rank", e);
                 uiResult.message = e.getMessage();
             }
             return uiResult;

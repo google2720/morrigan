@@ -19,10 +19,11 @@ import com.morrigan.m.R;
 import com.morrigan.m.SpacingDecoration;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.c.UserController;
 
 import java.util.List;
 
-public class DeviceActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<List<Device>>, DeviceAdapter.Listener {
+public class DeviceActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<List<UiData>>, DeviceAdapter.Listener {
 
     private DeviceAdapter adapter;
 
@@ -46,37 +47,37 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
     }
 
     @Override
-    public Loader<List<Device>> onCreateLoader(int id, Bundle args) {
-        return new DeviceDataLoader(this);
+    public Loader<List<UiData>> onCreateLoader(int id, Bundle args) {
+        return new DeviceDataLoader(this, UserController.getInstance().getUserId(this));
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Device>> loader, List<Device> data) {
+    public void onLoadFinished(Loader<List<UiData>> loader, List<UiData> data) {
         adapter.setData(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Device>> loader) {
+    public void onLoaderReset(Loader<List<UiData>> loader) {
     }
 
     @Override
-    public void onListItemClick(View v, Device data) {
-        if (data.type == Device.TYPE_ADD) {
+    public void onListItemClick(View v, UiData data) {
+        if (data.type == UiData.TYPE_ADD) {
             Intent intent = new Intent(this, DeviceScanActivity.class);
             startActivity(intent);
         }
     }
 
     @Override
-    public void onListItemUpdateClick(View v, Device data) {
+    public void onListItemUpdateClick(View v, UiData data) {
         Intent intent = new Intent(this, DeviceNameUpdateActivity.class);
         intent.putExtra("name", data.name);
-        intent.putExtra("mac", data.mac);
+        intent.putExtra("address", data.address);
         startActivity(intent);
     }
 
     @Override
-    public void onListItemDeleteClick(View v, final Device data) {
+    public void onListItemDeleteClick(View v, final UiData data) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.device_remove);
         builder.setMessage(R.string.device_remove_msg);
@@ -90,7 +91,7 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
         builder.show();
     }
 
-    private void removeBind(Device data) {
+    private void removeBind(UiData data) {
         RemoveDeviceTask task = new RemoveDeviceTask(this, data);
         AsyncTaskCompat.executeParallel(task);
     }
@@ -98,10 +99,10 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
     class RemoveDeviceTask extends AsyncTask<Void, Void, UiResult> {
 
         private Activity activity;
-        private Device data;
+        private UiData data;
         private ProgressDialog dialog;
 
-        RemoveDeviceTask(Activity activity, Device data) {
+        RemoveDeviceTask(Activity activity, UiData data) {
             this.activity = activity;
             this.data = data;
         }
@@ -116,7 +117,7 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
 
         @Override
         protected UiResult doInBackground(Void... params) {
-            return DeviceController.getInstance().remove(activity, data.mac);
+            return DeviceController.getInstance().remove(activity, data.address);
         }
 
         @Override

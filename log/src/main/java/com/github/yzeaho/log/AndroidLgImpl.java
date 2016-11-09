@@ -28,7 +28,7 @@ public class AndroidLgImpl implements LgInterface {
 
     @Override
     public void d(String tag, String msg) {
-        if (level >= Log.DEBUG) {
+        if (level <= Log.DEBUG) {
             Log.d(tag, msg);
             write("D", tag, msg);
         }
@@ -36,7 +36,7 @@ public class AndroidLgImpl implements LgInterface {
 
     @Override
     public void i(String tag, String msg) {
-        if (level >= Log.INFO) {
+        if (level <= Log.INFO) {
             Log.i(tag, msg);
             write("I", tag, msg);
         }
@@ -44,7 +44,7 @@ public class AndroidLgImpl implements LgInterface {
 
     @Override
     public void w(String tag, String msg, Throwable e) {
-        if (level >= Log.WARN) {
+        if (level <= Log.WARN) {
             Log.w(tag, msg, e);
             write("W", tag, msg, e);
         }
@@ -52,7 +52,7 @@ public class AndroidLgImpl implements LgInterface {
 
     @Override
     public void w(String tag, String msg) {
-        if (level >= Log.WARN) {
+        if (level <= Log.WARN) {
             Log.w(tag, msg);
             write("W", tag, msg);
         }
@@ -60,7 +60,7 @@ public class AndroidLgImpl implements LgInterface {
 
     @Override
     public void e(String tag, String msg, Throwable e) {
-        if (level >= Log.ERROR) {
+        if (level <= Log.ERROR) {
             Log.e(tag, msg, e);
             write("E", tag, msg, e);
         }

@@ -19,11 +19,11 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
 
     private Activity activity;
     private Listener listener;
-    private List<Device> objects;
+    private List<UiData> objects;
     private View.OnClickListener updateClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Device data = (Device) v.getTag();
+            UiData data = (UiData) v.getTag();
             if (data != null) {
                 listener.onListItemUpdateClick(v, data);
             }
@@ -32,14 +32,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     private View.OnClickListener deleteClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Device data = (Device) v.getTag();
+            UiData data = (UiData) v.getTag();
             if (data != null) {
                 listener.onListItemDeleteClick(v, data);
             }
         }
     };
 
-    public void remove(Device data) {
+    public void remove(UiData data) {
         int position = objects.indexOf(data);
         if (objects.remove(position) != null) {
             notifyItemRemoved(position);
@@ -48,11 +48,11 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
 
     public interface Listener {
 
-        void onListItemClick(View v, Device data);
+        void onListItemClick(View v, UiData data);
 
-        void onListItemUpdateClick(View v, Device data);
+        void onListItemUpdateClick(View v, UiData data);
 
-        void onListItemDeleteClick(View v, Device data);
+        void onListItemDeleteClick(View v, UiData data);
     }
 
     DeviceAdapter(@NonNull Activity activity, @NonNull Listener listener) {
@@ -60,14 +60,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         this.listener = listener;
     }
 
-    public void setData(List<Device> t) {
+    public void setData(List<UiData> t) {
         this.objects = t;
         notifyDataSetChanged();
     }
 
     @Override
     public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == Device.TYPE_ADD) {
+        if (viewType == UiData.TYPE_ADD) {
             View view = activity.getLayoutInflater().inflate(R.layout.device_add_item, parent, false);
             DeviceViewHolder holder = new DeviceViewHolder(view);
             holder.itemView.setOnClickListener(this);
@@ -93,15 +93,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
 
     @Override
     public void onBindViewHolder(DeviceViewHolder holder, int position) {
-        Device data = objects.get(position);
-        if (data.type == Device.TYPE_ADD) {
+        UiData data = objects.get(position);
+        if (data.type == UiData.TYPE_ADD) {
             holder.itemView.setTag(data);
         } else {
             holder.updateView.setTag(data);
             holder.deleteView.setTag(data);
             holder.numView.setText(String.valueOf(data.num));
             holder.nameView.setText(data.name);
-            holder.macView.setText(data.mac);
+            holder.macView.setText(data.address);
         }
     }
 
@@ -112,7 +112,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
 
     @Override
     public void onClick(View v) {
-        Device data = (Device) v.getTag();
+        UiData data = (UiData) v.getTag();
         if (data != null) {
             listener.onListItemClick(v, data);
         }

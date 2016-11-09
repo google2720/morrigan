@@ -16,9 +16,6 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BuildConfig;
-import com.morrigan.m.ble.data.BatteryResult;
-import com.morrigan.m.ble.data.Data;
-import com.morrigan.m.ble.data.NotifyDataHelper;
 import com.morrigan.m.ble.scanner.BleScanner;
 import com.morrigan.m.ble.scanner.BleScannerHelper;
 
@@ -243,7 +240,16 @@ public abstract class AbstractBleController {
         }
     }
 
-    protected void write2(byte[] data) {
+    protected byte[] write(byte[] data, long timeout) {
+        checkThread();
+        checkConnectionState();
+        synchronized (mLock) {
+            mBleConnection.write(mDataCharacteristic, data, timeout);
+            return mBleConnection.read(mDataCharacteristic, timeout);
+        }
+    }
+
+    protected void writeWithNoRead(byte[] data) {
         checkThread();
         checkConnectionState();
         synchronized (mLock) {

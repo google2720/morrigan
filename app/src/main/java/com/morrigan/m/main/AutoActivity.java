@@ -1,6 +1,7 @@
 package com.morrigan.m.main;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
 import com.morrigan.m.ble.SimpleBleCallback;
 import com.morrigan.m.c.MassageController;
+import com.morrigan.m.device.DeviceScanActivity;
 
 /**
  * 自动按摩界面
@@ -53,6 +55,11 @@ public class AutoActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         BleController.getInstance().removeCallback(cb);
+    }
+
+    public void onClickScan(View view) {
+        Intent intent = new Intent(this, DeviceScanActivity.class);
+        startActivity(intent);
     }
 
     public void onClickBack(View view) {

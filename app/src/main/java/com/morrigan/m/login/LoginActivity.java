@@ -13,16 +13,11 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.github.yzeaho.common.ToastUtils;
-import com.github.yzeaho.http.HttpInterface;
-import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.main.MainActivity;
-
-import okhttp3.FormBody;
-import okhttp3.Request;
 
 public class LoginActivity extends BaseActivity {
 
@@ -31,15 +26,14 @@ public class LoginActivity extends BaseActivity {
     private static final int REQUEST_CODE_REGISTER = 2;
     private EditText phoneView;
     private EditText pwView;
+    private boolean tryLoginEnable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         phoneView = (EditText) findViewById(R.id.phone);
-        // phoneView.setText(UserController.getInstance().getMobile(this));
         pwView = (EditText) findViewById(R.id.pw);
-        // pwView.setText(UserController.getInstance().getPassword(this));
         findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,16 +98,19 @@ public class LoginActivity extends BaseActivity {
             ToastUtils.show(this, R.string.input_pw_hint);
             return;
         }
+        loginImpl(mobile, pw);
+    }
+
+    private void loginImpl(String mobile, String pw) {
         LoginTask task = new LoginTask(this, mobile, pw);
         AsyncTaskCompat.executeParallel(task);
     }
 
-    class LoginTask extends AsyncTask<Void, Void, UiResult> {
+    class LoginTask extends AsyncTask<Void, Void, UiResult<Void>> {
 
         private Activity activity;
         private String mobile;
         private String pw;
-        private HttpInterface.Result result;
         private ProgressDialog dialog;
 
         LoginTask(Activity activity, String mobile, String pw) {
@@ -131,32 +128,12 @@ public class LoginActivity extends BaseActivity {
         }
 
         @Override
-        protected UiResult doInBackground(Void... params) {
-            UiResult uiResult = new UiResult();
-            try {
-                String url = activity.getString(R.string.host) + "/rest/moli/login";
-                FormBody.Builder b = new FormBody.Builder();
-                b.add("mobile", mobile);
-                b.add("password", pw);
-                Request.Builder builder = new Request.Builder();
-                builder.url(url);
-                builder.post(b.build());
-                result = HttpInterface.Factory.create().execute(builder.build());
-                LoginResult r = result.parse(LoginResult.class);
-                uiResult.success = r.isSuccessful();
-                uiResult.message = r.retMsg;
-                if (uiResult.success) {
-                    UserController.getInstance().setUserInfo(activity, r.userInfo);
-                }
-            } catch (Exception e) {
-                Lg.w(TAG, "failed to login", e);
-                uiResult.message = e.getMessage();
-            }
-            return uiResult;
+        protected UiResult<Void> doInBackground(Void... params) {
+            return UserController.getInstance().login(activity, mobile, pw);
         }
 
         @Override
-        protected void onPostExecute(UiResult result) {
+        protected void onPostExecute(UiResult<Void> result) {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }

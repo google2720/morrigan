@@ -2,26 +2,16 @@ package com.morrigan.m.c;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.github.yzeaho.file.Closeables;
 import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.ble.db.DBHelper;
-import com.morrigan.m.historyrecord.TodayRecord;
+import com.morrigan.m.device.DeviceController;
+import com.morrigan.m.login.LoginResult;
 import com.morrigan.m.login.UserInfo;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -70,7 +60,7 @@ public class UserController {
         preferences.edit().putBoolean("auto_login", b).apply();
     }
 
-    public void setUserInfo(Context context, UserInfo userInfo) {
+    private void setUserInfo(Context context, UserInfo userInfo) {
         SharedPreferences preferences = getSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("userId", userInfo.userId);
@@ -160,53 +150,6 @@ public class UserController {
         preferences.edit().putString("target", target).apply();
     }
 
-    public TodayRecord getTodayRecord(Context context) {
-        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
-        TodayRecord data = UserController.getInstance().get(context, "todayRecord", TodayRecord.class);
-        if (data == null || !data.date.equals(sf.format(new Date()))) {
-            data = new TodayRecord();
-        }
-        return data;
-    }
-
-    public boolean setTodayRecord(Context context, TodayRecord todayRecord) {
-        return save(context, "todayRecord", todayRecord);
-    }
-
-    public <T> T get(Context context, String key, Class<T> c) {
-        ObjectInputStream in = null;
-        try {
-            File file = context.getFileStreamPath(key);
-            in = new ObjectInputStream(new FileInputStream(file));
-            Object o = in.readObject();
-            if (o != null && c.isInstance(o)) {
-                return (T) o;
-            }
-        } catch (Exception e) {
-            Log.w(TAG, "", e);
-        } finally {
-            Closeables.close(in);
-        }
-        return null;
-    }
-
-
-    public boolean save(Context context, String key, Serializable obj) {
-        ObjectOutputStream out = null;
-        try {
-            File file = context.getFileStreamPath(key);
-            out = new ObjectOutputStream(new FileOutputStream(file));
-            out.writeObject(obj);
-            out.flush();
-            return true;
-        } catch (Exception e) {
-            Log.w(TAG, "", e);
-            return false;
-        } finally {
-            Closeables.close(out);
-        }
-    }
-
     public UiResult modify(Context context, String col, String value) {
         UiResult uiResult = new UiResult();
         try {
@@ -243,6 +186,31 @@ public class UserController {
             uiResult.message = r.retMsg;
         } catch (Exception e) {
             Lg.w("user", "failed to logout user", e);
+            uiResult.message = e.getMessage();
+        }
+        return uiResult;
+    }
+
+    public UiResult<Void> login(Context context, String mobile, String pw) {
+        UiResult<Void> uiResult = new UiResult<>();
+        try {
+            String url = context.getString(R.string.host) + "/rest/moli/login";
+            FormBody.Builder b = new FormBody.Builder();
+            b.add("mobile", mobile);
+            b.add("password", pw);
+            Request.Builder builder = new Request.Builder();
+            builder.url(url);
+            builder.post(b.build());
+            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
+            LoginResult r = result.parse(LoginResult.class);
+            uiResult.success = r.isSuccessful();
+            uiResult.message = r.retMsg;
+            if (uiResult.success) {
+                setUserInfo(context, r.userInfo);
+                DeviceController.getInstance().fetchAsync(context);
+            }
+        } catch (Exception e) {
+            Lg.w(TAG, "failed to login", e);
             uiResult.message = e.getMessage();
         }
         return uiResult;

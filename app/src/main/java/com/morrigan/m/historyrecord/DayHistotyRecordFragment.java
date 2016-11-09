@@ -1,28 +1,31 @@
 package com.morrigan.m.historyrecord;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.os.AsyncTaskCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.morrigan.m.R;
+import com.morrigan.m.ble.db.Massage;
 import com.morrigan.m.c.UserController;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by fei on 2016/10/12.
  */
-
 public class DayHistotyRecordFragment extends Fragment {
 
-    DayView dayView;
     private static final String TAG = "DayHistotyRecordFragment";
     private TextView txt_total_min;
     private TextView txt_date;
@@ -30,12 +33,8 @@ public class DayHistotyRecordFragment extends Fragment {
     private TextView txt_nursing_min;
     private TextView txt_sulplus_min;
     private TextView txt_average_nursing_min;
-    private TodayRecord data;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private DayView dayView;
+    private DataTask task;
 
     @Nullable
     @Override
@@ -53,17 +52,51 @@ public class DayHistotyRecordFragment extends Fragment {
         txt_nursing_min = (TextView) view.findViewById(R.id.txt_nursing_min);
         txt_sulplus_min = (TextView) view.findViewById(R.id.txt_sulplus_min);
         txt_average_nursing_min = (TextView) view.findViewById(R.id.txt_average_nursing_min);
-        initData();
-
     }
 
-    private void initData() {
-        data = UserController.getInstance().getTodayRecord(getContext());
-        SimpleDateFormat sd = new SimpleDateFormat("yyyy年MM月dd日");
-        ;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
         txt_date.setText(sd.format(new Date()));
-        if (data != null) {
-            String str = UserController.getInstance().getTarget(this.getContext());
+        loadData();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (task != null) {
+            task.cancel(true);
+            task = null;
+        }
+    }
+
+    private void loadData() {
+        task = new DataTask();
+        AsyncTaskCompat.executeParallel(task);
+    }
+
+    private class DataTask extends AsyncTask<Void, Void, TodayRecord> {
+
+        private Context context;
+        private String userId;
+
+        private DataTask() {
+            this.context = getActivity().getApplicationContext();
+            this.userId = UserController.getInstance().getUserId(context);
+        }
+
+        @Override
+        protected TodayRecord doInBackground(Void... voids) {
+            return Massage.queryTodayHistory(context, userId);
+        }
+
+        @Override
+        protected void onPostExecute(TodayRecord data) {
+            if (getActivity() == null) {
+                return;
+            }
+            String str = UserController.getInstance().getTarget(context);
             int total = str == null ? 0 : Integer.parseInt(str);
             int nursing = 0;
             int sulplus = 0;
@@ -81,25 +114,19 @@ public class DayHistotyRecordFragment extends Fragment {
                 txt_nursing_min.setText(nursing + "分钟");
                 txt_nursing_min.setCompoundDrawables(null, null, null, null);
             }
-
             if (sulplus != 0) {
                 txt_sulplus_min.setText(sulplus + "分钟");
                 txt_sulplus_min.setCompoundDrawables(null, null, null, null);
             }
-
+            refreshBarChart(data);
         }
-        refreshBarChart();
     }
 
-
-    private void refreshBarChart() {
+    private void refreshBarChart(TodayRecord data) {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < data.records.length; i++) {
             list.add(data.records[i]);
         }
         dayView.refreshData(list);
-
     }
-
-
 }

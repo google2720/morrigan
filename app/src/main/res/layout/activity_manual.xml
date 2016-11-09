@@ -19,6 +19,7 @@
                 style="@style/Widget.AppCompat.ActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:onClick="onClickBack"
                 android:src="?attr/homeAsUpIndicator" />
 
@@ -29,6 +30,16 @@
                 android:text="@string/knead_manual"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#fffffd" />
+
+            <ImageButton
+                android:id="@+id/connect"
+                style="@style/Widget.AppCompat.ActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:onClick="onClickScan"
+                android:src="@drawable/ic_ellipse" />
         </RelativeLayout>
 
         <com.morrigan.m.main.ManualView

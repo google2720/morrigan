@@ -10,7 +10,6 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BuildConfig;
@@ -175,10 +174,14 @@ public class BleConnection {
     }
 
     public byte[] read(BluetoothGattCharacteristic characteristic) {
+        return read(characteristic, TIMEOUT_MILLIS);
+    }
+
+    public byte[] read(BluetoothGattCharacteristic characteristic, long timeout) {
         synchronized (mObject) {
             mBluetoothGatt.readCharacteristic(characteristic);
             try {
-                mObject.wait(TIMEOUT_MILLIS);
+                mObject.wait(timeout);
             } catch (InterruptedException e) {
                 // ignore
             }
@@ -189,12 +192,16 @@ public class BleConnection {
     }
 
     public void write(BluetoothGattCharacteristic characteristic, byte[] data) {
+        write(characteristic, data, TIMEOUT_MILLIS);
+    }
+
+    public void write(BluetoothGattCharacteristic characteristic, byte[] data, long timeout) {
         synchronized (mObject) {
             characteristic.setValue(data);
             boolean r = mBluetoothGatt.writeCharacteristic(characteristic);
             Lg.d("BleData", "write data " + (r ? "success " : "failed ") + "[" + toHex(data) + "]");
             try {
-                mObject.wait(TIMEOUT_MILLIS);
+                mObject.wait(timeout);
             } catch (InterruptedException e) {
                 // ignore
             }

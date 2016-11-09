@@ -54,8 +54,8 @@ public class MassageController {
             massage.address = address;
             massage.startTime = startTime;
             massage.endTime = endTime;
-            massage.hour = String.valueOf(c2.get(Calendar.HOUR_OF_DAY));
-            massage.date = new SimpleDateFormat("yyyy-MM-DD", Locale.CHINA).format(c2.getTime());
+            massage.hour = c2.get(Calendar.HOUR_OF_DAY);
+            massage.date = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(c2.getTime());
             massage.save(context);
             UploadHistoryDataService.startAction(context);
         } else {
@@ -64,8 +64,8 @@ public class MassageController {
             massage.address = address;
             massage.startTime = startTime;
             massage.endTime = c2.getTimeInMillis();
-            massage.hour = String.valueOf(c2.get(Calendar.HOUR_OF_DAY));
-            massage.date = new SimpleDateFormat("yyyy-MM-DD", Locale.CHINA).format(c2.getTime());
+            massage.hour = c2.get(Calendar.HOUR_OF_DAY);
+            massage.date = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(c2.getTime());
             massage.save(context);
             saveImpl(context, userId, address, c2.getTimeInMillis() + 1, endTime);
         }

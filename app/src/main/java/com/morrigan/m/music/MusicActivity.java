@@ -2,6 +2,7 @@ package com.morrigan.m.music;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.device.DeviceScanActivity;
 import com.morrigan.m.main.VisualizerView;
 import com.morrigan.m.music.MusicLoader.MusicInfo;
 
@@ -88,6 +90,11 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         popupWindow = new MusicsPopupWindow(activity);
         iv_up.setOpenPopup(this);
         initMusic();
+    }
+
+    public void onClickScan(View view) {
+        Intent intent = new Intent(this, DeviceScanActivity.class);
+        startActivity(intent);
     }
 
     @Override

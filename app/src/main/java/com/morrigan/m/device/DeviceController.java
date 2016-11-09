@@ -10,6 +10,7 @@ import com.github.yzeaho.log.Lg;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.ble.db.Device;
 import com.morrigan.m.c.UserController;
 
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class DeviceController {
     public static final Uri NOTIFY_URI = Uri.parse("content://com.morrigan.m/device_list_notify");
 
     private static DeviceController sInstance = new DeviceController();
-    private List<DeviceInfo> deviceInfoList;
 
     private DeviceController() {
     }
@@ -48,12 +48,13 @@ public class DeviceController {
         });
     }
 
-    public UiResult fetch(Context context) {
+    private UiResult fetch(Context context) {
         UiResult uiResult = new UiResult();
         try {
+            String userId = UserController.getInstance().getUserId(context);
             String url = context.getString(R.string.host) + "/rest/moli/get-device-list";
             FormBody.Builder b = new FormBody.Builder();
-            b.add("userId", UserController.getInstance().getUserId(context));
+            b.add("userId", userId);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
@@ -62,7 +63,16 @@ public class DeviceController {
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success && r.deviceInfo != null) {
-                saveDeviceInfoList(context, r.deviceInfo);
+                ArrayList<Device> deviceList = new ArrayList<>();
+                for (DeviceInfo d : r.deviceInfo) {
+                    Device device = new Device();
+                    device.userId = userId;
+                    device.address = d.mac;
+                    device.name = d.deviceName;
+                    deviceList.add(device);
+                }
+                Device.save(context, userId, deviceList);
+                context.getContentResolver().notifyChange(NOTIFY_URI, null);
             }
         } catch (Exception e) {
             Lg.w(TAG, "failed to fetch bind device list", e);
@@ -71,29 +81,18 @@ public class DeviceController {
         return uiResult;
     }
 
-    private void saveDeviceInfoList(Context context, List<DeviceInfo> deviceInfoList) {
-        synchronized (this) {
-            this.deviceInfoList = deviceInfoList;
-        }
-        context.getContentResolver().notifyChange(NOTIFY_URI, null);
-    }
-
-    public List<DeviceInfo> load() {
-        synchronized (this) {
-            if (deviceInfoList == null) {
-                return null;
-            }
-            return new ArrayList<>(deviceInfoList);
-        }
+    public List<Device> load(Context context, String userId) {
+        return Device.query(context, userId);
     }
 
     public UiResult remove(Context context, String address) {
         UiResult uiResult = new UiResult();
         try {
+            String userId = UserController.getInstance().getUserId(context);
             String url = context.getString(R.string.host) + "/rest/moli/remove-bind";
             FormBody.Builder b = new FormBody.Builder();
-            b.add("userId", UserController.getInstance().getUserId(context));
-            b.add("mac", address);
+            b.add("userId", userId);
+            b.add("address", address);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
@@ -102,7 +101,7 @@ public class DeviceController {
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success) {
-                remove(address);
+                Device.remove(context, userId, address);
             }
         } catch (Exception e) {
             Lg.w(TAG, "failed to remove device", e);
@@ -111,30 +110,14 @@ public class DeviceController {
         return uiResult;
     }
 
-    private void remove(String address) {
-        synchronized (this) {
-            if (deviceInfoList != null) {
-                DeviceInfo deviceInfo = null;
-                for (DeviceInfo d : deviceInfoList) {
-                    if (d.mac.equals(address)) {
-                        deviceInfo = d;
-                        break;
-                    }
-                }
-                if (deviceInfo != null) {
-                    deviceInfoList.remove(deviceInfo);
-                }
-            }
-        }
-    }
-
     public UiResult modifyDeviceName(Context context, String address, String name) {
         UiResult uiResult = new UiResult();
         try {
+            String userId = UserController.getInstance().getUserId(context);
             String url = context.getString(R.string.host) + "/rest/moli/edit-device-name";
             FormBody.Builder b = new FormBody.Builder();
-            b.add("userId", UserController.getInstance().getUserId(context));
-            b.add("mac", address);
+            b.add("userId", userId);
+            b.add("address", address);
             b.add("deviceName", name);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
@@ -144,7 +127,7 @@ public class DeviceController {
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success) {
-                modifyDeviceName(address, name);
+                Device.update(context, userId, address, name);
             }
         } catch (Exception e) {
             Lg.w(TAG, "failed to remove device", e);
@@ -153,29 +136,14 @@ public class DeviceController {
         return uiResult;
     }
 
-    private void modifyDeviceName(String address, String name) {
-        synchronized (this) {
-            if (deviceInfoList != null) {
-                for (DeviceInfo d : deviceInfoList) {
-                    if (d.mac.equals(address)) {
-                        d.deviceName = name;
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     public UiResult<Boolean> check(Context context, String address) {
         UiResult<Boolean> uiResult = new UiResult<>();
-        synchronized (this) {
-            for (DeviceInfo d : deviceInfoList) {
-                if (d.mac.equals(address)) {
-                    uiResult.success = true;
-                    uiResult.t = false;
-                    return uiResult;
-                }
-            }
+        String userId = UserController.getInstance().getUserId(context);
+        Device device = Device.restoreByAddress(context, userId, address);
+        if (device != null) {
+            uiResult.success = true;
+            uiResult.t = false;
+            return uiResult;
         }
         return bindCheck(context, address);
     }
@@ -186,7 +154,7 @@ public class DeviceController {
             String url = context.getString(R.string.host) + "/rest/moli/bind-check";
             FormBody.Builder b = new FormBody.Builder();
             b.add("userId", UserController.getInstance().getUserId(context));
-            b.add("mac", address);
+            b.add("address", address);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
@@ -205,11 +173,12 @@ public class DeviceController {
     public UiResult<Void> bind(Context context, String address, String deviceName) {
         UiResult<Void> uiResult = new UiResult<>();
         try {
+            String userId = UserController.getInstance().getUserId(context);
             String url = context.getString(R.string.host) + "/rest/moli/bind";
             FormBody.Builder b = new FormBody.Builder();
-            b.add("userId", UserController.getInstance().getUserId(context));
+            b.add("userId", userId);
             b.add("deviceName", deviceName);
-            b.add("mac", address);
+            b.add("address", address);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
@@ -217,6 +186,9 @@ public class DeviceController {
             HttpResult r = result.parse(HttpResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
+            if (uiResult.success) {
+                Device.add(context, userId, address, deviceName);
+            }
         } catch (Exception e) {
             Lg.w(TAG, "failed to check device", e);
             uiResult.message = e.getMessage();

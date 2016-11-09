@@ -1,13 +1,16 @@
 package com.morrigan.m;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
@@ -48,20 +51,18 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void showPermission() {
-        List<String> permissions = new ArrayList<String>();
+        List<String> permissions = new ArrayList<>();
         // Check if we have write permission
         int p = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (p != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.RECORD_AUDIO);
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-
         if (permissions.isEmpty()) {
             doIt();
         } else {
@@ -84,16 +85,13 @@ public class WelcomeActivity extends BaseActivity {
                     if (Manifest.permission.ACCESS_COARSE_LOCATION.equals(permission)) {
                         sb.append(getString(R.string.permission_explain_location));
                     }
-
                     if (Manifest.permission.RECORD_AUDIO.equals(permission)) {
                         sb.append(getString(R.string.permission_explain_record));
                     }
                     if (Manifest.permission.READ_EXTERNAL_STORAGE.equals(permission)) {
                         sb.append(getString(R.string.permission_explain_retad_external_storage));
                     }
-                    break;
                 }
-
             }
             if (allGranted) {
                 doIt();
@@ -133,6 +131,18 @@ public class WelcomeActivity extends BaseActivity {
 
     private void doIt() {
         handle.postDelayed(r, 3000);
+        final Context context = getApplicationContext();
+        AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                if (UserController.getInstance().isAutoLogin(context)) {
+                    String mobile = UserController.getInstance().getMobile(context);
+                    String pw = UserController.getInstance().getPassword(context);
+                    UserController.getInstance().login(context, mobile, pw);
+                }
+                return null;
+            }
+        });
     }
 
     @Override

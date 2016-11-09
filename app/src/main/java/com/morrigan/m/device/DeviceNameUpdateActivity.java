@@ -54,22 +54,22 @@ public class DeviceNameUpdateActivity extends Toolbar2Activity {
 
     @Override
     protected void onClickConfirm() {
-        String mac = getIntent().getStringExtra("mac");
+        String address = getIntent().getStringExtra("address");
         String name = editView.getText().toString().trim();
-        UpdateDeviceNameTask task = new UpdateDeviceNameTask(this, mac, name);
+        UpdateDeviceNameTask task = new UpdateDeviceNameTask(this, address, name);
         AsyncTaskCompat.executeParallel(task);
     }
 
     class UpdateDeviceNameTask extends AsyncTask<Void, Void, UiResult> {
 
         private Activity activity;
-        private String mac;
+        private String address;
         private String name;
         private ProgressDialog dialog;
 
-        UpdateDeviceNameTask(Activity activity, String mac, String name) {
+        UpdateDeviceNameTask(Activity activity, String address, String name) {
             this.activity = activity;
-            this.mac = mac;
+            this.address = address;
             this.name = name;
         }
 
@@ -83,7 +83,7 @@ public class DeviceNameUpdateActivity extends Toolbar2Activity {
 
         @Override
         protected UiResult doInBackground(Void... params) {
-            return DeviceController.getInstance().modifyDeviceName(activity, mac, name);
+            return DeviceController.getInstance().modifyDeviceName(activity, address, name);
         }
 
         @Override
