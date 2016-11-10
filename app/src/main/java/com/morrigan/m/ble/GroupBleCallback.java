@@ -84,9 +84,16 @@ public class GroupBleCallback implements BleCallback {
     }
 
     @Override
-    public void onFetchBatterySuccess(int value) {
+    public void onNotifyBattery(int value) {
         for (BleCallback l : listeners) {
-            l.onFetchBatterySuccess(value);
+            l.onNotifyBattery(value);
+        }
+    }
+
+    @Override
+    public void onFetchBatterySuccess() {
+        for (BleCallback l : listeners) {
+            l.onFetchBatterySuccess();
         }
     }
 

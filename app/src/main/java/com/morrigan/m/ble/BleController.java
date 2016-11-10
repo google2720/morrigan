@@ -37,6 +37,16 @@ public class BleController extends AbstractBleController {
                 }
             }
         }
+
+        @Override
+        public void onGattDisconnected(BluetoothDevice device) {
+            mCallbacks.onNotifyBattery(0);
+        }
+
+        @Override
+        public void onBluetoothOff() {
+            mCallbacks.onNotifyBattery(0);
+        }
     };
 
     private BleController() {
@@ -66,7 +76,7 @@ public class BleController extends AbstractBleController {
             Lg.i(TAG, "no support notify data?");
         } else if (d instanceof BatteryResult) {
             batteryResponseAsync();
-            mCallbacks.onFetchBatterySuccess(d.getIntValue());
+            mCallbacks.onNotifyBattery(d.getIntValue());
         }
     }
 
@@ -123,6 +133,7 @@ public class BleController extends AbstractBleController {
                     Lg.i(TAG, "fetch battery start");
                     Battery data = new Battery();
                     writeWithNoRead(data.toValue());
+                    mCallbacks.onFetchBatterySuccess();
                 } catch (Exception e) {
                     Lg.w(TAG, "failed to bind device", e);
                     mCallbacks.onFetchBatteryFailed(BleError.SYSTEM);
@@ -186,6 +197,11 @@ public class BleController extends AbstractBleController {
 
     public void autoMassageAsync(@Size(5) byte[] autoMode) {
         MassageTask massageTask = new MassageTask(new MassageData(true, autoMode));
+        massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
+    }
+
+    public void musicMassageAsync(byte decibel) {
+        MassageTask massageTask = new MassageTask(new MassageData(true, decibel));
         massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
     }
 }

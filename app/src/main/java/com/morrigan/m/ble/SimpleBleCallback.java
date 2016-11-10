@@ -49,7 +49,11 @@ public class SimpleBleCallback implements BleCallback {
     }
 
     @Override
-    public void onFetchBatterySuccess(int value) {
+    public void onNotifyBattery(int value) {
+    }
+
+    @Override
+    public void onFetchBatterySuccess() {
     }
 
     @Override

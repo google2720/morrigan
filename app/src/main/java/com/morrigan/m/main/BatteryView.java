@@ -36,7 +36,7 @@ public class BatteryView extends View {
     private int battery = 0;
     private BleCallback cb = new SimpleBleCallback() {
         @Override
-        public void onFetchBatterySuccess(int value) {
+        public void onNotifyBattery(int value) {
             battery = value;
             batteryStr = String.valueOf(value);
             ViewCompat.postInvalidateOnAnimation(BatteryView.this);

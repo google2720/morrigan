@@ -3,6 +3,7 @@ package com.morrigan.m.ble.data;
 import android.support.annotation.Size;
 
 /**
+ * 与硬件通讯的按摩消息
  * Created by y on 2016/11/6.
  */
 public class MassageData extends Data {

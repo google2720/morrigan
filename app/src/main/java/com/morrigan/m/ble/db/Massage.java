@@ -135,7 +135,7 @@ public class Massage extends Data {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
             long todayStartTime = calendar.getTimeInMillis();
-            String selection = "userId=? AND _startTime<?";
+            String selection = "_userId=? AND _startTime<?";
             String[] selectionArgs = new String[]{userId, String.valueOf(todayStartTime)};
             String[] columns = new String[]{"sum(_duration) as _duration", "_date"};
             cursor = getReadableDatabase(context).query(TABLE_MASSAGE, columns, selection, selectionArgs, "_date", null, null);

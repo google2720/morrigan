@@ -26,7 +26,9 @@ public interface BleCallback {
 
     void onGattServicesNoFound(BluetoothDevice device);
 
-    void onFetchBatterySuccess(int value);
+    void onNotifyBattery(int value);
+    
+    void onFetchBatterySuccess();
 
     void onFetchBatteryFailed(int error);
 

@@ -14,6 +14,10 @@ public class NotifyDataHelper {
         if (r != null) {
             return r;
         }
+        r = BindResult.parser(data);
+        if (r != null) {
+            return r;
+        }
         return MassageDataResult.parser(data);
     }
 }

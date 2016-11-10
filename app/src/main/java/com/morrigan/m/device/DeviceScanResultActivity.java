@@ -55,6 +55,11 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         }
 
         @Override
+        public void onBluetoothOff() {
+            onBindDeviceFailed(BleError.SYSTEM);
+        }
+
+        @Override
         public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
             startActivity(intent);

@@ -62,14 +62,16 @@ public class DeviceController {
             DeviceListResult r = result.parse(DeviceListResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
-            if (uiResult.success && r.deviceInfo != null) {
+            if (uiResult.success) {
                 ArrayList<Device> deviceList = new ArrayList<>();
-                for (DeviceInfo d : r.deviceInfo) {
-                    Device device = new Device();
-                    device.userId = userId;
-                    device.address = d.mac;
-                    device.name = d.deviceName;
-                    deviceList.add(device);
+                if (r.deviceInfo != null) {
+                    for (DeviceInfo d : r.deviceInfo) {
+                        Device device = new Device();
+                        device.userId = userId;
+                        device.address = d.mac;
+                        device.name = d.deviceName;
+                        deviceList.add(device);
+                    }
                 }
                 Device.save(context, userId, deviceList);
                 context.getContentResolver().notifyChange(NOTIFY_URI, null);
@@ -92,7 +94,7 @@ public class DeviceController {
             String url = context.getString(R.string.host) + "/rest/moli/remove-bind";
             FormBody.Builder b = new FormBody.Builder();
             b.add("userId", userId);
-            b.add("address", address);
+            b.add("mac", address);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
@@ -117,7 +119,7 @@ public class DeviceController {
             String url = context.getString(R.string.host) + "/rest/moli/edit-device-name";
             FormBody.Builder b = new FormBody.Builder();
             b.add("userId", userId);
-            b.add("address", address);
+            b.add("mac", address);
             b.add("deviceName", name);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
@@ -154,7 +156,7 @@ public class DeviceController {
             String url = context.getString(R.string.host) + "/rest/moli/bind-check";
             FormBody.Builder b = new FormBody.Builder();
             b.add("userId", UserController.getInstance().getUserId(context));
-            b.add("address", address);
+            b.add("mac", address);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
@@ -178,7 +180,7 @@ public class DeviceController {
             FormBody.Builder b = new FormBody.Builder();
             b.add("userId", userId);
             b.add("deviceName", deviceName);
-            b.add("address", address);
+            b.add("mac", address);
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());

@@ -9,16 +9,9 @@ android {
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resConfigs "zh"
-        if (project.hasProperty('version_code')) {
-            versionCode Integer.parseInt(version_code)
-        } else {
-            versionCode 2
-        }
-        if (project.hasProperty('version_name')) {
-            versionName version_name
-        } else {
-            versionName "9.9.9"
-        }
+        versionCode project.hasProperty('version_code') ? Integer.parseInt(version_code) : 2
+        versionName project.hasProperty('version_name') ? version_name : "9.9.9"
+        buildConfigField "int", "LOG_LEVEL", project.hasProperty('log_level') ? log_level : "2"
     }
     signingConfigs {
         config {
@@ -32,21 +25,19 @@ android {
         debug {
             signingConfig signingConfigs.config
             buildConfigField "boolean", "WAVE_ON", "false"
-            buildConfigField "int", "LOG_LEVEL", "2"
         }
         release {
             signingConfig signingConfigs.config
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "WAVE_ON", "false"
-            buildConfigField "int", "LOG_LEVEL", "6"
         }
     }
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             if ("release".equals(variant.buildType.name)) {
                 def oldFile = output.outputFile
-                def apkName = 'morragan-' + variant.buildType.name + "-" + defaultConfig.versionName + '-' + getCurrentDate() + '.apk'
+                def apkName = 'morragan-' + variant.buildType.name + "-" + variant.versionName + '-' + getCurrentDate() + '.apk'
                 output.outputFile = new File(oldFile.parent, apkName)
             }
         }

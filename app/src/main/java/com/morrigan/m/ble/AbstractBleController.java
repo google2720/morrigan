@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -64,7 +63,6 @@ public abstract class AbstractBleController {
     private boolean mAutoReconnect = true;
     private boolean mDeviceReady;
     private BleScanner mScanner;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

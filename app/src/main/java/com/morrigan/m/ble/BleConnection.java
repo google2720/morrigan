@@ -225,7 +225,7 @@ public class BleConnection {
         byte[] data = characteristic.getValue();
         if (data != null && data.length > 0) {
             intent.putExtra(EXTRA_DATA, data);
-            Lg.i("BleData", "data:[" + BleConnection.toHex(data) + "]");
+            Lg.i("BleData", "notify data:[" + BleConnection.toHex(data) + "]");
         }
         intent.putExtra(EXTRA_UUID, characteristic.getUuid().toString());
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
