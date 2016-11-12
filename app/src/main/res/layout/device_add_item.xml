@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/device_add"
-    android:minHeight="144dp">
+    android:minHeight="168dp">
 
     <TextView
         android:layout_width="wrap_content"

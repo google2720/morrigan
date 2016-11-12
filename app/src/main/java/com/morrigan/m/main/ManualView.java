@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.annotation.Keep;
 import android.util.AttributeSet;
@@ -27,6 +28,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     private static final int MAX_GEAR = 5;
     private Paint paint;
     private int offset = 2;
+    private int textPadding = 10;
     private int gear = 1;
     private int wave = 1;
     private boolean start;
@@ -41,10 +43,14 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     public ManualView(Context context, AttributeSet attrs) {
         super(context, attrs);
         float density = getResources().getDisplayMetrics().density;
+        textPadding *= density;
         offset *= density;
         wave *= density;
         paint = new Paint();
         paint.setAntiAlias(true);
+        paint.setFakeBoldText(true);
+        paint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltcxh.ttf"));
+
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         getHolder().addCallback(this);
@@ -176,15 +182,18 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         } else {
             text = "00:00";
         }
-        canvas.drawText(text, cx, cy + radius * 3 / 5, paint);
+        canvas.drawText(text, cx, cy + radius * 70 / 100, paint);
 
+        int saveCount = canvas.save();
+        canvas.translate(cx, cy);
+        paint.setStrokeWidth(1);
         paint.setTextSize(w / 6);
         paint.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(String.valueOf(gear), cx, cy, paint);
+        canvas.drawText(String.valueOf(gear), 0, 0, paint);
         paint.setTextSize(w / 18);
         paint.setTextAlign(Paint.Align.LEFT);
-        paint.setStrokeWidth(1);
-        canvas.drawText("gear", cx, cy, paint);
+        canvas.drawText("gear", textPadding, 0, paint);
+        canvas.restoreToCount(saveCount);
     }
 
     private long waveProgress;

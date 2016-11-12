@@ -22,7 +22,6 @@ public class AutoLayout extends FrameLayout {
 
     private Paint paint = new Paint();
     private Paint textPaint = new Paint();
-    private RectF rectF = new RectF();
     private int strokeWidth = 5;
     private View startView;
     private AutoItemView massage1View;
@@ -35,6 +34,7 @@ public class AutoLayout extends FrameLayout {
     private String startTip;
     private Rect boundText = new Rect();
     private Drawable drawable;
+    private Drawable drawableY;
     private Rect rect = new Rect();
     private long startSystemTime;
     private long stopSystemTime;
@@ -51,6 +51,7 @@ public class AutoLayout extends FrameLayout {
         textPaint.setColor(Color.WHITE);
         startTip = getResources().getString(R.string.massage_ready);
         drawable = getResources().getDrawable(R.drawable.massage_soft_ing);
+        drawableY = getResources().getDrawable(R.drawable.auto_y);
     }
 
     @Override
@@ -154,16 +155,12 @@ public class AutoLayout extends FrameLayout {
         paint.setColor(Color.WHITE);
         canvas.drawCircle(cx, cy, radius, paint);
 
-        rectF.left = getPaddingLeft() - strokeWidth / 2;
-        rectF.top = getHeight() - getPaddingBottom() - h / 5f;
-        rectF.right = getWidth() - getPaddingRight() + strokeWidth / 2;
-        rectF.bottom = getHeight() - getPaddingBottom() + h / 5f + strokeWidth / 2;
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(0xffdcbafa);
-        canvas.drawArc(rectF, 180, 180, false, paint);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.WHITE);
-        canvas.drawArc(rectF, 180, 180, false, paint);
+        rect.left = getPaddingLeft();
+        rect.top = getHeight() - getPaddingBottom() - h / 5;
+        rect.right = getWidth() - getPaddingRight();
+        rect.bottom = getHeight() - getPaddingBottom();
+        drawableY.setBounds(rect);
+        drawableY.draw(canvas);
 
         if (start) {
             int vw = massage1View.getMeasuredWidth();
@@ -177,7 +174,7 @@ public class AutoLayout extends FrameLayout {
             drawable.draw(canvas);
             // canvas.drawRect(rect, paint);
         } else {
-            textPaint.setTextSize(w / 20);
+            textPaint.setTextSize(w / 22);
             textPaint.getTextBounds(startTip, 0, startTip.length(), boundText);
             canvas.drawText(startTip, cx, cy - boundText.height(), textPaint);
         }

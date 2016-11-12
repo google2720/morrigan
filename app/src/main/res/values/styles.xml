@@ -20,10 +20,16 @@
     <style name="AppTheme.Login">
         <item name="colorPrimaryDark">#440067</item>
     </style>
+
+    <style name="AppTheme.Main">
+        <item name="android:windowBackground">@drawable/activity_main_bg</item>
+    </style>
+
     <style name="AppTheme.History">
         <item name="colorPrimary">@color/c8c39e5</item>
         <item name="colorPrimaryDark">@color/c8c39e5</item>
     </style>
+
     <style name="AppTheme.Music">
         <item name="colorPrimary">@color/cA957FF</item>
         <item name="colorPrimaryDark">@color/cA957FF</item>

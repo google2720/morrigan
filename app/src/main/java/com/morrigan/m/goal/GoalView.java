@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ScrollerCompat;
@@ -13,7 +14,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
+import android.widget.TextView;
 
 import com.morrigan.m.R;
 
@@ -21,26 +22,28 @@ import com.morrigan.m.R;
  * 刻度尺View
  * Created by y on 2016/10/6.
  */
-public class GoalView extends View implements GestureDetector.OnGestureListener {
+public class GoalView extends TextView implements GestureDetector.OnGestureListener {
 
     private static final String TAG = "GoalView";
     private static final long DELAY_MILLIS = 50;
+
     private ScrollerCompat scroller;
     private GestureDetector detector;
-    private Paint paint;
-    private Paint paint2;
-    private Paint paint3;
-    private Paint paint4;
+    private Paint linePaint;
+    private Paint rulePaint;
+    private Paint trianglePaint;
+    private Paint valuePaint;
+    private Paint unitPaint;
+    private Paint tipPaint;
     private Rect boundText = new Rect();
     private Path path = new Path();
+    private int lineWidth = 2;
     private int divide = 10;
     private int divideGroup = divide * 5;
     private int triangleGap = 3;
-    private int minValueHeight = 64;
-    private int minValueWidth = 128;
-    private int bottomPadding = 10;
-    private int textPadding = 20;
     private String unit;
+    private String tip;
+    private String tip2;
     private int minValue = 0;
     private int maxValue = 300;
     private Runnable runnable = new Runnable() {
@@ -69,6 +72,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         }
     };
     private int value;
+    private int valueMinHeight = 92;
 
     public GoalView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -77,33 +81,46 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         detector = new GestureDetector(context, this);
         initPaint();
         float density = getResources().getDisplayMetrics().density;
+        lineWidth *= density;
         divide *= density;
         divideGroup = divide * 5;
         triangleGap *= density;
-        minValueHeight *= density;
-        bottomPadding *= density;
-        textPadding *= density;
-        minValueWidth *= density;
+        valueMinHeight *= density;
         unit = context.getString(R.string.minute);
+        tip = context.getString(R.string.goal_title_message);
+        tip2 = context.getString(R.string.goal_title_message2);
     }
 
     private void initPaint() {
-        paint = new Paint();
-        paint.setColor(0xff999999);
-        paint.setAntiAlias(true);
+        linePaint = new Paint();
+        linePaint.setAntiAlias(true);
+        linePaint.setStrokeWidth(lineWidth);
 
-        paint2 = new Paint();
-        paint2.setColor(0xff666666);
-        paint2.setAntiAlias(true);
-        paint2.setTextAlign(Paint.Align.CENTER);
+        rulePaint = new Paint();
+        rulePaint.setColor(0xb2000000);
+        rulePaint.setAntiAlias(true);
+        rulePaint.setTextAlign(Paint.Align.CENTER);
 
-        paint3 = new Paint();
-        paint3.setColor(0xff7d1db6);
-        paint3.setAntiAlias(true);
+        trianglePaint = new Paint();
+        trianglePaint.setColor(0xff7d1db6);
+        trianglePaint.setAntiAlias(true);
 
-        paint4 = new Paint();
-        paint4.setColor(0xff7d1db6);
-        paint4.setAntiAlias(true);
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltqh.ttf");
+        valuePaint = new Paint();
+        valuePaint.setColor(0xff7d1db6);
+        valuePaint.setAntiAlias(true);
+        valuePaint.setTypeface(font);
+        valuePaint.setTextAlign(Paint.Align.CENTER);
+
+        unitPaint = new Paint();
+        unitPaint.setColor(0x7f000000);
+        unitPaint.setAntiAlias(true);
+        unitPaint.setTypeface(font);
+
+        tipPaint = new Paint();
+        tipPaint.setColor(0xb2000000);
+        tipPaint.setAntiAlias(true);
+        tipPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     @Override
@@ -142,11 +159,39 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         final int w = getWidth();
         final int h = getHeight();
         final int sx = getScrollX();
-        paint2.setTextSize(h / 15);
-        paint2.getTextBounds("0", 0, "0".length(), boundText);
-        final int th = boundText.height();
-        final int lineBottom = h - th - bottomPadding - textPadding;
+        final int centerX = sx + w / 2;
         final int offset = w / 2;
+
+        // 倒三角
+        int top = getPaddingTop();
+        int bottom = top + triangleGap * 3;
+        path.reset();
+        path.moveTo(centerX, bottom);
+        path.lineTo(centerX - triangleGap * 2, top);
+        path.lineTo(centerX + triangleGap * 2, top);
+        path.close();
+        canvas.drawPath(path, trianglePaint);
+
+        // 值
+        top = bottom + divide;
+        final String valueStr = String.valueOf((sx + w / 2 - offset) / divide);
+        valuePaint.setTextSize(h / 4);
+        valuePaint.getTextBounds(valueStr, 0, valueStr.length(), boundText);
+        final int valueY = top + Math.max(valueMinHeight, boundText.height());
+        canvas.drawText(valueStr, centerX, valueY, valuePaint);
+
+        // 单位:分
+        unitPaint.setTextSize(h / 8);
+        final int unitX = centerX + (boundText.width() / 2) + divide * 3;
+        canvas.drawText(unit, unitX, valueY, unitPaint);
+
+        // 刻度
+        top = valueY + divide * 3;
+        int lineBottom = top + divide * 3;
+        rulePaint.setTextSize(h / 20);
+        rulePaint.getTextBounds("0", 0, "0".length(), boundText);
+        int th = boundText.height();
+        int ruleTextBottom = lineBottom + th + divide * 2;
         int v;
         for (int i = sx; i <= sx + w; i++) {
             if (i < w / 2) {
@@ -157,40 +202,34 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
             }
             v = i - offset;
             if (v % divideGroup == 0) {
-                canvas.drawLine(i, lineBottom, i, lineBottom - divide * 3, paint2);
-                canvas.drawText(String.valueOf(v / divide), i, h - bottomPadding, paint2);
+                linePaint.setColor(0xb2000000);
+                canvas.drawLine(i, lineBottom, i, lineBottom - divide * 3, linePaint);
+                canvas.drawText(String.valueOf(v / divide), i, ruleTextBottom, rulePaint);
             } else if (v % divide == 0) {
-                canvas.drawLine(i, lineBottom, i, lineBottom - divide * 2, paint);
+                linePaint.setColor(0x7f000000);
+                canvas.drawLine(i, lineBottom, i, lineBottom - divide * 2, linePaint);
             }
         }
+        linePaint.setColor(0xcc8c39e5);
+        canvas.drawLine(centerX, lineBottom, centerX, top, linePaint);
 
-        final int centerX = sx + w / 2;
-        canvas.drawLine(centerX, lineBottom, centerX, lineBottom - divide * 3, paint3);
+        // 三角
         path.reset();
         path.moveTo(centerX, lineBottom + triangleGap);
         path.lineTo(centerX - triangleGap, lineBottom + triangleGap * 2);
         path.lineTo(centerX + triangleGap, lineBottom + triangleGap * 2);
         path.close();
-        canvas.drawPath(path, paint3);
+        canvas.drawPath(path, trianglePaint);
 
-        final int vBottom = lineBottom - divide * 8;
-        final String valueStr = String.valueOf((sx + w / 2 - offset) / divide);
-        paint4.setTextSize(h / 3);
-        paint4.getTextBounds(valueStr, 0, valueStr.length(), boundText);
-        final int valueX = sx + (w - boundText.width()) / 2;
-        canvas.drawText(valueStr, valueX, vBottom, paint4);
-        paint2.setTextSize(h / 10);
-        final int unitX = centerX + Math.max(minValueWidth, boundText.width()) / 2 + divide * 2;
-        canvas.drawText(unit, unitX, vBottom, paint2);
+        // 文字提示
+        top = ruleTextBottom + divide * 3;
+        tipPaint.setTextSize(getTextSize());
+        tipPaint.getTextBounds(tip, 0, tip.length(), boundText);
+        th = boundText.height();
+        canvas.drawText(tip, centerX, top + th, tipPaint);
 
-        final int top = vBottom - Math.max(minValueHeight, boundText.height()) - divide;
-        path.reset();
-        path.moveTo(centerX, top);
-        path.lineTo(centerX - triangleGap * 2, top - triangleGap * 2);
-        path.lineTo(centerX + triangleGap * 2, top - triangleGap * 2);
-        path.close();
-        canvas.drawPath(path, paint3);
-        // Log.i(TAG, String.format("onDraw %d/%d/%d/%d/%d", w, h, sx, vBottom, boundText.height()));
+        top = top + th + divide / 2;
+        canvas.drawText(tip2, centerX, top + th, tipPaint);
     }
 
     @Override
@@ -250,7 +289,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
     }
 
     private int getHorizontalScrollRange() {
-        return Math.max(0, getMaxWidth() - (getWidth() - getPaddingLeft() - getPaddingRight()));
+        return Math.max(0, getViewMaxWidth() - (getWidth() - getPaddingLeft() - getPaddingRight()));
     }
 
     boolean overScrollByCompat(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
@@ -304,7 +343,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
     @Override
     protected int computeHorizontalScrollRange() {
         int contentWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-        int scrollRange = getMaxWidth();
+        int scrollRange = getViewMaxWidth();
         int scrollX = getScrollX();
         int overScrollLeft = Math.max(0, scrollRange - contentWidth);
         if (scrollX < 0) {
@@ -320,7 +359,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         super.scrollTo(scrollX, scrollY);
     }
 
-    private int getMaxWidth() {
+    private int getViewMaxWidth() {
         return maxValue * divide + getWidth();
     }
 

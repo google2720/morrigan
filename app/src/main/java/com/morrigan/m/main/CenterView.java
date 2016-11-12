@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -43,21 +44,32 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
     private String dateStr = createDateStr(date);
     private boolean am = true;
     private GestureDetector detector;
+    private RectF oval = new RectF();
 
     public CenterView(Context context, AttributeSet attrs) {
         super(context, attrs);
         detector = new GestureDetector(context, this);
+
         float density = getResources().getDisplayMetrics().density;
         textPadding *= density;
         strokeWidth *= density;
         roundRectRadius *= density;
+
         paint.setAntiAlias(true);
+
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltqh.ttf");
         textPaint1.setAntiAlias(true);
         textPaint1.setColor(Color.WHITE);
+        textPaint1.setTypeface(font);
+
         textPaint2.setAntiAlias(true);
         textPaint2.setColor(Color.WHITE);
+        textPaint2.setTypeface(font);
+
         textPaint3.setAntiAlias(true);
         textPaint3.setColor(0xfff0f0f0);
+        textPaint3.setTypeface(font);
+
         drawable = ContextCompat.getDrawable(context, R.drawable.dial1);
     }
 
@@ -88,14 +100,14 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         textPaint1.getTextBounds(goal, 0, goal.length(), boundText1);
         textPaint2.setTextSize(w / 10);
         textPaint2.getTextBounds("min", 0, "min".length(), boundText2);
-        int x = (w - boundText1.width() - boundText2.width() + textPadding) / 2;
+        int x = (w - boundText1.width() - boundText2.width() - textPadding) / 2;
         int y = cy;
         canvas.drawText(goal, x, y, textPaint1);
         x = x + boundText1.width() + textPadding;
         canvas.drawText("min", x, y, textPaint2);
 
         textPaint2.setTextSize(w / 12);
-        textPaint3.setTextSize(w / 14);
+        textPaint3.setTextSize(w / 16);
         textPaint3.getTextBounds(dateStr, 0, dateStr.length(), boundText1);
         String amStr = am ? "AM" : "PM";
         textPaint2.getTextBounds(amStr, 0, amStr.length(), boundText2);
@@ -105,20 +117,21 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         x = x + boundText1.width() + textPadding;
         canvas.drawText(amStr, x, y, textPaint2);
 
-        rectF.left = cx - textPadding - textPadding / 2;
-        rectF.top = y + textPadding + textPadding / 2;
-        rectF.right = rectF.left + textPadding;
-        rectF.bottom = rectF.top + textPadding / 3;
+        int offset = textPadding / 2;
+        int roundWidth = textPadding * 2;
+        int roundHeight = textPadding / 3;
+        rectF.left = cx - roundWidth - offset;
+        rectF.top = y + textPadding + offset;
+        rectF.right = rectF.left + roundWidth;
+        rectF.bottom = rectF.top + roundHeight;
         paint.setStyle(am ? Paint.Style.FILL : Paint.Style.STROKE);
         paint.setColor(0xffee7bb1);
         paint.setStrokeWidth(1);
         canvas.drawRoundRect(rectF, roundRectRadius, roundRectRadius, paint);
 
-        rectF.left = cx + textPadding / 2;
-        rectF.right = rectF.left + textPadding;
+        rectF.left = cx + offset;
+        rectF.right = rectF.left + roundWidth;
         paint.setStyle(am ? Paint.Style.STROKE : Paint.Style.FILL);
-        paint.setColor(0xffee7bb1);
-        paint.setStrokeWidth(1);
         canvas.drawRoundRect(rectF, roundRectRadius, roundRectRadius, paint);
 
         bounds.left = 0;
@@ -127,6 +140,19 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         bounds.bottom = h;
         drawable.setBounds(bounds);
         drawable.draw(canvas);
+
+        drawProgress(canvas, cx, cy, w / 2 - strokeWidth / 2);
+    }
+
+    private void drawProgress(Canvas canvas, int cx, int cy, float radius) {
+        paint.setStyle(Paint.Style.STROKE);
+        // paint.setStrokeWidth(strokeWidth);
+        paint.setColor(0x7fff00ff);
+        oval.left = cx - radius;
+        oval.top = cy - radius;
+        oval.right = cx + radius;
+        oval.bottom = cy + radius;
+        canvas.drawArc(oval, 270, 120, false, paint);
     }
 
     private String createDateStr(Date date) {

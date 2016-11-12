@@ -24,6 +24,12 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_menu" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/logo_text" />
+
             <ImageButton
                 android:id="@+id/connect"
                 style="@style/Widget.AppCompat.ActionButton"
@@ -61,12 +67,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/main_bottom_bg"
-        android:gravity="bottom"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="30dp"
+        android:paddingBottom="0dp"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingTop="30dp">
+        android:paddingTop="0dp">
 
         <TextView
             android:id="@+id/knead_manual"

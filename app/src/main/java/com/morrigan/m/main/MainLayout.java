@@ -2,6 +2,7 @@ package com.morrigan.m.main;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
@@ -58,16 +59,16 @@ public class MainLayout extends FrameLayout {
         final int w = getMeasuredWidth();
         final int h = getMeasuredHeight();
         final int side = Math.min(w, h);
-        int widthSpec = MeasureSpec.makeMeasureSpec(side * 60 / 100, MeasureSpec.EXACTLY);
-        int heightSpec = MeasureSpec.makeMeasureSpec(side * 60 / 100, MeasureSpec.EXACTLY);
+        int widthSpec = MeasureSpec.makeMeasureSpec(side * 65 / 100, MeasureSpec.EXACTLY);
+        int heightSpec = MeasureSpec.makeMeasureSpec(side * 65 / 100, MeasureSpec.EXACTLY);
         centerView.measure(widthSpec, heightSpec);
 
-        widthSpec = MeasureSpec.makeMeasureSpec(side / 5, MeasureSpec.EXACTLY);
-        heightSpec = MeasureSpec.makeMeasureSpec(side / 5, MeasureSpec.EXACTLY);
+        widthSpec = MeasureSpec.makeMeasureSpec(side * 20 / 100, MeasureSpec.EXACTLY);
+        heightSpec = MeasureSpec.makeMeasureSpec(side * 20 / 100, MeasureSpec.EXACTLY);
         batteryView.measure(widthSpec, heightSpec);
 
-        widthSpec = MeasureSpec.makeMeasureSpec(side / 4, MeasureSpec.EXACTLY);
-        heightSpec = MeasureSpec.makeMeasureSpec(side / 4, MeasureSpec.EXACTLY);
+        widthSpec = MeasureSpec.makeMeasureSpec(side * 23 / 100, MeasureSpec.EXACTLY);
+        heightSpec = MeasureSpec.makeMeasureSpec(side * 23 / 100, MeasureSpec.EXACTLY);
         startView.measure(widthSpec, heightSpec);
     }
 
@@ -77,28 +78,28 @@ public class MainLayout extends FrameLayout {
         final int w = getWidth();
         final int h = getHeight();
 
-        int vw = centerView.getMeasuredWidth();
-        int vh = centerView.getMeasuredHeight();
-        int l = w / 2 - vw / 2;
-        int t = h / 2 - vh / 2 - batteryPadding;
-        int r = l + vw;
-        int b = t + vh;
+        int bvw = batteryView.getMeasuredWidth();
+        int bvh = batteryView.getMeasuredHeight();
+        int cvw = centerView.getMeasuredWidth();
+        int cvh = centerView.getMeasuredHeight();
+        int l = w / 2 - cvw / 2;
+        int t = h / 2 - cvh / 2 - bvh * 3 / 10;
+        int r = l + cvw;
+        int b = t + cvh;
         centerView.layout(l, t, r, b);
 
-        vw = batteryView.getMeasuredWidth();
-        vh = batteryView.getMeasuredHeight();
-        l = w - vw - batteryPadding;
-        t = batteryPadding;
-        r = l + vw;
-        b = t + vh;
+        l = r - cvw * 15 / 100;
+        t = Math.max(0, centerView.getTop() - bvh * 60 / 100);
+        r = l + bvw;
+        b = t + bvh;
         batteryView.layout(l, t, r, b);
 
-        vw = startView.getMeasuredWidth();
-        vh = startView.getMeasuredHeight();
-        l = w - vw - batteryView.getMeasuredWidth() / 2;
-        t = h - vh - batteryPadding;
-        r = l + vw;
-        b = t + vh;
+        int svw = startView.getMeasuredWidth();
+        int svh = startView.getMeasuredHeight();
+        l = w / 2 + cvw * 15 / 100;
+        t = centerView.getBottom() - batteryPadding / 3;
+        r = l + svw;
+        b = t + svh;
         startView.layout(l, t, r, b);
     }
 
@@ -243,9 +244,14 @@ public class MainLayout extends FrameLayout {
         path.quadTo(x3 - (x3 - x4) / 2 + pathOffset, y3 - (y3 - y4) / 2 - pathOffset, x4, y4);
         canvas.drawPath(path, paint);
 
-//        paint.setColor(Color.RED);
+        paint.setColor(Color.RED);
+        canvas.drawLine(bcx, bcy, ccx, ccy, paint);
+        canvas.drawLine(scx, scy, ccx, ccy, paint);
 //        canvas.drawLine(x1, y1, ccx, ccy, paint);
 //        canvas.drawLine(x2, y2, ccx, ccy, paint);
+//        canvas.drawLine(x3, y3, x2, y2, paint);
+        canvas.drawLine(0, ccy, w, ccy, paint);
+        canvas.drawLine(ccx, 0, ccx, h, paint);
 //        canvas.drawLine(x3, y3, x2, y2, paint);
     }
 

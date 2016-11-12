@@ -38,13 +38,13 @@ public class WeekView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (datas!=null){
-            canvas.drawLine(0,(float) 0.85*getHeight(),getWidth()-3,(float) 0.85*getHeight()+2,mPaint);
+            canvas.drawLine(0,(float) 0.8*getHeight(),getWidth()-3,(float) 0.8*getHeight()+2,mPaint);
             for(int i=0; i <datas.size(); i ++){
                 int w=(int)((1/13.0)*getWidth());
                 int l=(int)((i*2/13.0)*getWidth());
                 int t=(int)(getHeight()*(0.2+  0.6*(1-(datas.get(i)*1.0/max))));
                 int r =l+w;
-                int b=(int)(getHeight()*0.85+1);
+                int b=(int)(getHeight()*0.8);
                 if (max==0){
                     t=b-5;//数据全为0时。//默认画出高度为5px柱形
                 }else {
@@ -109,7 +109,7 @@ public class WeekView extends View {
                     break;
                 }
                 float x=l+w/2- bounds.width()/2;
-                float baseline=(int)(0.925*getMeasuredHeight())+bounds.height()/2;
+                float baseline=(int)(0.9*getMeasuredHeight())+bounds.height()/2;
                 canvas.drawText(strWeek, x,baseline , mPaint);
             }
         }

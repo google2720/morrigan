@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -49,14 +50,18 @@ public class BatteryView extends View {
         textPadding *= density;
         offset1 *= density;
         offset2 *= density;
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltqh.ttf");
         paint.setAntiAlias(true);
         textPaint1.setAntiAlias(true);
         textPaint1.setColor(Color.WHITE);
+        textPaint1.setTypeface(font);
         textPaint2.setAntiAlias(true);
         textPaint2.setColor(Color.WHITE);
+        textPaint2.setTypeface(font);
         textPaint3.setAntiAlias(true);
         textPaint3.setColor(Color.WHITE);
         textPaint3.setTextAlign(Paint.Align.CENTER);
+        textPaint3.setTypeface(font);
     }
 
     @Override
@@ -103,11 +108,11 @@ public class BatteryView extends View {
         paint.setColor(0xffc5e3c9);
         canvas.drawCircle(cx, cy, radius, paint);
 
-        textPaint1.setTextSize(w / 3);
+        textPaint1.setTextSize(w / 4);
         textPaint1.getTextBounds(batteryStr, 0, batteryStr.length(), boundText1);
-        textPaint2.setTextSize(w / 6);
+        textPaint2.setTextSize(w / 8);
         textPaint2.getTextBounds("%", 0, "%".length(), boundText2);
-        textPaint3.setTextSize(w / 6);
+        textPaint3.setTextSize(w / 8);
         canvas.drawText(batteryStr, (w - boundText1.width() - boundText2.width() - textPadding) / 2, cy, textPaint1);
         canvas.drawText("%", (w - boundText1.width() - boundText2.width()) / 2 + boundText1.width() + textPadding, cy, textPaint2);
         canvas.drawText("电量", cx, cy + boundText1.height() + textPadding, textPaint3);

@@ -10,6 +10,7 @@ import com.github.yzeaho.log.Lg;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.ble.BleController;
 import com.morrigan.m.ble.db.Device;
 import com.morrigan.m.c.UserController;
 
@@ -104,6 +105,10 @@ public class DeviceController {
             uiResult.message = r.retMsg;
             if (uiResult.success) {
                 Device.remove(context, userId, address);
+                if (address.equals(BleController.getInstance().getBindDeviceAddress())) {
+                    BleController.getInstance().saveBindDevice(null);
+                    BleController.getInstance().disconnect();
+                }
             }
         } catch (Exception e) {
             Lg.w(TAG, "failed to remove device", e);

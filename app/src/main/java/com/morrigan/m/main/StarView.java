@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -29,6 +30,7 @@ public class StarView extends View {
     private int strokeWidth = 2;
     private Rect bounds = new Rect();
     private Drawable drawable;
+    private String rankStr = "0";
 
     public StarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,12 +38,15 @@ public class StarView extends View {
         textPadding *= density;
         offsetRadius *= density;
         strokeWidth *= density;
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltqh.ttf");
         paint.setAntiAlias(true);
         paint.setStrokeWidth(strokeWidth);
         textPaint1.setAntiAlias(true);
         textPaint1.setColor(Color.WHITE);
+        textPaint1.setTypeface(font);
         textPaint2.setAntiAlias(true);
         textPaint2.setColor(Color.WHITE);
+        textPaint2.setTypeface(font);
         drawable = ContextCompat.getDrawable(context, R.drawable.ic_star0);
     }
 
@@ -63,11 +68,11 @@ public class StarView extends View {
         canvas.drawCircle(cx, cy, radius - offsetRadius, paint);
 
         textPaint1.setTextSize(w / 4);
-        textPaint1.getTextBounds("88", 0, "88".length(), boundText1);
+        textPaint1.getTextBounds(rankStr, 0, rankStr.length(), boundText1);
         textPaint2.setTextSize(w / 8);
         textPaint2.getTextBounds("star", 0, "star".length(), boundText2);
         int x = (w - boundText1.width() - boundText2.width() - textPadding) / 2;
-        canvas.drawText("88", x, cy, textPaint1);
+        canvas.drawText(rankStr, x, cy, textPaint1);
         x = x + boundText1.width() + textPadding;
         canvas.drawText("star", x, cy, textPaint2);
 
@@ -83,25 +88,32 @@ public class StarView extends View {
         switch (rank) {
             case 0:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star1);
+                rankStr = "0.5";
                 break;
             case 1:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star2);
+                rankStr = "1";
                 break;
             case 2:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star3);
+                rankStr = "1.5";
                 break;
             case 3:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star4);
+                rankStr = "2";
                 break;
             case 4:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star5);
+                rankStr = "2.5";
                 break;
             case 5:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star5);
+                rankStr = "3";
                 break;
             case -1:
             default:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star0);
+                rankStr = "0";
                 break;
         }
         ViewCompat.postInvalidateOnAnimation(this);

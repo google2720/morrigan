@@ -87,6 +87,7 @@ public class BleController extends AbstractBleController {
                 Lg.i(TAG, "connectAndBindAsync " + deviceName + " " + address);
                 UiResult<Boolean> result = DeviceController.getInstance().check(mContext, address);
                 if (result.t) {
+                    Lg.i(TAG, deviceName + "(" + address + ") is already bind by other user");
                     mCallbacks.onBindDeviceFailed(BleError.BIND_BY_OTHER);
                     return;
                 }
@@ -107,13 +108,14 @@ public class BleController extends AbstractBleController {
             @Override
             public void run() {
                 try {
-                    Lg.i(TAG, "bind device start");
+                    Lg.i(TAG, "bind device start " + sendToServer);
                     setCharacteristicNotification(mNotifyCharacteristic, mNotifyDescriptor, true);
                     boolean firstBind = device.getAddress().equals(getBindDeviceAddress());
                     Bind data = new Bind();
                     writeWithNoRead(data.toValue());
                     saveBindDevice(device.getAddress());
                     if (sendToServer) {
+                        Lg.i(TAG, "send bind info to server");
                         DeviceController.getInstance().bind(mContext, device.getAddress(), device.getName());
                     }
                     mCallbacks.onBindDeviceSuccess(device, firstBind);
