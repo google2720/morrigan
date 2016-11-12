@@ -17,6 +17,12 @@
     <color name="cfaffffff">#faffffff</color>
     <color name="c7E7879">#7E7879</color>
     <color name="cFFC3DC">#F4A2C6</color>
-    <color name="divider_line">#F6F6F6</color>
+    <color name="divider_line">#E6E6F0</color>
+    <color name="cFF70DC">#FF70DC</color>
+    <color name="c5F3684">#5F3684</color>
+
+
+
+
 
 </resources>

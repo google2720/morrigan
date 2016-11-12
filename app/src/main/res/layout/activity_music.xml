@@ -79,9 +79,16 @@
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxHeight="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/tv_totalTime"
-            android:layout_toRightOf="@id/tv_currTime" />
+            android:layout_toRightOf="@id/tv_currTime"
+            android:thumb="@drawable/ic_music_thumb"
+            android:progressDrawable="@drawable/bg_bar"
+
+            />
 
         <TextView
             android:id="@+id/tv_totalTime"

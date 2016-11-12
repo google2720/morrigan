@@ -41,8 +41,8 @@
             <com.morrigan.m.historyrecord.DayView
                 android:id="@+id/dayView"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="260dp"
+                android:layout_marginTop="15dp"
                 />
 
         </RelativeLayout>
@@ -50,7 +50,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@color/cffffff"
             android:orientation="vertical">
 

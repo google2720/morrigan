@@ -10,9 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/c8c39e5">
-
-
-
         <LinearLayout
             android:id="@+id/contact_radio"
             android:layout_width="match_parent"
