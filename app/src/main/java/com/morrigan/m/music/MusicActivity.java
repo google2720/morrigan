@@ -9,6 +9,7 @@ import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -27,6 +28,7 @@ import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * 音乐跟随界面
@@ -63,6 +65,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private FlingUpImageView iv_up;
     MusicsPopupWindow popupWindow;
     private GestureDetector gestureDetector;
+    long time;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -190,7 +193,10 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 @Override
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
                     Log.i("music", "onWaveFormDataCapture " + bytes.length);
-                    visualizerView.updateVisualizer(bytes);
+                    if (SystemClock.elapsedRealtime() - time > 200) {
+                        time = SystemClock.elapsedRealtime();
+                        visualizerView.updateVisualizer(bytes);
+                    }
                 }
 
                 @Override
