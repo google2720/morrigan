@@ -31,7 +31,7 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         if (mainLayout.isMenuOpen()) {
             mainLayout.closeMenu();
         } else {
-            super.onBackPressed();
+            exitApp();
         }
     }
 }

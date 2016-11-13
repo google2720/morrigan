@@ -1,8 +1,11 @@
 package com.morrigan.m.device;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,6 +18,8 @@ import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
 import com.morrigan.m.ble.BleError;
 import com.morrigan.m.ble.SimpleBleCallback;
+import com.morrigan.m.ble.db.Device;
+import com.morrigan.m.c.UserController;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -78,6 +83,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
     };
     private View connectStateView;
     private String connectAddress;
+    private DeviceScanResultAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +103,10 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         });
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DeviceScanResultAdapter adapter = new DeviceScanResultAdapter(this, this);
+        adapter = new DeviceScanResultAdapter(this, this);
         recyclerView.setAdapter(adapter);
-        adapter.setData(devices);
+        QueryDeviceNameTask task = new QueryDeviceNameTask(this, devices);
+        AsyncTaskCompat.executeParallel(task);
     }
 
     @Override
@@ -119,6 +126,39 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
             ble.disconnect();
             ble.connectAndBindAsync(device.name, device.address);
             connectStateView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class QueryDeviceNameTask extends AsyncTask<Void, Void, ArrayList<UiData>> {
+
+        private Context context;
+        private ArrayList<UiData> devices;
+
+        private QueryDeviceNameTask(Context _context, ArrayList<UiData> devices) {
+            this.context = _context;
+            this.devices = devices;
+        }
+
+        @Override
+        protected ArrayList<UiData> doInBackground(Void... params) {
+            if (devices != null && !devices.isEmpty()) {
+                String userId = UserController.getInstance().getUserId(context);
+                for (UiData d : devices) {
+                    Device device = Device.restoreByAddress(context, userId, d.address);
+                    if (device != null) {
+                        d.name = device.name;
+                    }
+                }
+            }
+            return devices;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<UiData> result) {
+            if (isFinishing()) {
+                return;
+            }
+            adapter.setData(result);
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.morrigan.m.main;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,24 +17,37 @@ import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.ble.db.Massage;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.device.DeviceScanActivity;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements CenterView.Callback {
 
     private Listener listener;
-    private RankTask task;
+    private RankTask rankTask;
     private BatteryView batteryView;
     private CenterView centerView;
     private StarView starView;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadData(centerView.getAm());
+        }
+    };
+    private LoadDataTask loadDataTask;
 
     public static MainFragment newInstance() {
         return new MainFragment();
+    }
+
+    public interface Listener {
+        void onMenuClick();
     }
 
     @Override
@@ -88,6 +103,7 @@ public class MainFragment extends Fragment {
         });
         batteryView = (BatteryView) view.findViewById(R.id.battery);
         centerView = (CenterView) view.findViewById(R.id.center);
+        centerView.setCallback(this);
         starView = (StarView) view.findViewById(R.id.star);
     }
 
@@ -97,28 +113,80 @@ public class MainFragment extends Fragment {
         listener = null;
     }
 
-    public interface Listener {
-        void onMenuClick();
+    @Override
+    public void onAmChange(boolean am) {
+        loadData(am);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        getContext().registerReceiver(receiver, filter);
+    }
+
+    private void loadData(boolean am) {
+        if (loadDataTask != null) {
+            loadDataTask.cancel(true);
+        }
+        loadDataTask = new LoadDataTask(getActivity(), am);
+        AsyncTaskCompat.executeParallel(loadDataTask);
+    }
+
+    private class LoadDataTask extends AsyncTask<Void, Void, List<Massage>> {
+
+        private Context context;
+        private boolean am;
+
+        private LoadDataTask(Context _context, boolean am) {
+            context = _context.getApplicationContext();
+            this.am = am;
+        }
+
+        @Override
+        protected List<Massage> doInBackground(Void... params) {
+            String userId = UserController.getInstance().getUserId(context);
+            return Massage.queryToday(context, userId, am);
+        }
+
+        @Override
+        protected void onPostExecute(List<Massage> result) {
+            if (getActivity() == null) {
+                return;
+            }
+            centerView.setMassageData(result);
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (task != null) {
-            task.cancel(true);
-        }
-        task = new RankTask(getContext());
-        AsyncTaskCompat.executeParallel(task);
+        loadRank();
         centerView.setGoal(UserController.getInstance().getTarget(getContext()));
-        centerView.setDate(new Date());
+        centerView.setDate(Calendar.getInstance());
+        loadData(centerView.getAm());
+    }
+
+    private void loadRank() {
+        if (rankTask != null) {
+            rankTask.cancel(true);
+        }
+        rankTask = new RankTask(getContext());
+        AsyncTaskCompat.executeParallel(rankTask);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (task != null) {
-            task.cancel(true);
-            task = null;
+        getContext().unregisterReceiver(receiver);
+        if (rankTask != null) {
+            rankTask.cancel(true);
+            rankTask = null;
+        }
+        if (loadDataTask != null) {
+            loadDataTask.cancel(true);
+            loadDataTask = null;
         }
     }
 

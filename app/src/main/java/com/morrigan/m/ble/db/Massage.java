@@ -95,14 +95,14 @@ public class Massage extends Data {
         return todayRecord;
     }
 
-    public static List<Massage> queryToday(Context context, String userId) {
+    public static List<Massage> queryToday(Context context, String userId, boolean am) {
         Calendar toady = Calendar.getInstance();
-        toady.set(Calendar.HOUR_OF_DAY, 0);
+        toady.set(Calendar.HOUR_OF_DAY, am ? 0 : 12);
         toady.set(Calendar.MINUTE, 0);
         toady.set(Calendar.SECOND, 0);
         toady.set(Calendar.MILLISECOND, 0);
         long todayStartTime = toady.getTimeInMillis();
-        toady.set(Calendar.HOUR_OF_DAY, 23);
+        toady.set(Calendar.HOUR_OF_DAY, am ? 11 : 23);
         toady.set(Calendar.MINUTE, 59);
         toady.set(Calendar.SECOND, 59);
         toady.set(Calendar.MILLISECOND, 999);

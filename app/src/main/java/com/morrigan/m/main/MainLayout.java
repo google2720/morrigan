@@ -83,7 +83,7 @@ public class MainLayout extends FrameLayout {
         int cvw = centerView.getMeasuredWidth();
         int cvh = centerView.getMeasuredHeight();
         int l = w / 2 - cvw / 2;
-        int t = h / 2 - cvh / 2 - bvh * 3 / 10;
+        int t = h / 2 - cvh / 2 - bvh * 30 / 100;
         int r = l + cvw;
         int b = t + cvh;
         centerView.layout(l, t, r, b);
@@ -244,15 +244,11 @@ public class MainLayout extends FrameLayout {
         path.quadTo(x3 - (x3 - x4) / 2 + pathOffset, y3 - (y3 - y4) / 2 - pathOffset, x4, y4);
         canvas.drawPath(path, paint);
 
-        paint.setColor(Color.RED);
-        canvas.drawLine(bcx, bcy, ccx, ccy, paint);
-        canvas.drawLine(scx, scy, ccx, ccy, paint);
-//        canvas.drawLine(x1, y1, ccx, ccy, paint);
-//        canvas.drawLine(x2, y2, ccx, ccy, paint);
-//        canvas.drawLine(x3, y3, x2, y2, paint);
-        canvas.drawLine(0, ccy, w, ccy, paint);
-        canvas.drawLine(ccx, 0, ccx, h, paint);
-//        canvas.drawLine(x3, y3, x2, y2, paint);
+//        paint.setColor(Color.RED);
+//        canvas.drawLine(bcx, bcy, ccx, ccy, paint);
+//        canvas.drawLine(scx, scy, ccx, ccy, paint);
+//        canvas.drawLine(0, ccy, w, ccy, paint);
+//        canvas.drawLine(ccx, 0, ccx, h, paint);
     }
 
     private void calculateCenterPoint(int ccx, int ccy, int x2, int y2, int r, Point point) {
