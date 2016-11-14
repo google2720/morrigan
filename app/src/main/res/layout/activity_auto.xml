@@ -82,7 +82,7 @@
                 android:background="@null"
                 android:src="@drawable/massage_empty" />
 
-            <com.morrigan.m.main.AutoItemView
+            <ImageButton
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

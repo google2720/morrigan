@@ -26,7 +26,8 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final int MIN_GEAR = 1;
     private static final int MAX_GEAR = 5;
-    private Paint paint;
+    private Paint paint = new Paint();
+    private Paint timePaint = new Paint();
     private int offset = 2;
     private int textPadding = 10;
     private int gear = 1;
@@ -46,10 +47,14 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         textPadding *= density;
         offset *= density;
         wave *= density;
-        paint = new Paint();
+
         paint.setAntiAlias(true);
         paint.setFakeBoldText(true);
         paint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltcxh.ttf"));
+
+        timePaint.setAntiAlias(true);
+        timePaint.setColor(Color.WHITE);
+        timePaint.setTextAlign(Paint.Align.CENTER);
 
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
@@ -172,20 +177,18 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(Color.WHITE);
         canvas.drawCircle(cx, cy, radius, paint);
 
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
-        paint.setTextSize(w / 14);
-        paint.setTextAlign(Paint.Align.CENTER);
+        timePaint.setTextSize(w / 14);
         final String text;
         if (start) {
             text = duration.toValue((SystemClock.uptimeMillis() - startTime) / 1000);
         } else {
             text = "00:00";
         }
-        canvas.drawText(text, cx, cy + radius * 70 / 100, paint);
+        canvas.drawText(text, cx, cy + radius * 70 / 100, timePaint);
 
         int saveCount = canvas.save();
         canvas.translate(cx, cy);
+        paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(1);
         paint.setTextSize(w / 6);
         paint.setTextAlign(Paint.Align.RIGHT);
