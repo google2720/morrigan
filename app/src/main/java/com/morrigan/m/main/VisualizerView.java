@@ -12,6 +12,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 /**
@@ -49,7 +50,15 @@ public class VisualizerView extends View {
                 vols.add(vol);
             }
             max = Collections.max(vols);
-            if (max != 0) {
+            float min=Collections.min(vols);
+            if (max!=0){
+                if (max==min) {
+                    for (int i = 0; i < 41; i++) {
+                        Random random=new Random();
+                        float tem=random.nextInt(128);
+                        vols.set(i, tem);
+                    }
+                }
                 ViewCompat.postInvalidateOnAnimation(this);
             }
 

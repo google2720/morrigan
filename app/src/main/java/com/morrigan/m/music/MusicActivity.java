@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.ble.BleController;
 import com.morrigan.m.device.DeviceScanActivity;
 import com.morrigan.m.main.VisualizerView;
 import com.morrigan.m.music.MusicLoader.MusicInfo;
@@ -64,7 +65,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     MusicLoader loader;
     private FlingUpImageView iv_up;
     MusicsPopupWindow popupWindow;
-    private GestureDetector gestureDetector;
     long time;
 
     @Override
@@ -88,21 +88,10 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnErrorListener(this);
         setupVisualizerFxAndUI();
-//        visualizer.setEnabled(true);
         iv_up = (FlingUpImageView) this.findViewById(R.id.iv_up);
         popupWindow = new MusicsPopupWindow(activity);
         iv_up.setOpenPopup(this);
         initMusic();
-    }
-
-    public void onClickScan(View view) {
-        Intent intent = new Intent(this, DeviceScanActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void openPopup() {
-        popupWindow.showAtLocation(MusicActivity.this.getWindow().getDecorView(), Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
     private void initMusic() {
@@ -115,18 +104,28 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         }).start();
     }
 
+    public void onClickScan(View view) {
+        Intent intent = new Intent(this, DeviceScanActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void openPopup() {
+        popupWindow.showAtLocation(MusicActivity.this.getWindow().getDecorView(), Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+
     private Handler hander = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case SEARCH_MUSIC_SUCCESS:
-
                     popupWindow.setData(musics);
                     //搜索音乐文件结束时
                     break;
                 case CURR_TIME_VALUE:
                     //设置当前时间
                     tv_currTime.setText(msg.obj.toString());
-                    updateSeek(500);
+                    updateSeek(500);//500毫秒更新一次
                     break;
                 default:
                     break;
@@ -139,7 +138,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     //开始播放
     private void start() {
         if (musics != null && musics.size() > 0) {
-            visualizer.setEnabled(true);
             MusicInfo info = musics.get(currIndex);
             mediaPlayer.reset();
             try {
@@ -154,10 +152,12 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 btnPlay.setImageResource(R.drawable.music_pause);
                 currState = PAUSE;
                 popupWindow.setPlayIndex(currIndex);
+                visualizer.setEnabled(true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
+            visualizer.setEnabled(false);
             Toast.makeText(this, "播放列表为空", Toast.LENGTH_SHORT).show();
         }
     }
@@ -192,10 +192,13 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
                 @Override
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-                    Log.i("music", "onWaveFormDataCapture " + bytes.length);
                     if (SystemClock.elapsedRealtime() - time > 200) {
+                        Log.i("music", "onWaveFormDataCapture " + bytes.length);
                         time = SystemClock.elapsedRealtime();
                         visualizerView.updateVisualizer(bytes);
+                        int vol = 128 - Math.abs(bytes[0]);
+                        int decibel = (int) (vol * 160 / 128.0);
+                        BleController.getInstance().musicMassageAsync(decibel);
                     }
                 }
 
@@ -239,11 +242,13 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 start();
                 break;
             case PAUSE:
+                visualizer.setEnabled(false);
                 mediaPlayer.pause();
                 btnPlay.setImageResource(R.drawable.music_play);
                 currState = START;
                 break;
             case START:
+                visualizer.setEnabled(true);
                 mediaPlayer.start();
                 btnPlay.setImageResource(R.drawable.music_pause);
                 currState = PAUSE;
@@ -270,10 +275,11 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     //监听器，当当前歌曲播放完时触发，播放下一首
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        visualizer.setEnabled(false);
+
         if (musics != null && musics.size() > 0) {
             next();
         } else {
+            visualizer.setEnabled(false);
             Toast.makeText(this, "播放列表为空", Toast.LENGTH_SHORT).show();
         }
     }
