@@ -127,7 +127,12 @@ public class GoalView extends TextView implements GestureDetector.OnGestureListe
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (value != 0) {
-            scrollTo(value * divide, 0);
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scrollTo(value * divide, 0);
+                }
+            }, 150);
         }
     }
 

@@ -134,7 +134,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
         AsyncTaskCompat.executeParallel(loadDataTask);
     }
 
-    private class LoadDataTask extends AsyncTask<Void, Void, List<Massage>> {
+    private class LoadDataTask extends AsyncTask<Void, Integer, List<CenterData>> {
 
         private Context context;
         private boolean am;
@@ -145,17 +145,32 @@ public class MainFragment extends Fragment implements CenterView.Callback {
         }
 
         @Override
-        protected List<Massage> doInBackground(Void... params) {
+        protected List<CenterData> doInBackground(Void... params) {
             String userId = UserController.getInstance().getUserId(context);
+            int target = 60;
+            try {
+                target = Integer.parseInt(UserController.getInstance().getTarget(getContext()));
+            } catch (Exception e) {
+                // ignore
+            }
+            int sum = Massage.sum(context, userId) / 60000;
+            publishProgress(Math.max(0, target - sum));
             return Massage.queryToday(context, userId, am);
         }
 
         @Override
-        protected void onPostExecute(List<Massage> result) {
+        protected void onProgressUpdate(Integer... values) {
+            if (!isCancelled()) {
+                centerView.setGoal(values[0].toString());
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<CenterData> result) {
             if (getActivity() == null) {
                 return;
             }
-            centerView.setMassageData(result);
+            centerView.setCenterDataList(result);
         }
     }
 
@@ -163,7 +178,6 @@ public class MainFragment extends Fragment implements CenterView.Callback {
     public void onStart() {
         super.onStart();
         loadRank();
-        centerView.setGoal(UserController.getInstance().getTarget(getContext()));
         centerView.setDate(Calendar.getInstance());
         loadData(centerView.getAm());
     }

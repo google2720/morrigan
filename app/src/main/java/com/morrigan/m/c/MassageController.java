@@ -28,7 +28,26 @@ public class MassageController {
         return sInstance;
     }
 
+    public void test(Context context) {
+        Calendar c1 = Calendar.getInstance();
+        c1.set(Calendar.HOUR_OF_DAY, 21);
+        c1.set(Calendar.MINUTE, 4);
+        c1.set(Calendar.SECOND, 0);
+        c1.set(Calendar.MILLISECOND, 0);
+        Calendar c2 = Calendar.getInstance();
+        c2.set(Calendar.HOUR_OF_DAY, 21);
+        c2.set(Calendar.MINUTE, 8);
+        c2.set(Calendar.SECOND, 0);
+        c2.set(Calendar.MILLISECOND, 0);
+        long startTime = c1.getTimeInMillis();
+        long endTime = c2.getTimeInMillis();
+        save(context, "xx", startTime, endTime);
+    }
+
     public void save(Context _context, final String address, final long startTime, final long endTime) {
+        if (endTime - startTime < 60000) {
+            return;
+        }
         final Context context = _context.getApplicationContext();
         final String userId = UserController.getInstance().getUserId(context);
         BackgroundHandler.post(new Runnable() {

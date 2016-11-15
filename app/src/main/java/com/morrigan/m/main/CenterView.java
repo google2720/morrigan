@@ -9,11 +9,10 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.morrigan.m.ble.db.Massage;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,6 +26,7 @@ import java.util.Locale;
  */
 public class CenterView extends View implements GestureDetector.OnGestureListener {
 
+    private static final String TAG = "CenterView";
     private Paint paint = new Paint();
     private Paint textPaint1 = new Paint();
     private Paint textPaint2 = new Paint();
@@ -46,7 +46,7 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
     private int dialStrokeWidth = 1;
     private int dialStrokeWidth2 = 2;
     private Callback callback;
-    private List<Massage> massageList;
+    private List<CenterData> dataList;
 
     public CenterView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -154,8 +154,8 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         final int angle = Math.max(0, (int) time / 120000);
         drawDial(canvas, w, h, angle);
         drawProgress(canvas, cx, cy, w / 2 - strokeWidth / 2, angle);
-        if (massageList != null && !massageList.isEmpty()) {
-            drawProgress(canvas, cx, cy, w / 2 - strokeWidth / 2, massageList, startCalendar.getTimeInMillis());
+        if (dataList != null && !dataList.isEmpty()) {
+            drawProgress(canvas, cx, cy, w / 2 - strokeWidth / 2, dataList);
         }
     }
 
@@ -206,19 +206,18 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         canvas.drawArc(oval, 270, angle, false, paint);
     }
 
-    private void drawProgress(Canvas canvas, int cx, int cy, float radius, List<Massage> massageList, long startTime) {
+    private void drawProgress(Canvas canvas, int cx, int cy, float radius, List<CenterData> dataList) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(strokeWidth * 60 / 100);
         paint.setColor(0xffed73ac);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        for (Massage massage : massageList) {
+        for (CenterData data : dataList) {
             oval.left = cx - radius;
             oval.top = cy - radius;
             oval.right = cx + radius;
             oval.bottom = cy + radius;
-            final int angle1 = (int) ((massage.startTime - startTime) / 120000);
-            final int angle2 = (int) ((massage.endTime - startTime) / 120000);
-            canvas.drawArc(oval, 270 + angle1, angle2 - angle1, false, paint);
+            Log.i(TAG, "drawProgress " + data.startAngle + " " + data.endAngle);
+            canvas.drawArc(oval, 270 + data.startAngle, data.endAngle - data.startAngle, false, paint);
         }
     }
 
@@ -310,8 +309,8 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
-    public void setMassageData(List<Massage> massageList) {
-        this.massageList = massageList;
+    public void setCenterDataList(List<CenterData> dataList) {
+        this.dataList = dataList;
         ViewCompat.postInvalidateOnAnimation(this);
     }
 }

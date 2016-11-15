@@ -6,10 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.morrigan.m.historyrecord.TodayRecord;
+import com.morrigan.m.main.CenterData;
 import com.morrigan.m.main.UploadHistoryDataService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.morrigan.m.ble.db.DBHelper.TABLE_MASSAGE;
@@ -95,7 +98,7 @@ public class Massage extends Data {
         return todayRecord;
     }
 
-    public static List<Massage> queryToday(Context context, String userId, boolean am) {
+    public static List<CenterData> queryToday(Context context, String userId, boolean am) {
         Calendar toady = Calendar.getInstance();
         toady.set(Calendar.HOUR_OF_DAY, am ? 0 : 12);
         toady.set(Calendar.MINUTE, 0);
@@ -107,20 +110,50 @@ public class Massage extends Data {
         toady.set(Calendar.SECOND, 59);
         toady.set(Calendar.MILLISECOND, 999);
         long todayEndTime = toady.getTimeInMillis();
-        List<Massage> result = new ArrayList<>();
+
         Cursor cursor = null;
+        HashSet<Integer> modeSet = new HashSet<>();
+        long timeOffset;
+        int startMode;
+        int endMode;
         Massage massage;
         try {
-            String selection = "_userId=? AND _startTime>=? AND _endTime<=? AND _duration>=600000";
+            String selection = "_userId=? AND _startTime>=? AND _endTime<=?";
             String[] selectionArgs = new String[]{userId, String.valueOf(todayStartTime), String.valueOf(todayEndTime)};
             cursor = getReadableDatabase(context).query(TABLE_MASSAGE, null, selection, selectionArgs, null, null, null);
             while (cursor != null && cursor.moveToNext()) {
                 massage = new Massage();
                 massage.restore(cursor);
-                result.add(massage);
+                timeOffset = massage.startTime - todayStartTime;
+                startMode = (int) timeOffset / 600000;
+                if ((startMode + 1) * 600000 - timeOffset > 60000) {
+                    modeSet.add(startMode);
+                }
+                timeOffset = massage.endTime - todayStartTime;
+                endMode = (int) timeOffset / 600000;
+                if (timeOffset - endMode * 600000 > 60000) {
+                    modeSet.add(endMode);
+                }
+                for (int i = startMode; i < endMode; i++) {
+                    modeSet.add(i);
+                }
             }
         } finally {
             close(cursor);
+        }
+        Integer[] modes = modeSet.toArray(new Integer[modeSet.size()]);
+        Arrays.sort(modes);
+        List<CenterData> result = new ArrayList<>();
+        CenterData data = null;
+        for (int i = 0; i < modes.length; i++) {
+            if (i != 0 && modes[i] - modes[i - 1] == 1) {
+                data.endAngle = (modes[i] + 1) * 10;
+            } else {
+                data = new CenterData();
+                data.startAngle = modes[i] * 5;
+                data.endAngle = (modes[i] + 1) * 5;
+                result.add(data);
+            }
         }
         return result;
     }
@@ -151,5 +184,32 @@ public class Massage extends Data {
             close(cursor);
         }
         return result;
+    }
+
+    public static int sum(Context context, String userId) {
+        Calendar toady = Calendar.getInstance();
+        toady.set(Calendar.HOUR_OF_DAY, 0);
+        toady.set(Calendar.MINUTE, 0);
+        toady.set(Calendar.SECOND, 0);
+        toady.set(Calendar.MILLISECOND, 0);
+        long todayStartTime = toady.getTimeInMillis();
+        toady.set(Calendar.HOUR_OF_DAY, 23);
+        toady.set(Calendar.MINUTE, 59);
+        toady.set(Calendar.SECOND, 59);
+        toady.set(Calendar.MILLISECOND, 999);
+        long todayEndTime = toady.getTimeInMillis();
+        Cursor cursor = null;
+        try {
+            String[] columns = new String[]{"sum(_duration) as _duration"};
+            String selection = "_userId=? AND _startTime>=? AND _endTime<=?";
+            String[] selectionArgs = new String[]{userId, String.valueOf(todayStartTime), String.valueOf(todayEndTime)};
+            cursor = getReadableDatabase(context).query(TABLE_MASSAGE, columns, selection, selectionArgs, null, null, null);
+            if (cursor != null && cursor.moveToNext()) {
+                return cursor.getInt(cursor.getColumnIndex("_duration"));
+            }
+        } finally {
+            close(cursor);
+        }
+        return 0;
     }
 }

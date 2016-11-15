@@ -15,6 +15,7 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         setContentView(R.layout.activity_main);
         mainLayout = (MenuLayout) findViewById(R.id.mainLayout);
         getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, MainFragment.newInstance()).commitAllowingStateLoss();
+        // MassageController.getInstance().test(this);
     }
 
     @Override
