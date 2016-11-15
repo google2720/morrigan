@@ -177,7 +177,7 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
                 sy = h / 2 - dialStrokeWidth2;
                 paint.setStrokeWidth(dialStrokeWidth2);
                 paint.setColor(0xfff7bdd8);
-            } else if (i % 6 == 0) {
+            } else if (i % 5 == 0) {
                 sx = w - strokeWidth + dialPadding * 2;
                 ex = w - dialPadding;
                 sy = h / 2 - dialStrokeWidth;
@@ -185,7 +185,7 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
                 paint.setColor(0xfff4d6e6);
             }
 
-            if (i % 6 == 0) {
+            if (i % 5 == 0) {
                 final int saveCount = canvas.save();
                 canvas.rotate(-90 + i, w / 2, h / 2);
                 canvas.drawLine(sx, sy, ex, sy, paint);

@@ -24,5 +24,7 @@ public class ExampleUnitTest {
         long t = calendar.getTimeInMillis() - zero.getTimeInMillis();
         System.out.println(t);
         System.out.println(t / 120000);
+        long time2 = 12 * 60 * 1000;
+        System.out.println(time2);
     }
 }

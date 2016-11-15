@@ -22,6 +22,7 @@ import com.morrigan.m.FeedbackActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.about.AboutActivity;
+import com.morrigan.m.ble.BleController;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.device.DeviceActivity;
 import com.morrigan.m.goal.GoalActivity;
@@ -138,6 +139,7 @@ public class NavigateFragment extends Fragment {
                     dialog.dismiss();
                 }
                 if (result.success) {
+                    BleController.getInstance().disconnect();
                     UserController.getInstance().clear(getContext());
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

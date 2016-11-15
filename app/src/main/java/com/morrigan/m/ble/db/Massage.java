@@ -109,10 +109,11 @@ public class Massage extends Data {
         toady.set(Calendar.MINUTE, 59);
         toady.set(Calendar.SECOND, 59);
         toady.set(Calendar.MILLISECOND, 999);
-        long todayEndTime = toady.getTimeInMillis();
+        long todayEndTime = Math.min(Calendar.getInstance().getTimeInMillis(), toady.getTimeInMillis());
 
         Cursor cursor = null;
         HashSet<Integer> modeSet = new HashSet<>();
+        int g = 600000;
         long timeOffset;
         int startMode;
         int endMode;
@@ -125,13 +126,13 @@ public class Massage extends Data {
                 massage = new Massage();
                 massage.restore(cursor);
                 timeOffset = massage.startTime - todayStartTime;
-                startMode = (int) timeOffset / 600000;
-                if ((startMode + 1) * 600000 - timeOffset > 60000) {
+                startMode = (int) timeOffset / g;
+                if ((startMode + 1) * g - timeOffset > 60000) {
                     modeSet.add(startMode);
                 }
                 timeOffset = massage.endTime - todayStartTime;
-                endMode = (int) timeOffset / 600000;
-                if (timeOffset - endMode * 600000 > 60000) {
+                endMode = (int) timeOffset / g;
+                if (timeOffset - endMode * g > 60000) {
                     modeSet.add(endMode);
                 }
                 for (int i = startMode; i < endMode; i++) {
@@ -147,7 +148,7 @@ public class Massage extends Data {
         CenterData data = null;
         for (int i = 0; i < modes.length; i++) {
             if (i != 0 && modes[i] - modes[i - 1] == 1) {
-                data.endAngle = (modes[i] + 1) * 10;
+                data.endAngle = (modes[i] + 1) * 5;
             } else {
                 data = new CenterData();
                 data.startAngle = modes[i] * 5;

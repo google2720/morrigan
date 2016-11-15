@@ -192,6 +192,7 @@ public class MainLayout extends FrameLayout {
         path.lineTo(x1, y1);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(0xff852abb);
+        paint.setStrokeJoin(Paint.Join.ROUND);
         canvas.drawPath(path, paint);
 
         path.reset();
