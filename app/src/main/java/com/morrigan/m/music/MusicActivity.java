@@ -220,6 +220,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        BleController.getInstance().manualStopAsync();
         mediaPlayer.stop();
         mediaPlayer.release();
     }
@@ -242,6 +243,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 start();
                 break;
             case PAUSE:
+                BleController.getInstance().manualStopAsync();
                 visualizer.setEnabled(false);
                 mediaPlayer.pause();
                 btnPlay.setImageResource(R.drawable.music_play);
@@ -287,6 +289,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
         visualizer.setEnabled(false);
+        BleController.getInstance().manualStopAsync();
         mediaPlayer.reset();
         return false;
     }

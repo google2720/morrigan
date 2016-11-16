@@ -22,9 +22,8 @@ import java.util.logging.Logger;
 public class VisualizerView extends View {
 
     private byte[] mBytes;
-    private float[] mPoints;
-    private Rect mRect = new Rect();
-    private Paint mForePaint = new Paint();
+    private Paint mForePaint1 = new Paint();
+    private Paint mForePaint2 = new Paint();
     List<Float> vols;
     float max = 0;
 
@@ -35,9 +34,12 @@ public class VisualizerView extends View {
 
     private void init() {
         mBytes = null;
-        mForePaint.setStrokeWidth(1f);
-        mForePaint.setAntiAlias(true);
-        mForePaint.setColor(0xffB269FE);
+        mForePaint1.setStrokeWidth(1f);
+        mForePaint1.setAntiAlias(true);
+        mForePaint1.setColor(0xffffffff);
+        mForePaint2.setStrokeWidth(1f);
+        mForePaint2.setAntiAlias(true);
+        mForePaint2.setColor(0xffB269FE);
     }
 
     public void updateVisualizer(byte[] bytes) {
@@ -80,7 +82,7 @@ public class VisualizerView extends View {
             float t = (float) ((getHeight() - (vol / max) * getHeight()) * 0.5);
             float r = l + 2 * w;
             float b = (float) (getHeight() * 0.5) - 5;
-            canvas.drawRect(l, t, r, b, mForePaint);
+            canvas.drawRect(l, t, r, b, mForePaint1);
         }
         for (int i = 0; i < 41; i++) {
             float vol = vols.get(i);
@@ -89,7 +91,7 @@ public class VisualizerView extends View {
             float t = (float) (getHeight() * 0.5 + 5);
             float r = l + 2 * w;
             float b = (float) (t + ((vol / max) * getHeight() * 0.5));
-            canvas.drawRect(l, t, r, b, mForePaint);
+            canvas.drawRect(l, t, r, b, mForePaint2);
         }
 
     }
