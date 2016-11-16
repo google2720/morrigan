@@ -9,7 +9,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
+
+import com.github.yzeaho.log.Lg;
 
 public class BleService extends Service {
 
@@ -64,11 +65,11 @@ public class BleService extends Service {
 
         @Override
         public void handleMessage(Message msg) {
-            Log.d(TAG, "handleMessage " + msg.what);
+            Lg.d(TAG, "handleMessage " + msg.what);
             switch (msg.what) {
                 case MSG_INIT:
                     String address = mBle.getBindDeviceAddress();
-                    Log.i(TAG, "bind device address " + address);
+                    Lg.i(TAG, "bind device address " + address);
                     if (!TextUtils.isEmpty(address)) {
                         sendEmptyMessage(MSG_SCAN);
                     }
@@ -97,7 +98,7 @@ public class BleService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "onCreate");
+        Lg.i(TAG, "onCreate");
         mHandler = new ServiceHandler(Looper.getMainLooper());
         mBle = BleController.getInstance();
         mBle.initialize(this);
@@ -107,14 +108,14 @@ public class BleService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "onStartCommand " + startId);
+        Lg.i(TAG, "onStartCommand " + startId);
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy");
+        Lg.i(TAG, "onDestroy");
         mBle.removeCallback(mCallback);
     }
 }

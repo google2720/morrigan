@@ -1,0 +1,52 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="TextAppearance.AppCompat.Title" parent="Base.TextAppearance.AppCompat.Title" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_title</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat" parent="Base.TextAppearance.AppCompat" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_medium</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Inverse" parent="Base.TextAppearance.AppCompat.Inverse" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_medium</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Small" parent="Base.TextAppearance.AppCompat.Small" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_small</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Small.Inverse" parent="Base.TextAppearance.AppCompat.Small.Inverse" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_small</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Medium" parent="Base.TextAppearance.AppCompat.Medium" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_medium</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Medium.Inverse" parent="Base.TextAppearance.AppCompat.Medium.Inverse" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_medium</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Large" parent="Base.TextAppearance.AppCompat.Large" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_large</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Large.Inverse" parent="Base.TextAppearance.AppCompat.Large.Inverse" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_large</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Widget.Button" parent="Base.TextAppearance.AppCompat.Widget.Button" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_medium</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Widget.ActionBar.Menu" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Menu" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_medium</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Subhead" parent="Base.TextAppearance.AppCompat.Subhead" tools:override="true">
+        <item name="android:textSize">@dimen/app_text_medium</item>
+        <item name="android:textColor">#333</item>
+    </style>
+
+</resources>

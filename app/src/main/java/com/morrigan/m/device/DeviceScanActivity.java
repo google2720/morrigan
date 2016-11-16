@@ -52,6 +52,9 @@ public class DeviceScanActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ble.setAutoConnect(false);
+        ble.setAutoReconnect(false);
+        ble.disconnect();
         ble.addCallback(cb);
         setContentView(R.layout.activity_device_scan);
         ImageView iconView = (ImageView) findViewById(R.id.icon);

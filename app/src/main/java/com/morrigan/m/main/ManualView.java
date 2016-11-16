@@ -25,7 +25,7 @@ import com.morrigan.m.BuildConfig;
 public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final int MIN_GEAR = 1;
-    private static final int MAX_GEAR = 5;
+    private static final int MAX_GEAR = 3;
     private Paint paint = new Paint();
     private Paint timePaint = new Paint();
     private int offset = 2;
@@ -59,6 +59,8 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         getHolder().addCallback(this);
+
+
     }
 
     @Override

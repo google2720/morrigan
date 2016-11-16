@@ -56,22 +56,27 @@
 
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/connectState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:background="@drawable/device_scan"
+        android:gravity="center"
         android:minHeight="@dimen/line_min_height"
         android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/connectIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_connect" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_connect"
             android:text="@string/device_connect"
             android:textColor="#a361ea" />
-    </FrameLayout>
+    </LinearLayout>
 </LinearLayout>

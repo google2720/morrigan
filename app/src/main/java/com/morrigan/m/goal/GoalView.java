@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.TextView;
+import android.view.View;
 
 import com.morrigan.m.R;
 
@@ -22,7 +22,7 @@ import com.morrigan.m.R;
  * 刻度尺View
  * Created by y on 2016/10/6.
  */
-public class GoalView extends TextView implements GestureDetector.OnGestureListener {
+public class GoalView extends View implements GestureDetector.OnGestureListener {
 
     private static final String TAG = "GoalView";
     private static final long DELAY_MILLIS = 50;
@@ -37,7 +37,7 @@ public class GoalView extends TextView implements GestureDetector.OnGestureListe
     private Paint tipPaint;
     private Rect boundText = new Rect();
     private Path path = new Path();
-    private int lineWidth = 2;
+    private int lineWidth = 1;
     private int divide = 10;
     private int divideGroup = divide * 5;
     private int triangleGap = 3;
@@ -73,13 +73,13 @@ public class GoalView extends TextView implements GestureDetector.OnGestureListe
     };
     private int value;
     private int valueMinHeight = 92;
+    private boolean firstLoad = true;
 
     public GoalView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOverScrollMode(OVER_SCROLL_ALWAYS);
         scroller = ScrollerCompat.create(context, null);
         detector = new GestureDetector(context, this);
-        initPaint();
         float density = getResources().getDisplayMetrics().density;
         lineWidth *= density;
         divide *= density;
@@ -89,6 +89,7 @@ public class GoalView extends TextView implements GestureDetector.OnGestureListe
         unit = context.getString(R.string.minute);
         tip = context.getString(R.string.goal_title_message);
         tip2 = context.getString(R.string.goal_title_message2);
+        initPaint();
     }
 
     private void initPaint() {
@@ -118,7 +119,8 @@ public class GoalView extends TextView implements GestureDetector.OnGestureListe
         unitPaint.setTypeface(font);
 
         tipPaint = new Paint();
-        tipPaint.setColor(0xb2000000);
+        tipPaint.setColor(0x7f000000);
+        tipPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.app_text_small));
         tipPaint.setAntiAlias(true);
         tipPaint.setTextAlign(Paint.Align.CENTER);
     }
@@ -126,13 +128,9 @@ public class GoalView extends TextView implements GestureDetector.OnGestureListe
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (value != 0) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scrollTo(value * divide, 0);
-                }
-            }, 150);
+        if (w > 0 && firstLoad) {
+            firstLoad = false;
+            scrollTo(value * divide, 0);
         }
     }
 
@@ -228,7 +226,6 @@ public class GoalView extends TextView implements GestureDetector.OnGestureListe
 
         // 文字提示
         top = ruleTextBottom + divide * 3;
-        tipPaint.setTextSize(getTextSize());
         tipPaint.getTextBounds(tip, 0, tip.length(), boundText);
         th = boundText.height();
         canvas.drawText(tip, centerX, top + th, tipPaint);

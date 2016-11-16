@@ -9,6 +9,7 @@ import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.github.yzeaho.common.ToastUtils;
@@ -66,6 +67,8 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
 
         @Override
         public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
+            ble.setAutoConnect(true);
+            ble.setAutoReconnect(true);
             Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
             startActivity(intent);
             finish();
@@ -84,6 +87,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
     private View connectStateView;
     private String connectAddress;
     private DeviceScanResultAdapter adapter;
+    private View connectIconView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         ArrayList<UiData> devices = (ArrayList<UiData>) getIntent().getSerializableExtra("data");
         setContentView(R.layout.activity_device_scan_result);
         connectStateView = findViewById(R.id.connectState);
+        connectIconView = findViewById(R.id.connectIcon);
         ImageView iconView = (ImageView) findViewById(R.id.icon);
         Picasso.with(this).load(R.drawable.device_scan_result_top).into(iconView);
         findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
@@ -113,19 +118,15 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
     protected void onDestroy() {
         super.onDestroy();
         ble.removeCallback(cb);
-        ble.setAutoConnect(true);
-        ble.setAutoReconnect(true);
     }
 
     @Override
     public void onListItemClick(View v, UiData device) {
         if (connectStateView.getVisibility() == View.GONE) {
             connectAddress = device.address;
-            ble.setAutoConnect(false);
-            ble.setAutoReconnect(false);
-            ble.disconnect();
             ble.connectAndBindAsync(device.name, device.address);
             connectStateView.setVisibility(View.VISIBLE);
+            connectIconView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
         }
     }
 
