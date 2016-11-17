@@ -25,7 +25,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#fffffd" />
 
-        <ImageButton
+        <com.morrigan.m.main.FloatConnectImageView
             android:id="@+id/connect"
             style="@style/Widget.AppCompat.ActionButton"
             android:layout_width="wrap_content"
@@ -79,14 +79,14 @@
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="5dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/tv_totalTime"
             android:layout_toRightOf="@id/tv_currTime"
-            android:thumb="@drawable/ic_music_thumb"
+            android:maxHeight="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:progressDrawable="@drawable/bg_bar"
+            android:thumb="@drawable/ic_music_thumb"
 
             />
 

@@ -1,6 +1,5 @@
 package com.morrigan.m.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,7 +8,6 @@ import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleController;
 import com.morrigan.m.c.MassageController;
-import com.morrigan.m.device.DeviceScanActivity;
 
 /**
  * 手动按摩界面
@@ -140,7 +138,6 @@ public class ManualActivity extends BaseActivity {
     }
 
     public void onClickScan(View view) {
-        Intent intent = new Intent(this, DeviceScanActivity.class);
-        startActivity(intent);
+        MassageController.getInstance().onClickConnect(this);
     }
 }

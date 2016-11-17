@@ -1,10 +1,17 @@
 package com.morrigan.m.c;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 
 import com.github.yzeaho.log.Lg;
+import com.morrigan.m.R;
 import com.morrigan.m.ble.BackgroundHandler;
+import com.morrigan.m.ble.BleController;
 import com.morrigan.m.ble.db.Massage;
+import com.morrigan.m.device.DeviceScanActivity;
 import com.morrigan.m.main.UploadHistoryDataService;
 
 import java.text.SimpleDateFormat;
@@ -88,5 +95,27 @@ public class MassageController {
             massage.save(context);
             saveImpl(context, userId, address, c2.getTimeInMillis() + 1, endTime);
         }
+    }
+
+    public void onClickConnect(final Activity activity) {
+        if (BleController.getInstance().isDeviceReady()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setMessage(R.string.change_device_tip);
+            builder.setNegativeButton(R.string.action_cancel, null);
+            builder.setPositiveButton(R.string.action_confirm, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    gotoDeviceScanActivity(activity);
+                }
+            });
+            builder.show();
+        } else {
+            gotoDeviceScanActivity(activity);
+        }
+    }
+
+    private void gotoDeviceScanActivity(Activity activity) {
+        Intent intent = new Intent(activity, DeviceScanActivity.class);
+        activity.startActivity(intent);
     }
 }

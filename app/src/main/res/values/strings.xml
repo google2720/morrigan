@@ -10,6 +10,10 @@
     <string name="action_yes">"是"</string>
     <string name="action_resetting">"重新设置"</string>
     <string name="action_logout">"注销"</string>
+    <string name="action_connect">"连接"</string>
+    <!-- 提示框 -->
+    <string name="no_open_ble_tip">"打开蓝牙来允许\"MORRIGAN\"连接到配件"</string>
+    <string name="change_device_tip">"确定要切换设备"</string>
     <!-- 网络错误 -->
     <string name="error_no_net">"当前网络不可用，请检查你的网络设置"</string>
     <!-- 欢迎界面 -->
@@ -64,12 +68,13 @@
     <string name="deleting">"正在删除"</string>
     <string name="emotion_be_in_love">"恋爱"</string>
     <string name="emotion_married">"已婚"</string>
-    <string name="emotion_single">"单身"</string>
+    <string name="emotion_single">"未婚"</string>
     <string name="select_avatar">"选择头像"</string>
     <string name="from_photo">"从相册中选择"</string>
     <string name="capture">"拍照"</string>
     <string name="capture_permission">"拍照功能需要读写SD的权限。"</string>
     <string name="uploading">"正在上传"</string>
+    <string name="age_message">"%d岁"</string>
     <!-- 设定目标 -->
     <string name="goal_title">"设定目标"</string>
     <string name="minute">"分"</string>
@@ -80,11 +85,11 @@
     <string name="device_title">"关联设备"</string>
     <string name="device_add">"添加新设备"</string>
     <string name="device_scan_title">"摩莉智能文胸"</string>
-    <string name="device_scan_tip">"正在搜索设备..."</string>
+    <string name="device_scan_tip">"正在搜索设备&#8230;"</string>
     <string name="device_scan_stop">"停止搜索"</string>
     <string name="device_please_select">"请选择设备"</string>
     <string name="device_result_num">"设备<xliff:g>%s</xliff:g>"</string>
-    <string name="device_connect">"正在连接..."</string>
+    <string name="device_connect">"正在连接&#8230;"</string>
     <string name="device_name_update_title">"修改设备名称"</string>
     <string name="device_name_input_hint">"请输入设备名称"</string>
     <string name="device_connect_failed">"连接失败"</string>
@@ -130,7 +135,7 @@
     <string name="history_title_week">"本周一阅"</string>
     <string name="history_today">"日"</string>
     <string name="history_week">"周"</string>
-    <string name="history_record_ing_message">"正在加载..."</string>
+    <string name="history_record_ing_message">"正在加载&#8230;"</string>
     <string name="history_week_goal">本周目标</string>
     <string name="history_week_nursing">本周护养</string>
     <string name="history_week_surplus">剩余目标值</string>
@@ -140,6 +145,5 @@
     <string name="history_day_surplus">剩余目标值</string>
     <!-- 音乐随动 -->
     <string name="music_play_title">"音乐随动"</string>
-   <string name="music_popup_colose">"关闭 "</string>
-
+    <string name="music_popup_close">"关闭 "</string>
 </resources>

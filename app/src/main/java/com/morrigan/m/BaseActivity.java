@@ -4,6 +4,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 
 import com.github.yzeaho.common.ToastUtils;
+import com.morrigan.m.ble.BleController;
 
 /**
  * activity的基类
@@ -17,6 +18,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         long time = SystemClock.elapsedRealtime();
         long spent = time - firstPressTime;
         if (spent < 2000) {
+            BleController ble = BleController.getInstance();
+            ble.setAutoConnect(false);
+            ble.setAutoReconnect(false);
+            ble.disconnect();
             super.onBackPressed();
         } else {
             firstPressTime = time;

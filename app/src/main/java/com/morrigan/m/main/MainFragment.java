@@ -18,8 +18,8 @@ import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.ble.db.Massage;
+import com.morrigan.m.c.MassageController;
 import com.morrigan.m.c.UserController;
-import com.morrigan.m.device.DeviceScanActivity;
 
 import java.util.Calendar;
 import java.util.List;
@@ -76,8 +76,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
         view.findViewById(R.id.connect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
-                startActivity(intent);
+                MassageController.getInstance().onClickConnect(getActivity());
             }
         });
         view.findViewById(R.id.knead_manual).setOnClickListener(new View.OnClickListener() {

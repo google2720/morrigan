@@ -3,6 +3,7 @@ package com.morrigan.m.login;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -279,7 +280,10 @@ public class RegisterActivity extends BaseActivity {
             }
             ToastUtils.show(activity, result.message);
             if (result.success) {
-                setResult(RESULT_OK);
+                Intent data = new Intent();
+                data.putExtra("phone", mobile);
+                data.putExtra("password", pw);
+                setResult(RESULT_OK, data);
                 finish();
             }
         }

@@ -80,8 +80,8 @@ public class LoginActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_REGISTER) {
             if (resultCode == RESULT_OK) {
-                phoneView.setText(UserController.getInstance().getMobile(this));
-                pwView.setText(UserController.getInstance().getPassword(this));
+                phoneView.setText(data.getStringExtra("phone"));
+                pwView.setText(data.getStringExtra("password"));
                 login();
             }
         }

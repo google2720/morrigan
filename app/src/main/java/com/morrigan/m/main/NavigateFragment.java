@@ -139,7 +139,10 @@ public class NavigateFragment extends Fragment {
                     dialog.dismiss();
                 }
                 if (result.success) {
-                    BleController.getInstance().disconnect();
+                    BleController ble = BleController.getInstance();
+                    ble.setAutoConnect(false);
+                    ble.setAutoReconnect(false);
+                    ble.disconnect();
                     UserController.getInstance().clear(getContext());
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

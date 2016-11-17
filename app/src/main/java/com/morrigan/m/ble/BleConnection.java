@@ -277,6 +277,7 @@ public class BleConnection {
     public synchronized void disconnect() {
         Lg.i(TAG, "disconnect");
         connectFailed(true);
+        broadcastUpdate(ACTION_GATT_DISCONNECTED);
     }
 
     public BluetoothDevice getDevice() {

@@ -75,7 +75,7 @@
                 android:background="@drawable/item_background"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="@string/music_popup_colose"
+                android:text="@string/music_popup_close"
                 android:textSize="20dp"
                 />
 

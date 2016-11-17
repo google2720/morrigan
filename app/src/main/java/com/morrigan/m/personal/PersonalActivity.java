@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.OptionsPickerView;
+import com.bigkoo.pickerview.YearMonthDayPickerView;
 import com.bigkoo.pickerview.model.ItemBean;
 import com.github.yzeaho.common.ToastUtils;
 import com.github.yzeaho.file.Closeables;
@@ -42,7 +43,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -69,6 +75,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     private TextView nicknameView;
     private File captureOutFile;
     private ImageView avatarView;
+    private Calendar birthCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,8 +111,16 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         String age = UserController.getInstance().getAge(this);
         if (TextUtils.isEmpty(age)) {
             ageView.setText(R.string.please_input);
+            setBirthDefaultDate();
         } else {
-            ageView.setText(age + "岁");
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(age);
+                birthCalendar.setTime(date);
+                updateAgeView();
+            } catch (ParseException e) {
+                ageView.setText(R.string.please_input);
+                setBirthDefaultDate();
+            }
         }
 
         // 情感
@@ -139,6 +154,36 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         }
     }
 
+    private void setBirthDefaultDate() {
+        birthCalendar.setTime(new Date());
+        birthCalendar.add(Calendar.YEAR, -18);
+        birthCalendar.set(Calendar.MONTH, 11);
+        birthCalendar.set(Calendar.DAY_OF_MONTH, 22);
+    }
+
+    private void updateAgeView() {
+        int age = 0;
+        Calendar calendar = Calendar.getInstance();
+        if (calendar.after(birthCalendar)) {
+            age = calendar.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR);
+            int monthBirth = birthCalendar.get(Calendar.MONTH);
+            int dayOfMonthBirth = birthCalendar.get(Calendar.DAY_OF_MONTH);
+            int monthNow = calendar.get(Calendar.MONTH);
+            int dayOfMonthNow = calendar.get(Calendar.DAY_OF_MONTH);
+            if (monthNow <= monthBirth) {
+                //如果月份相等，在比较日期，如果当前日，小于出生日，也减1，表示不满多少周岁
+                if (monthNow == monthBirth) {
+                    if (dayOfMonthNow < dayOfMonthBirth) {
+                        age--;
+                    }
+                } else {
+                    age--;
+                }
+            }
+        }
+        ageView.setText(getString(R.string.age_message, age));
+    }
+
     public void onClickModifyNickName(View view) {
         Intent intent = new Intent(this, ModifyNickNameActivity.class);
         startActivity(intent);
@@ -147,7 +192,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     public void onClickEmotion(View view) {
         final String[] emotionValues = getResources().getStringArray(R.array.emotion_values);
         String emotion = UserController.getInstance().getEmotion(this);
-        int index = 0;
+        int index = 2;
         int length = emotionValues.length;
         for (int i = 0; i < length; i++) {
             if (emotionValues[i].equals(emotion)) {
@@ -186,7 +231,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     public void onClickHeight(View view) {
         String h = UserController.getInstance().getHeight(this);
-        int index = 0;
+        int index = 168 - MIN_HEIGHT;
         try {
             index = Integer.parseInt(h) - MIN_HEIGHT;
             index = Math.max(0, Math.min(index, MAX_HEIGHT - MIN_HEIGHT));
@@ -221,7 +266,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     public void onClickWeight(View view) {
         String w = UserController.getInstance().getWeight(this);
-        int index = 0;
+        int index = 48 - MIN_WEIGHT;
         try {
             index = Integer.parseInt(w) - MIN_WEIGHT;
             index = Math.max(0, Math.min(index, MAX_WEIGHT - MIN_WEIGHT));
@@ -255,38 +300,30 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     }
 
     public void onClickAge(View view) {
-        String age = UserController.getInstance().getAge(this);
-        int index = 18;
-        try {
-            index = Integer.parseInt(age);
-            index = Math.max(1, Math.min(index, 120));
-        } catch (Exception e) {
-            // ignore
-        }
-        final ArrayList<ItemBean> items = new ArrayList<>();
-        for (int i = 1; i <= 120; i++) {
-            items.add(new ItemBean(i, String.valueOf(i)));
-        }
-        OptionsPickerView<ItemBean> optionsPickerView = new OptionsPickerView<>(this);
-        optionsPickerView.setPicker(items, null, null);
-        optionsPickerView.setCyclic(false, false, false);
-        optionsPickerView.setSelectOptions(index - 1, 0, 0);
-        optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+        YearMonthDayPickerView pickerView = new YearMonthDayPickerView(this, YearMonthDayPickerView.Type.YEAR_MONTH_DAY);
+        pickerView.setRange(1916, Calendar.getInstance().get(Calendar.YEAR));
+        pickerView.setTime(birthCalendar.getTime());
+        pickerView.setCyclic(false);
+        pickerView.setCancelable(true);
+        pickerView.setOnTimeSelectListener(new YearMonthDayPickerView.OnTimeSelectListener() {
             @Override
-            public void onOptionsSelect(int options1, int options2, int options3) {
-                final String age = items.get(options1).getName();
+            public void onTimeSelect(final int year, final int month, final int dayOfMonth) {
+                int m = month + 1;
+                final String age = year + "-" + (m < 10 ? "0" + m : m) + "-" + (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth);
                 PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "age", age, new Runnable() {
                     @Override
                     public void run() {
                         UserController.getInstance().setAge(PersonalActivity.this, age);
-                        ageView.setText(age + "岁");
+                        birthCalendar.set(Calendar.YEAR, year);
+                        birthCalendar.set(Calendar.MONTH, month);
+                        birthCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        updateAgeView();
                     }
                 });
                 AsyncTaskCompat.executeParallel(task);
             }
         });
-        optionsPickerView.setCancelable(true);
-        optionsPickerView.show();
+        pickerView.show();
     }
 
     public void onClickAvatar(View view) {

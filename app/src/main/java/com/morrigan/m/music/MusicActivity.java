@@ -2,7 +2,6 @@ package com.morrigan.m.music;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
@@ -12,7 +11,6 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,13 +21,12 @@ import android.widget.Toast;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleController;
-import com.morrigan.m.device.DeviceScanActivity;
+import com.morrigan.m.c.MassageController;
 import com.morrigan.m.main.VisualizerView;
 import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Timer;
 
 /**
  * 音乐跟随界面
@@ -105,8 +102,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     public void onClickScan(View view) {
-        Intent intent = new Intent(this, DeviceScanActivity.class);
-        startActivity(intent);
+        MassageController.getInstance().onClickConnect(this);
     }
 
     @Override
