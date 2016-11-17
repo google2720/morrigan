@@ -10,12 +10,13 @@
     <string name="action_yes">"是"</string>
     <string name="action_resetting">"重新设置"</string>
     <string name="action_logout">"注销"</string>
+    <!-- 网络错误 -->
+    <string name="error_no_net">"当前网络不可用，请检查你的网络设置"</string>
     <!-- 欢迎界面 -->
     <string name="permission_explain">"权限说明"</string>
     <string name="permission_explain_location">"扫描摩莉设备需要使用手机的位置信息\n"</string>
     <string name="permission_explain_record">"显示音乐波形图需要使用麦克风权限\n"</string>
     <string name="permission_explain_retad_external_storage">"播放音乐需要使用读取外部存储权限\n"</string>
-
     <!-- 登录界面 -->
     <string name="input_phone_hint">"请输入手机号码"</string>
     <string name="input_pw_hint">"请输入密码"</string>
@@ -109,6 +110,8 @@
     <string name="bra_left">"左胸"</string>
     <string name="bra_right">"右胸"</string>
     <string name="bra_empty_tip">"同步操作开关至少一个被选中"</string>
+    <string name="bra_max_gear">""当前已经是最高档位""</string>
+    <string name="bra_min_gear">""当前已经是最低档位""</string>
     <string name="device_no_connect">"设备未连接"</string>
     <string name="device_no_connect_tip">"请先连接设备再来开始按摩吧"</string>
     <!-- 自动按摩界面 -->

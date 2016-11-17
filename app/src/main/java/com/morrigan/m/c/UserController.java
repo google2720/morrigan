@@ -3,8 +3,8 @@ package com.morrigan.m.c;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
+import com.morrigan.m.HttpProxy;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
@@ -160,13 +160,12 @@ public class UserController {
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
-            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-            HttpResult r = result.parse(HttpResult.class);
+            HttpResult r = new HttpProxy().execute(context, builder.build(), HttpResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
         } catch (Exception e) {
             Lg.w("user", "failed to modify user info", e);
-            uiResult.message = e.getMessage();
+            uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;
     }
@@ -180,13 +179,12 @@ public class UserController {
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
-            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-            HttpResult r = result.parse(HttpResult.class);
+            HttpResult r = new HttpProxy().execute(context, builder.build(), HttpResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
         } catch (Exception e) {
             Lg.w("user", "failed to logout user", e);
-            uiResult.message = e.getMessage();
+            uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;
     }
@@ -201,8 +199,7 @@ public class UserController {
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
-            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-            LoginResult r = result.parse(LoginResult.class);
+            LoginResult r = new HttpProxy().execute(context, builder.build(), LoginResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success) {
@@ -211,7 +208,7 @@ public class UserController {
             }
         } catch (Exception e) {
             Lg.w(TAG, "failed to login", e);
-            uiResult.message = e.getMessage();
+            uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;
     }

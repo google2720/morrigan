@@ -25,9 +25,9 @@ import com.bigkoo.pickerview.model.ItemBean;
 import com.github.yzeaho.common.ToastUtils;
 import com.github.yzeaho.file.Closeables;
 import com.github.yzeaho.file.FileApi;
-import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.Dirs;
+import com.morrigan.m.HttpProxy;
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
@@ -58,6 +58,10 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     private static final int REQUEST_CODE_PICK_PHOTO = 1;
     private static final int REQUEST_CODE_CAPTURE = 2;
     private static final int REQUEST_CODE_CUT = 3;
+    private static final int MIN_WEIGHT = 20;
+    private static final int MAX_WEIGHT = 199;
+    private static final int MIN_HEIGHT = 100;
+    private static final int MAX_HEIGHT = 299;
     private TextView heightView;
     private TextView weightView;
     private TextView emotionView;
@@ -182,21 +186,21 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     public void onClickHeight(View view) {
         String h = UserController.getInstance().getHeight(this);
-        int index = 160;
+        int index = 0;
         try {
-            index = Integer.parseInt(h);
-            index = Math.max(1, Math.min(index, 250));
+            index = Integer.parseInt(h) - MIN_HEIGHT;
+            index = Math.max(0, Math.min(index, MAX_HEIGHT - MIN_HEIGHT));
         } catch (Exception e) {
             // ignore
         }
         final ArrayList<ItemBean> items = new ArrayList<>();
-        for (int i = 1; i <= 250; i++) {
+        for (int i = MIN_HEIGHT; i <= MAX_HEIGHT; i++) {
             items.add(new ItemBean(i, String.valueOf(i)));
         }
         OptionsPickerView<ItemBean> optionsPickerView = new OptionsPickerView<>(this);
         optionsPickerView.setPicker(items, null, null);
         optionsPickerView.setCyclic(false, false, false);
-        optionsPickerView.setSelectOptions(index - 1, 0, 0);
+        optionsPickerView.setSelectOptions(index, 0, 0);
         optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
@@ -217,21 +221,21 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     public void onClickWeight(View view) {
         String w = UserController.getInstance().getWeight(this);
-        int index = 45;
+        int index = 0;
         try {
-            index = Integer.parseInt(w);
-            index = Math.max(1, Math.min(index, 125));
+            index = Integer.parseInt(w) - MIN_WEIGHT;
+            index = Math.max(0, Math.min(index, MAX_WEIGHT - MIN_WEIGHT));
         } catch (Exception e) {
             // ignore
         }
         final ArrayList<ItemBean> items = new ArrayList<>();
-        for (int i = 1; i <= 125; i++) {
+        for (int i = MIN_WEIGHT; i <= MAX_WEIGHT; i++) {
             items.add(new ItemBean(i, String.valueOf(i)));
         }
         OptionsPickerView<ItemBean> optionsPickerView = new OptionsPickerView<>(this);
         optionsPickerView.setPicker(items, null, null);
         optionsPickerView.setCyclic(false, false, false);
-        optionsPickerView.setSelectOptions(index - 1, 0, 0);
+        optionsPickerView.setSelectOptions(index, 0, 0);
         optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
@@ -402,14 +406,13 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
                 Request.Builder builder = new Request.Builder();
                 builder.url(url);
                 builder.post(requestBody);
-                HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-                UploadResult r = result.parse(UploadResult.class);
+                UploadResult r = new HttpProxy().execute(context, builder.build(), UploadResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
                 uiResult.t = r.imgUrl;
             } catch (Exception e) {
                 Lg.w(TAG, "failed to update img", e);
-                uiResult.message = e.getMessage();
+                uiResult.message = HttpProxy.parserError(context, e);
             }
             return uiResult;
         }

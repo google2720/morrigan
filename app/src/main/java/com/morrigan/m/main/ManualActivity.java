@@ -41,6 +41,8 @@ public class ManualActivity extends BaseActivity {
             if (manualView.isStart()) {
                 BleController.getInstance().manualAsync(manualView.getGear(), getBar());
             }
+        } else {
+            ToastUtils.show(this, R.string.bra_max_gear);
         }
     }
 
@@ -49,6 +51,8 @@ public class ManualActivity extends BaseActivity {
             if (manualView.isStart()) {
                 BleController.getInstance().manualAsync(manualView.getGear(), getBar());
             }
+        } else {
+            ToastUtils.show(this, R.string.bra_min_gear);
         }
     }
 

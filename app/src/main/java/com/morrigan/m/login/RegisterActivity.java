@@ -16,9 +16,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.github.yzeaho.common.ToastUtils;
-import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BaseActivity;
+import com.morrigan.m.HttpProxy;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
@@ -148,7 +148,7 @@ public class RegisterActivity extends BaseActivity {
 
         private Context context;
         private String mobile;
-        private HttpInterface.Result result;
+        private HttpProxy http = new HttpProxy();
 
         SendSmsCodeTask(Context context, String mobile) {
             this.context = context.getApplicationContext();
@@ -171,13 +171,12 @@ public class RegisterActivity extends BaseActivity {
                 Request.Builder builder = new Request.Builder();
                 builder.url(url);
                 builder.post(b.build());
-                result = HttpInterface.Factory.create().execute(builder.build());
-                HttpResult r = result.parse(HttpResult.class);
+                HttpResult r = http.execute(context, builder.build(), HttpResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
             } catch (Exception e) {
                 Lg.w(TAG, "failed to send sms code", e);
-                uiResult.message = e.getMessage();
+                uiResult.message = HttpProxy.parserError(context, e);
             }
             return uiResult;
         }
@@ -192,9 +191,7 @@ public class RegisterActivity extends BaseActivity {
         }
 
         void cancel() {
-            if (result != null && result.call != null) {
-                result.call.cancel();
-            }
+            http.cancel();
             cancel(true);
         }
     }
@@ -230,7 +227,6 @@ public class RegisterActivity extends BaseActivity {
         private String smsCode;
         private String pw;
         private boolean male;
-        private HttpInterface.Result result;
         private ProgressDialog dialog;
 
         RegisterTask(Activity activity, String mobile, String smsCode, String pw, boolean male) {
@@ -262,8 +258,7 @@ public class RegisterActivity extends BaseActivity {
                 Request.Builder builder = new Request.Builder();
                 builder.url(url);
                 builder.post(b.build());
-                result = HttpInterface.Factory.create().execute(builder.build());
-                RegisterResult r = result.parse(RegisterResult.class);
+                RegisterResult r = new HttpProxy().execute(activity, builder.build(), RegisterResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
                 uiResult.t = r.userId;
@@ -272,7 +267,7 @@ public class RegisterActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to register", e);
-                uiResult.message = e.getMessage();
+                uiResult.message = HttpProxy.parserError(activity, e);
             }
             return uiResult;
         }

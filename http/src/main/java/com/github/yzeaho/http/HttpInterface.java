@@ -25,6 +25,7 @@ public interface HttpInterface {
     Call enqueue(Request request, Callback responseCallback, ProgressListener progressListener) throws IOException;
 
     class Result {
+        private static final String TAG = "http";
         public Call call;
         public Response response;
 
@@ -37,7 +38,7 @@ public interface HttpInterface {
                     throw new RuntimeException(response.code() + " " + response.message());
                 }
                 String r = response.body().string();
-                Lg.d("http", hashCode() + " rev:" + r);
+                Lg.d(TAG, hashCode() + " rev:" + r);
                 return new Gson().fromJson(r, cls);
             } finally {
                 response.close();
@@ -45,9 +46,9 @@ public interface HttpInterface {
         }
 
         Response execute() throws IOException {
-            Lg.d("http", hashCode() + " send:" + call.request().url());
+            Lg.d(TAG, hashCode() + " send:" + call.request().url());
             Response response = call.execute();
-            Lg.d("http", hashCode() + " " + response.toString());
+            Lg.d(TAG, hashCode() + " " + response.toString());
             return response;
         }
     }

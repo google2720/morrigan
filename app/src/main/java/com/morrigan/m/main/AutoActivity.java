@@ -67,12 +67,12 @@ public class AutoActivity extends BaseActivity {
     }
 
     public void onClickStart(View view) {
-        if (!BleController.getInstance().isDeviceReady()) {
-            showNoDeviceReady();
-            return;
-        }
         if (autoLayout.isModeEmpty()) {
             ToastUtils.show(this, R.string.massage_start_tip);
+            return;
+        }
+        if (!BleController.getInstance().isDeviceReady()) {
+            showNoDeviceReady();
             return;
         }
         boolean a = view.isActivated();

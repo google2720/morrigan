@@ -14,12 +14,12 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.yzeaho.common.ToastUtils;
 import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BaseActivity;
+import com.morrigan.m.HttpProxy;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
@@ -131,6 +131,7 @@ public class ForgetPasswordActivity extends BaseActivity {
         private Context context;
         private String mobile;
         private HttpInterface.Result result;
+        private HttpProxy http = new HttpProxy();
 
         SendSmsCodeTask(Context context, String mobile) {
             this.context = context.getApplicationContext();
@@ -153,13 +154,12 @@ public class ForgetPasswordActivity extends BaseActivity {
                 Request.Builder builder = new Request.Builder();
                 builder.url(url);
                 builder.post(b.build());
-                result = HttpInterface.Factory.create().execute(builder.build());
-                HttpResult r = result.parse(HttpResult.class);
+                HttpResult r = http.execute(context, builder.build(), HttpResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
             } catch (Exception e) {
                 Lg.w(TAG, "failed to send sms code", e);
-                uiResult.message = e.getMessage();
+                uiResult.message = HttpProxy.parserError(context, e);
             }
             return uiResult;
         }
@@ -174,9 +174,7 @@ public class ForgetPasswordActivity extends BaseActivity {
         }
 
         void cancel() {
-            if (result != null && result.call != null) {
-                result.call.cancel();
-            }
+            http.cancel();
             cancel(true);
         }
     }
@@ -207,7 +205,6 @@ public class ForgetPasswordActivity extends BaseActivity {
         private String mobile;
         private String smsCode;
         private String pw;
-        private HttpInterface.Result result;
         private ProgressDialog dialog;
 
         CompleteTask(Activity activity, String mobile, String smsCode, String pw) {
@@ -237,13 +234,12 @@ public class ForgetPasswordActivity extends BaseActivity {
                 Request.Builder builder = new Request.Builder();
                 builder.url(url);
                 builder.post(b.build());
-                result = HttpInterface.Factory.create().execute(builder.build());
-                HttpResult r = result.parse(RegisterResult.class);
+                HttpResult r = new HttpProxy().execute(activity, builder.build(), HttpResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
             } catch (Exception e) {
                 Lg.w(TAG, "failed to register", e);
-                uiResult.message = e.getMessage();
+                uiResult.message = HttpProxy.parserError(activity, e);
             }
             return uiResult;
         }

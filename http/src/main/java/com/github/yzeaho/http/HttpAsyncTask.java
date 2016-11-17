@@ -59,7 +59,7 @@ public abstract class HttpAsyncTask<Result> {
         }
     }
 
-    final class FetchAsyncTask extends AsyncTask<Void, Void, Result> {
+    private final class FetchAsyncTask extends AsyncTask<Void, Void, Result> {
 
         @Override
         protected void onPreExecute() {
