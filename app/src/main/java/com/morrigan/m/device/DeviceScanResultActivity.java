@@ -76,12 +76,19 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
 
         @Override
         public void onBindDeviceFailed(int error) {
-            if (error == BleError.BIND_BY_OTHER) {
-                ToastUtils.show(getApplicationContext(), "设备已被绑定");
-            }
-            Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindFailedActivity.class);
-            startActivity(intent);
-            finish();
+            final int temError=error;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (temError == BleError.BIND_BY_OTHER) {
+                        ToastUtils.show(getApplicationContext(), "设备已被绑定");
+                    }
+                    Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindFailedActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
         }
     };
     private View connectStateView;

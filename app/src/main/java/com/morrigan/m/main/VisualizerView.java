@@ -40,6 +40,26 @@ public class VisualizerView extends View {
         mForePaint2.setStrokeWidth(1f);
         mForePaint2.setAntiAlias(true);
         mForePaint2.setColor(0xffB269FE);
+        vols = new ArrayList<>();
+        Random random=new Random();
+        for (int i = 0; i < 41; i++) {
+            int tem1=i%3;
+            int tem2=128;
+            switch (tem1){
+                case 0:{
+                     tem2=60;
+                }break;
+                case 1:{
+                     tem2=80;
+                }break;
+                case 2:{
+                     tem2=128;
+                }break;
+            }
+            float tem3=random.nextInt(tem2);
+            vols.add( tem3);
+        }
+        max = Collections.max(vols);
     }
 
     public void updateVisualizer(byte[] bytes) {
@@ -53,18 +73,16 @@ public class VisualizerView extends View {
             }
             max = Collections.max(vols);
             float min=Collections.min(vols);
-            if (max!=0){
-                if (max==min) {
-                    for (int i = 0; i < 41; i++) {
-                        Random random=new Random();
-                        float tem=random.nextInt(128);
-                        vols.set(i, tem);
-                    }
+            if (max==0||max==min){
+                for (int i = 0; i < 41; i++) {
+                    Random random=new Random();
+                    float tem=random.nextInt(128);
+                    vols.set(i, tem);
                 }
-                ViewCompat.postInvalidateOnAnimation(this);
+                max = Collections.max(vols);
+                min=Collections.min(vols);
             }
-
-
+            ViewCompat.postInvalidateOnAnimation(this);
         }
 
     }
@@ -72,9 +90,6 @@ public class VisualizerView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mBytes == null) {
-            return;
-        }
         for (int i = 0; i < 41; i++) {
             float vol = vols.get(i);
             float w = (float) (1 / 122.0) * getWidth();
@@ -95,27 +110,5 @@ public class VisualizerView extends View {
         }
 
     }
-
-//    @Override
-//    protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
-//        if (mBytes == null) {
-//            return;
-//        }
-//        if (mPoints == null || mPoints.length < mBytes.length * 4) {
-//            mPoints = new float[mBytes.length * 4];
-//        }
-//        mRect.set(0, 0, getWidth(), getHeight());
-//        for (int i = 0; i < mBytes.length - 1; i++) {
-//            mPoints[i * 4] = mRect.width() * i / (mBytes.length - 1);
-//            mPoints[i * 4 + 1] = mRect.height() / 2
-//                    + ((byte) (mBytes[i] + 128)) * (mRect.height() / 2) / 128;
-//            mPoints[i * 4 + 2] = mRect.width() * (i + 1) / (mBytes.length - 1);
-//            mPoints[i * 4 + 3] = mRect.height() / 2
-//                    + ((byte) (mBytes[i + 1] + 128)) * (mRect.height() / 2) / 128;
-//        }
-//        canvas.drawLines(mPoints, mForePaint);
-//    }
-
 
 }

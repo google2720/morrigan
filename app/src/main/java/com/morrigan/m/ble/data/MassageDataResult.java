@@ -5,7 +5,7 @@ package com.morrigan.m.ble.data;
  */
 public class MassageDataResult extends Data {
 
-    private byte[] data;
+    public byte[] data;
 
     private MassageDataResult(byte[] data) {
         this.data = data;

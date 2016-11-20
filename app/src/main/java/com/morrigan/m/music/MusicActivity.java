@@ -63,7 +63,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private FlingUpImageView iv_up;
     MusicsPopupWindow popupWindow;
     long time;
-
+    int sendIndex=0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,9 +92,10 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     private void initMusic() {
-        loader = MusicLoader.instance(context.getApplicationContext().getContentResolver());
         new Thread(new Runnable() {
             public void run() {
+                loader = MusicLoader.instance(context.getApplicationContext());
+                loader.init();;
                 musics = loader.getMusicList();
                 hander.sendEmptyMessage(SEARCH_MUSIC_SUCCESS);
             }
@@ -137,7 +138,12 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             MusicInfo info = musics.get(currIndex);
             mediaPlayer.reset();
             try {
-                mediaPlayer.setDataSource(info.getUrl());
+                if (info.isAssertsMusic()){
+                    mediaPlayer.setDataSource(info.fileName);
+                }else {
+                    mediaPlayer.setDataSource(info.getUrl());
+                }
+
                 mediaPlayer.prepare();
                 mediaPlayer.start();
                 initSeekBar();
@@ -192,9 +198,19 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                         Log.i("music", "onWaveFormDataCapture " + bytes.length);
                         time = SystemClock.elapsedRealtime();
                         visualizerView.updateVisualizer(bytes);
-                        int vol = 128 - Math.abs(bytes[0]);
+                        long sum=0;
+                        for(int i=0 ;i<bytes.length; i ++ ){
+                            sum+=bytes[i];
+                        }
+                        int tem= (int) (sum/(bytes.length+0.0));
+                        Log.e("平均",tem+"");
+                        int vol = 128 - Math.abs(tem);
                         int decibel = (int) (vol * 160 / 128.0);
-                        BleController.getInstance().musicMassageAsync(decibel);
+                        sendIndex=(sendIndex+1)%10;
+                        if (sendIndex==0){
+                            BleController.getInstance().musicMassageAsync(decibel);
+                        }
+
                     }
                 }
 
