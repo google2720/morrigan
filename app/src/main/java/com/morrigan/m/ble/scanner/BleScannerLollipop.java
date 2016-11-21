@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.os.Build;
 
 import com.github.yzeaho.log.Lg;
@@ -44,7 +45,9 @@ public class BleScannerLollipop implements BleScanner {
     public void startLeScan() {
         BluetoothLeScanner scanner = mBleAdapter.getBluetoothLeScanner();
         if (scanner != null) {
-            scanner.startScan(mScanCallback);
+            ScanSettings.Builder builder = new ScanSettings.Builder();
+            builder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
+            scanner.startScan(null, builder.build(), mScanCallback);
         }
     }
 
