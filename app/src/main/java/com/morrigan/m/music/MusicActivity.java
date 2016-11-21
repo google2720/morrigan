@@ -63,7 +63,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private FlingUpImageView iv_up;
     MusicsPopupWindow popupWindow;
     long time;
-    int sendIndex=0;
+    int sendIndex = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +88,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         setupVisualizerFxAndUI();
         iv_up = (FlingUpImageView) this.findViewById(R.id.iv_up);
         popupWindow = new MusicsPopupWindow(activity);
+        popupWindow.setOpenPopup(this);
         iv_up.setOpenPopup(this);
         initMusic();
     }
@@ -95,7 +97,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         new Thread(new Runnable() {
             public void run() {
                 loader = MusicLoader.instance(context.getApplicationContext());
-                loader.init();;
+                loader.init();
+                ;
                 musics = loader.getMusicList();
                 hander.sendEmptyMessage(SEARCH_MUSIC_SUCCESS);
             }
@@ -109,6 +112,13 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     public void openPopup() {
         popupWindow.showAtLocation(MusicActivity.this.getWindow().getDecorView(), Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    @Override
+    public void closePopup() {
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+        }
     }
 
 
@@ -138,9 +148,9 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             MusicInfo info = musics.get(currIndex);
             mediaPlayer.reset();
             try {
-                if (info.isAssertsMusic()){
+                if (info.isAssertsMusic()) {
                     mediaPlayer.setDataSource(info.fileName);
-                }else {
+                } else {
                     mediaPlayer.setDataSource(info.getUrl());
                 }
 
@@ -198,16 +208,16 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                         Log.i("music", "onWaveFormDataCapture " + bytes.length);
                         time = SystemClock.elapsedRealtime();
                         visualizerView.updateVisualizer(bytes);
-                        long sum=0;
-                        for(int i=0 ;i<bytes.length; i ++ ){
-                            sum+=bytes[i];
+                        long sum = 0;
+                        for (int i = 0; i < bytes.length; i++) {
+                            sum += bytes[i];
                         }
-                        int tem= (int) (sum/(bytes.length+0.0));
-                        Log.e("平均",tem+"");
+                        int tem = (int) (sum / (bytes.length + 0.0));
+                        Log.e("平均", tem + "");
                         int vol = 128 - Math.abs(tem);
                         int decibel = (int) (vol * 160 / 128.0);
-                        sendIndex=(sendIndex+1)%10;
-                        if (sendIndex==0){
+                        sendIndex = (sendIndex + 1) % 10;
+                        if (sendIndex == 0) {
                             BleController.getInstance().musicMassageAsync(decibel);
                         }
 
