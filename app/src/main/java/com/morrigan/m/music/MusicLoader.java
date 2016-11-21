@@ -161,7 +161,7 @@ public class MusicLoader {
         List<MusicInfo> musicInfoList2 = new ArrayList<>();
         for (int i = 0; i < musicList.size(); i++) {
             MusicInfo info = musicList.get(i);
-            if ("G.E.M.邓紫棋 - 喜欢你".equals(info.getTitle())) {
+            if ("G.E.M. 邓紫棋 - 喜欢你".equals(info.getTitle())) {
                 musicInfoList1.add(info);
             } else if ("卡农 - 钢琴小提琴二重奏".equals(info.getTitle())) {
                 musicInfoList1.add(info);
