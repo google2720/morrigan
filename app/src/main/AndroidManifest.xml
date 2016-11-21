@@ -123,6 +123,11 @@
             android:name=".music.MusicActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ReConnectBleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ReConnect" />
+
         <service
             android:name=".main.UploadHistoryDataService"
             android:enabled="true"

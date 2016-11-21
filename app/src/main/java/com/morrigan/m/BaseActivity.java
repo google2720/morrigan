@@ -18,10 +18,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         long time = SystemClock.elapsedRealtime();
         long spent = time - firstPressTime;
         if (spent < 2000) {
-            BleController ble = BleController.getInstance();
-            ble.setAutoConnect(false);
-            ble.setAutoReconnect(false);
-            ble.disconnect();
+            BleController.getInstance().quit();
             super.onBackPressed();
         } else {
             firstPressTime = time;

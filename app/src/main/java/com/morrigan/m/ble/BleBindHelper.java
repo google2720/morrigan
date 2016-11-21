@@ -36,10 +36,10 @@ public class BleBindHelper {
             return;
         }
         Lg.i(TAG, "start connect " + address);
-        connect(device, 5);
+        connect(device, 5, true);
     }
 
-    private void connect(BluetoothDevice device, int retryCount) {
+    private void connect(BluetoothDevice device, int retryCount, boolean sendToServer) {
         SimpleBleCallback cb = new SimpleBleCallback() {
             @Override
             public void onBluetoothOff() {
@@ -70,7 +70,7 @@ public class BleBindHelper {
                     ble.getCallbacks().onBindDeviceFailed(BleError.BLE_OFF);
                     return;
                 } else if (connectSuccess) {
-                    if (ble.bindDevice(device, true)) {
+                    if (ble.bindDevice(device, sendToServer)) {
                         ble.getCallbacks().onBindDeviceSuccess(device, firstBind);
                         return;
                     }
@@ -82,5 +82,15 @@ public class BleBindHelper {
             ble.removeCallback(cb);
         }
         ble.getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
+    }
+
+    public void reconnect(Context context, String address) {
+        Lg.i(TAG, "start reconnect " + address);
+        BluetoothDevice device = ble.getRemoteDevice(address);
+        if (device == null) {
+            ble.getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
+            return;
+        }
+        connect(device, 5, false);
     }
 }

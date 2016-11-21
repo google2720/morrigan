@@ -59,8 +59,8 @@ public abstract class AbstractBleController {
     };
     private boolean mScanning;
     private boolean mInitialize;
-    private boolean mAutoConnect = true;
-    private boolean mAutoReconnect = true;
+    private boolean mAutoConnect = false;
+    private boolean mAutoReconnect = false;
     private boolean mDeviceReady;
     private BleScanner mScanner;
     private BroadcastReceiver receiver = new BroadcastReceiver() {

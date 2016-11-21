@@ -23,16 +23,26 @@ public class AutoActivity extends BaseActivity {
     private BleCallback cb = new SimpleBleCallback() {
         @Override
         public void onGattDisconnected(BluetoothDevice device) {
-            if (autoLayout.isStart()) {
-                stop();
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (autoLayout.isStart()) {
+                        stop();
+                    }
+                }
+            });
         }
 
         @Override
         public void onBluetoothOff() {
-            if (autoLayout.isStart()) {
-                stop();
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (autoLayout.isStart()) {
+                        stop();
+                    }
+                }
+            });
         }
     };
 

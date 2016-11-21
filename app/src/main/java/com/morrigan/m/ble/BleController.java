@@ -2,11 +2,13 @@ package com.morrigan.m.ble;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.Size;
 
 import com.github.yzeaho.log.Lg;
+import com.morrigan.m.ReConnectBleActivity;
 import com.morrigan.m.ble.data.Battery;
 import com.morrigan.m.ble.data.BatteryResponse;
 import com.morrigan.m.ble.data.BatteryResult;
@@ -26,6 +28,12 @@ public class BleController extends AbstractBleController {
         @Override
         public void onGattDisconnected(BluetoothDevice device) {
             mCallbacks.onNotifyBattery(0);
+            if (isAutoReconnect()) {
+                Intent intent = new Intent(mContext, ReConnectBleActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+                mContext.startActivity(intent);
+            }
         }
 
         @Override
@@ -35,6 +43,7 @@ public class BleController extends AbstractBleController {
 
         @Override
         public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
+            setAutoReconnect(true);
             fetchBatteryAsync();
         }
     };
@@ -59,6 +68,12 @@ public class BleController extends AbstractBleController {
         editor.apply();
     }
 
+    public void quit() {
+        setAutoConnect(false);
+        setAutoReconnect(false);
+        disconnect();
+    }
+
     @Override
     protected void onReceiveNotifyData(byte[] data) {
         Data d = NotifyDataHelper.parser(data);
@@ -75,6 +90,16 @@ public class BleController extends AbstractBleController {
             @Override
             public void run() {
                 new BleBindHelper().connectAndBind(mContext, address, deviceName);
+            }
+        });
+    }
+
+    public void reconnectAsync() {
+        EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
+            @Override
+            public void run() {
+                String address = getBindDeviceAddress();
+                new BleBindHelper().reconnect(mContext, address);
             }
         });
     }

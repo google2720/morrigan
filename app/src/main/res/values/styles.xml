@@ -45,4 +45,11 @@
         <item name="colorPrimaryDark">@color/cA957FF</item>
     </style>
 
+    <style name="AppTheme.ReConnect">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/transparent_half_bg</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Toast</item>
+    </style>
+
 </resources>

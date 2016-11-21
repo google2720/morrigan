@@ -235,6 +235,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         BleController.getInstance().massageStopAsync();
         mediaPlayer.stop();
         mediaPlayer.release();
+        visualizer.setEnabled(false);
     }
 
     public void onClickPrev(View view) {

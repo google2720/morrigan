@@ -38,8 +38,6 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ble.setAutoConnect(true);
-                    ble.setAutoReconnect(true);
                     Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
                     startActivity(intent);
                     finish();

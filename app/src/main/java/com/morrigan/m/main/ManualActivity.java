@@ -1,12 +1,15 @@
 package com.morrigan.m.main;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.view.View;
 
 import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
+import com.morrigan.m.ble.SimpleBleCallback;
 import com.morrigan.m.c.MassageController;
 
 /**
@@ -18,6 +21,31 @@ public class ManualActivity extends BaseActivity {
     private ManualView manualView;
     private View braLeftView;
     private View braRightView;
+    private BleCallback cb = new SimpleBleCallback() {
+        @Override
+        public void onGattDisconnected(BluetoothDevice device) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (manualView.isStart()) {
+                        stop();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onBluetoothOff() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (manualView.isStart()) {
+                        stop();
+                    }
+                }
+            });
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +56,13 @@ public class ManualActivity extends BaseActivity {
         braLeftView.setActivated(true);
         braRightView = findViewById(R.id.bar_right);
         braRightView.setActivated(true);
+        BleController.getInstance().addCallback(cb);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BleController.getInstance().removeCallback(cb);
     }
 
     public void onClickBack(View view) {
@@ -101,11 +136,6 @@ public class ManualActivity extends BaseActivity {
 
     private void showNoDeviceReady() {
         ToastUtils.show(this, R.string.device_no_connect_tip);
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle(R.string.device_no_connect);
-//        builder.setMessage(R.string.device_no_connect_tip);
-//        builder.setPositiveButton(R.string.action_confirm, null);
-//        builder.show();
     }
 
     private byte getBar() {
