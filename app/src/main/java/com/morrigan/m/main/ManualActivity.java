@@ -37,7 +37,7 @@ public class ManualActivity extends BaseActivity {
     public void onClickAddGear(View view) {
         if (manualView.addGear()) {
             if (manualView.isStart()) {
-                BleController.getInstance().manualAsync(manualView.getGear(), getBar());
+                BleController.getInstance().manualMassageAsync(manualView.getGear(), getBar());
             }
         } else {
             ToastUtils.show(this, R.string.bra_max_gear);
@@ -47,7 +47,7 @@ public class ManualActivity extends BaseActivity {
     public void onClickDeleteGear(View view) {
         if (manualView.deleteGear()) {
             if (manualView.isStart()) {
-                BleController.getInstance().manualAsync(manualView.getGear(), getBar());
+                BleController.getInstance().manualMassageAsync(manualView.getGear(), getBar());
             }
         } else {
             ToastUtils.show(this, R.string.bra_min_gear);
@@ -61,7 +61,7 @@ public class ManualActivity extends BaseActivity {
         } else {
             view.setActivated(!activated);
             if (manualView.isStart()) {
-                BleController.getInstance().manualAsync(manualView.getGear(), getBar());
+                BleController.getInstance().manualMassageAsync(manualView.getGear(), getBar());
             }
         }
     }
@@ -73,7 +73,7 @@ public class ManualActivity extends BaseActivity {
         } else {
             view.setActivated(!activated);
             if (manualView.isStart()) {
-                BleController.getInstance().manualAsync(manualView.getGear(), getBar());
+                BleController.getInstance().manualMassageAsync(manualView.getGear(), getBar());
             }
         }
     }
@@ -89,13 +89,13 @@ public class ManualActivity extends BaseActivity {
             stop();
         } else {
             manualView.start();
-            BleController.getInstance().manualAsync(manualView.getGear(), getBar());
+            BleController.getInstance().manualMassageAsync(manualView.getGear(), getBar());
         }
     }
 
     private void stop() {
         manualView.stop();
-        BleController.getInstance().manualStopAsync();
+        BleController.getInstance().massageStopAsync();
         saveRecord();
     }
 

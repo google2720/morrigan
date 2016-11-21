@@ -22,8 +22,6 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         setContentView(R.layout.activity_main);
         mainLayout = (MenuLayout) findViewById(R.id.mainLayout);
         getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, MainFragment.newInstance()).commitAllowingStateLoss();
-        ble.setAutoConnect(true);
-        ble.setAutoReconnect(true);
         if (!ble.isEnabled()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.no_open_ble_tip);

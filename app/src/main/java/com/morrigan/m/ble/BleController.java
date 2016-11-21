@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.Size;
-import android.text.TextUtils;
 
 import com.github.yzeaho.log.Lg;
-import com.morrigan.m.UiResult;
 import com.morrigan.m.ble.data.Battery;
 import com.morrigan.m.ble.data.BatteryResponse;
 import com.morrigan.m.ble.data.BatteryResult;
@@ -19,25 +17,12 @@ import com.morrigan.m.ble.data.MassageDataResult;
 import com.morrigan.m.ble.data.NotifyDataHelper;
 import com.morrigan.m.device.DeviceController;
 
-import java.util.HashMap;
-
 public class BleController extends AbstractBleController {
 
     private static final BleController sInstance = new BleController();
     private static final String BLE = "ble.main";
     private static final String BLE_ADDRESS = "ble_address";
-    private final HashMap<String, BluetoothDevice> deviceMap = new HashMap<>();
     private BleCallback scanCallback = new SimpleBleCallback() {
-
-        @Override
-        public void onLeScan(BluetoothDevice device) {
-            if (!TextUtils.isEmpty(device.getName())) {
-                synchronized (deviceMap) {
-                    deviceMap.put(device.getAddress(), device);
-                }
-            }
-        }
-
         @Override
         public void onGattDisconnected(BluetoothDevice device) {
             mCallbacks.onNotifyBattery(0);
@@ -46,6 +31,11 @@ public class BleController extends AbstractBleController {
         @Override
         public void onBluetoothOff() {
             mCallbacks.onNotifyBattery(0);
+        }
+
+        @Override
+        public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
+            fetchBatteryAsync();
         }
     };
 
@@ -73,7 +63,7 @@ public class BleController extends AbstractBleController {
     protected void onReceiveNotifyData(byte[] data) {
         Data d = NotifyDataHelper.parser(data);
         if (d == null) {
-            Lg.i(TAG, "no support notify data?");
+            Lg.w(TAG, "no support notify data?");
         } else if (d instanceof BatteryResult) {
             batteryResponseAsync();
             mCallbacks.onNotifyBattery(d.getIntValue());
@@ -84,47 +74,27 @@ public class BleController extends AbstractBleController {
         EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
             @Override
             public void run() {
-                Lg.i(TAG, "connectAndBindAsync " + deviceName + " " + address);
-                UiResult<Boolean> result = DeviceController.getInstance().check(mContext, address);
-                if (result.t) {
-                    Lg.i(TAG, deviceName + "(" + address + ") is already bind by other user");
-                    mCallbacks.onBindDeviceFailed(BleError.BIND_BY_OTHER);
-                    return;
-                }
-                BluetoothDevice device;
-                synchronized (deviceMap) {
-                    device = deviceMap.get(address);
-                }
-                if (device == null) {
-                    mCallbacks.onBindDeviceFailed(BleError.SYSTEM);
-                }
-                connect(device);
+                new BleBindHelper().connectAndBind(mContext, address, deviceName);
             }
         });
     }
 
-    public void bindDeviceAsync(final BluetoothDevice device, final boolean sendToServer) {
-        EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Lg.i(TAG, "bind device start " + sendToServer);
-                    setCharacteristicNotification(mNotifyCharacteristic, mNotifyDescriptor, true);
-                    boolean firstBind = device.getAddress().equals(getBindDeviceAddress());
-                    Bind data = new Bind();
-                    writeWithNoRead(data.toValue());
-                    saveBindDevice(device.getAddress());
-                    if (sendToServer) {
-                        Lg.i(TAG, "send bind info to server");
-                        DeviceController.getInstance().bind(mContext, device.getAddress(), device.getName());
-                    }
-                    mCallbacks.onBindDeviceSuccess(device, firstBind);
-                } catch (Exception e) {
-                    Lg.w(TAG, "failed to bind device", e);
-                    mCallbacks.onBindDeviceFailed(BleError.SYSTEM);
-                }
+    public boolean bindDevice(final BluetoothDevice device, final boolean sendToServer) {
+        try {
+            Lg.i(TAG, "start bind device " + sendToServer);
+            setCharacteristicNotification(mNotifyCharacteristic, mNotifyDescriptor, true);
+            Bind data = new Bind();
+            writeWithNoRead(data.toValue());
+            saveBindDevice(device.getAddress());
+            if (sendToServer) {
+                Lg.i(TAG, "send bind info to server");
+                DeviceController.getInstance().bind(mContext, device.getAddress(), device.getName());
             }
-        });
+            return true;
+        } catch (Exception e) {
+            Lg.w(TAG, "failed to bind device", e);
+        }
+        return false;
     }
 
     public void fetchBatteryAsync() {
@@ -137,14 +107,14 @@ public class BleController extends AbstractBleController {
                     writeWithNoRead(data.toValue());
                     mCallbacks.onFetchBatterySuccess();
                 } catch (Exception e) {
-                    Lg.w(TAG, "failed to bind device", e);
+                    Lg.w(TAG, "failed to connectAndBind device", e);
                     mCallbacks.onFetchBatteryFailed(BleError.SYSTEM);
                 }
             }
         });
     }
 
-    public void batteryResponseAsync() {
+    private void batteryResponseAsync() {
         EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
             @Override
             public void run() {
@@ -187,12 +157,12 @@ public class BleController extends AbstractBleController {
         }
     }
 
-    public void manualStopAsync() {
+    public void massageStopAsync() {
         MassageTask massageTask = new MassageTask(new MassageData(false));
         massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
     }
 
-    public void manualAsync(byte gear, byte bra) {
+    public void manualMassageAsync(byte gear, byte bra) {
         MassageTask massageTask = new MassageTask(new MassageData(true, gear, bra));
         massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
     }

@@ -82,9 +82,7 @@ public class FloatConnectImageView extends ImageButton {
                 post(showNoConnectRunnable);
             }
         } else if (visibility == GONE) {
-            if (animator != null) {
-                animator.cancel();
-            }
+            post(showConnectRunnable);
         }
     }
 

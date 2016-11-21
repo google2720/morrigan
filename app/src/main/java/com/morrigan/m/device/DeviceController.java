@@ -5,8 +5,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.os.AsyncTaskCompat;
 
-import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
+import com.morrigan.m.HttpProxy;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
@@ -59,8 +59,7 @@ public class DeviceController {
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
-            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-            DeviceListResult r = result.parse(DeviceListResult.class);
+            DeviceListResult r = new HttpProxy().execute(context, builder.build(), DeviceListResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success) {
@@ -78,8 +77,8 @@ public class DeviceController {
                 context.getContentResolver().notifyChange(NOTIFY_URI, null);
             }
         } catch (Exception e) {
-            Lg.w(TAG, "failed to fetch bind device list", e);
-            uiResult.message = e.getMessage();
+            Lg.w(TAG, "failed to fetch device list", e);
+            uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;
     }
@@ -99,8 +98,7 @@ public class DeviceController {
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
-            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-            HttpResult r = result.parse(HttpResult.class);
+            HttpResult r = new HttpProxy().execute(context, builder.build(), HttpResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success) {
@@ -112,7 +110,7 @@ public class DeviceController {
             }
         } catch (Exception e) {
             Lg.w(TAG, "failed to remove device", e);
-            uiResult.message = e.getMessage();
+            uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;
     }
@@ -129,16 +127,15 @@ public class DeviceController {
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
-            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-            HttpResult r = result.parse(HttpResult.class);
+            HttpResult r = new HttpProxy().execute(context, builder.build(), HttpResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success) {
                 Device.update(context, userId, address, name);
             }
         } catch (Exception e) {
-            Lg.w(TAG, "failed to remove device", e);
-            uiResult.message = e.getMessage();
+            Lg.w(TAG, "failed to edit device", e);
+            uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;
     }
@@ -165,14 +162,13 @@ public class DeviceController {
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
-            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-            DeviceBindCheckResult r = result.parse(DeviceBindCheckResult.class);
+            DeviceBindCheckResult r = new HttpProxy().execute(context, builder.build(), DeviceBindCheckResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             uiResult.t = (r.isbinded == 1);
         } catch (Exception e) {
             Lg.w(TAG, "failed to check device", e);
-            uiResult.message = e.getMessage();
+            uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;
     }
@@ -189,16 +185,15 @@ public class DeviceController {
             Request.Builder builder = new Request.Builder();
             builder.url(url);
             builder.post(b.build());
-            HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-            HttpResult r = result.parse(HttpResult.class);
+            HttpResult r = new HttpProxy().execute(context, builder.build(), HttpResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success) {
                 Device.add(context, userId, address, deviceName);
             }
         } catch (Exception e) {
-            Lg.w(TAG, "failed to check device", e);
-            uiResult.message = e.getMessage();
+            Lg.w(TAG, "failed to bind device", e);
+            uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;
     }

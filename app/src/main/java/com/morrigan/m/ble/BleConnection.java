@@ -131,14 +131,15 @@ public class BleConnection {
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
         }
     };
+
     private BluetoothDevice mmDevice;
 
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, BluetoothGattDescriptor descriptor, boolean enabled) {
-        if (mBluetoothGatt == null) {
-            Lg.w(TAG, "BluetoothAdapter not initialized");
-            return;
-        }
         synchronized (mObject) {
+            if (mBluetoothGatt == null) {
+                Lg.w(TAG, "BluetoothAdapter not initialized");
+                return;
+            }
             boolean r = mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
             Lg.d(TAG, "setCharacteristicNotification " + r);
             byte[] data = enabled ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
@@ -179,6 +180,10 @@ public class BleConnection {
 
     public byte[] read(BluetoothGattCharacteristic characteristic, long timeout) {
         synchronized (mObject) {
+            if (mBluetoothGatt == null) {
+                Lg.w(TAG, "BluetoothAdapter not initialized");
+                return null;
+            }
             mBluetoothGatt.readCharacteristic(characteristic);
             try {
                 mObject.wait(timeout);
@@ -197,6 +202,10 @@ public class BleConnection {
 
     public void write(BluetoothGattCharacteristic characteristic, byte[] data, long timeout) {
         synchronized (mObject) {
+            if (mBluetoothGatt == null) {
+                Lg.w(TAG, "BluetoothAdapter not initialized");
+                return;
+            }
             characteristic.setValue(data);
             boolean r = mBluetoothGatt.writeCharacteristic(characteristic);
             Lg.d("BleData", "write data " + (r ? "success " : "failed ") + "[" + toHex(data) + "]");
@@ -211,7 +220,7 @@ public class BleConnection {
     public static String toHex(byte[] data) {
         if (data == null) {
             return "";
-        }
+    }
         StringBuilder builder = new StringBuilder(data.length);
         for (byte byteChar : data) {
             builder.append(String.format("%02X ", byteChar));
@@ -231,12 +240,14 @@ public class BleConnection {
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
-    private void connectFailed(boolean disconnect) {
+    private synchronized void connectFailed(boolean disconnect) {
         if (mBluetoothGatt != null) {
             if (disconnect) {
                 mBluetoothGatt.disconnect();
+            } else {
+                mBluetoothGatt.close();
+                mBluetoothGatt = null;
             }
-            mBluetoothGatt.close();
         }
         setState(STATE_NONE);
     }
@@ -277,7 +288,6 @@ public class BleConnection {
     public synchronized void disconnect() {
         Lg.i(TAG, "disconnect");
         connectFailed(true);
-        broadcastUpdate(ACTION_GATT_DISCONNECTED);
     }
 
     public BluetoothDevice getDevice() {

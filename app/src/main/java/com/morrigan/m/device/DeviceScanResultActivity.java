@@ -34,53 +34,25 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
     private BleController ble = BleController.getInstance();
     private BleCallback cb = new SimpleBleCallback() {
         @Override
-        public void onGattConnecting(BluetoothDevice device) {
+        public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    connectStateView.setVisibility(View.VISIBLE);
+                    ble.setAutoConnect(true);
+                    ble.setAutoReconnect(true);
+                    Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             });
         }
 
         @Override
-        public void onGattServicesDiscovered(BluetoothDevice device) {
-            ble.bindDeviceAsync(device, true);
-        }
-
-        @Override
-        public void onGattServicesNoFound(BluetoothDevice device) {
-            onBindDeviceFailed(BleError.SYSTEM);
-        }
-
-        @Override
-        public void onGattDisconnected(BluetoothDevice device) {
-            if (device.getAddress().equals(connectAddress)) {
-                onBindDeviceFailed(BleError.SYSTEM);
-            }
-        }
-
-        @Override
-        public void onBluetoothOff() {
-            onBindDeviceFailed(BleError.SYSTEM);
-        }
-
-        @Override
-        public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
-            ble.setAutoConnect(true);
-            ble.setAutoReconnect(true);
-            Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        @Override
-        public void onBindDeviceFailed(int error) {
-            final int temError=error;
+        public void onBindDeviceFailed(final int error) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (temError == BleError.BIND_BY_OTHER) {
+                    if (error == BleError.BIND_BY_OTHER) {
                         ToastUtils.show(getApplicationContext(), "设备已被绑定");
                     }
                     Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindFailedActivity.class);
@@ -88,11 +60,9 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
                     finish();
                 }
             });
-
         }
     };
     private View connectStateView;
-    private String connectAddress;
     private DeviceScanResultAdapter adapter;
     private View connectIconView;
 
@@ -130,10 +100,9 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
     @Override
     public void onListItemClick(View v, UiData device) {
         if (connectStateView.getVisibility() == View.GONE) {
-            connectAddress = device.address;
-            ble.connectAndBindAsync(device.name, device.address);
             connectStateView.setVisibility(View.VISIBLE);
             connectIconView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
+            ble.connectAndBindAsync(device.name, device.address);
         }
     }
 

@@ -5,7 +5,6 @@ import android.app.Application;
 import com.github.yzeaho.log.AndroidLgImpl;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.ble.BleController;
-import com.morrigan.m.ble.BleService;
 
 public class MainApplication extends Application {
 
@@ -14,8 +13,8 @@ public class MainApplication extends Application {
         super.onCreate();
         Lg.setLg(new AndroidLgImpl(this));
         Lg.setLevel(BuildConfig.LOG_LEVEL);
-        registerActivityLifecycleCallbacks(new ActivityLifecycleCallback());
         BleController.getInstance().initialize(this);
-        BleService.actionStart(this);
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallback());
+        // BleService.actionStart(this);
     }
 }

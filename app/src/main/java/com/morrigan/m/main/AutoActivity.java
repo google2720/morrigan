@@ -97,7 +97,7 @@ public class AutoActivity extends BaseActivity {
 
     private void stop() {
         autoLayout.stop();
-        BleController.getInstance().manualStopAsync();
+        BleController.getInstance().massageStopAsync();
         saveRecord();
     }
 

@@ -37,7 +37,7 @@ public abstract class AbstractBleController {
     private static final Object mLock = new Object();
     protected final ExecutorService EXECUTOR_SERVICE_SINGLE = Executors.newSingleThreadExecutor();
     protected final Executor EXECUTOR_SERVICE_POOL = AsyncTask.THREAD_POOL_EXECUTOR;
-    private BluetoothAdapter mBleAdapter;
+    protected BluetoothAdapter mBleAdapter;
     private BleConnection mBleConnection;
     protected GroupBleCallback mCallbacks = new GroupBleCallback();
     private BluetoothGattService mDefaultGattService;
@@ -163,6 +163,10 @@ public abstract class AbstractBleController {
 
     public BleCallback getCallbacks() {
         return mCallbacks;
+    }
+
+    public BluetoothDevice getRemoteDevice(String address) {
+        return mBleAdapter == null ? null : mBleAdapter.getRemoteDevice(address);
     }
 
     public void startLeScan() {
