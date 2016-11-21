@@ -159,22 +159,17 @@ public class Massage extends Data {
         return result;
     }
 
-    public static List<UploadHistoryDataService.Data> queryUploadData(Context context, String userId, String goal) {
+    public static List<UploadHistoryDataService.Data> queryUploadData(Context context, String userId, String goal, long startTime) {
         List<UploadHistoryDataService.Data> result = new ArrayList<>();
+        UploadHistoryDataService.Data data;
         Cursor cursor = null;
         try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            long todayStartTime = calendar.getTimeInMillis();
             String selection = "_userId=? AND _startTime<?";
-            String[] selectionArgs = new String[]{userId, String.valueOf(todayStartTime)};
+            String[] selectionArgs = new String[]{userId, String.valueOf(startTime)};
             String[] columns = new String[]{"sum(_duration) as _duration", "_date"};
             cursor = getReadableDatabase(context).query(TABLE_MASSAGE, columns, selection, selectionArgs, "_date", null, null);
             while (cursor != null && cursor.moveToNext()) {
-                UploadHistoryDataService.Data data = new UploadHistoryDataService.Data();
+                data = new UploadHistoryDataService.Data();
                 data.userId = userId;
                 data.goalLong = goal;
                 data.date = cursor.getString(cursor.getColumnIndex("_date"));
@@ -185,6 +180,12 @@ public class Massage extends Data {
             close(cursor);
         }
         return result;
+    }
+
+    public static void deleteUploadData(Context context, String userId, long startTime) {
+        String whereClause = "_userId=? AND _startTime<?";
+        String[] whereArgs = new String[]{userId, String.valueOf(startTime)};
+        getWritableDatabase(context).delete(TABLE_MASSAGE, whereClause, whereArgs);
     }
 
     public static int sum(Context context, String userId) {

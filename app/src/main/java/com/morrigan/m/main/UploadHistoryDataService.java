@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.support.annotation.Keep;
 import android.util.Log;
 
-import com.github.yzeaho.http.HttpInterface;
 import com.google.gson.Gson;
+import com.morrigan.m.HttpProxy;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.db.Massage;
 import com.morrigan.m.c.UserController;
 
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -54,7 +55,13 @@ public class UploadHistoryDataService extends IntentService {
     private void upload() throws Exception {
         String userId = UserController.getInstance().getUserId(this);
         String goalLong = UserController.getInstance().getTarget(this);
-        List<Data> dataList = queryData(this, userId, goalLong);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long todayStartTime = calendar.getTimeInMillis();
+        List<Data> dataList = Massage.queryUploadData(this, userId, goalLong, todayStartTime);
         if (dataList.isEmpty()) {
             return;
         }
@@ -65,11 +72,9 @@ public class UploadHistoryDataService extends IntentService {
         Request.Builder builder = new Request.Builder();
         builder.url(url);
         builder.post(b.build());
-        HttpInterface.Result result = HttpInterface.Factory.create().execute(builder.build());
-        result.parse(HttpResult.class);
-    }
-
-    private List<Data> queryData(Context context, String userId, String goalLong) {
-        return Massage.queryUploadData(context, userId, goalLong);
+        HttpResult result = new HttpProxy().execute(this, builder.build(), HttpResult.class);
+        if (result.isSuccessful()) {
+            Massage.deleteUploadData(this, userId, todayStartTime);
+        }
     }
 }
