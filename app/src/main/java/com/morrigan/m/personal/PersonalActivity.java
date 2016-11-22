@@ -32,6 +32,7 @@ import com.morrigan.m.HttpProxy;
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.ble.BleController;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.login.LoginActivity;
 import com.squareup.picasso.Picasso;
@@ -364,6 +365,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 UserController.getInstance().setAutoLogin(PersonalActivity.this, false);
+                BleController.getInstance().quit();
                 Intent intent = new Intent(PersonalActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

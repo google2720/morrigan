@@ -232,10 +232,10 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BleController.getInstance().massageStopAsync();
         mediaPlayer.stop();
         mediaPlayer.release();
         visualizer.setEnabled(false);
+        BleController.getInstance().massageStopAsync();
     }
 
     public void onClickPrev(View view) {
