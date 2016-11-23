@@ -22,6 +22,7 @@ public class MenuLayout extends FrameLayout {
     private ViewDragHelper dragHelper;
     private boolean open;
     private boolean touchDownCloseEnable;
+    private Callback callback;
 
     public MenuLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -148,6 +149,9 @@ public class MenuLayout extends FrameLayout {
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.start();
         dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
+        if (callback != null) {
+            callback.onMenuOpenStatusChange(open);
+        }
     }
 
     public void openMenu() {
@@ -163,11 +167,22 @@ public class MenuLayout extends FrameLayout {
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.start();
         dragHelper.setEdgeTrackingEnabled(0);
+        if (callback != null) {
+            callback.onMenuOpenStatusChange(open);
+        }
     }
 
     @Keep
     public void setAnimValue(int v) {
         View view = getChildAt(1);
         view.layout(v, v / 10, v + view.getWidth(), getHeight() - v / 10);
+    }
+
+    public interface Callback {
+        void onMenuOpenStatusChange(boolean openStatus);
+    }
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
     }
 }

@@ -3,7 +3,9 @@ package com.morrigan.m.personal;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.os.Handler;
 
+import com.github.yzeaho.common.SleepTime;
 import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
@@ -20,6 +22,18 @@ public class PersonalModifyTask extends AsyncTask<Void, Void, UiResult> {
     private String value;
     private Runnable runnable;
     private ProgressDialog dialog;
+    private Handler handler = new Handler();
+    private Runnable showDialogRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!activity.isFinishing()) {
+                dialog = new ProgressDialog(activity);
+                dialog.setMessage(activity.getString(R.string.changing));
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        }
+    };
 
     public PersonalModifyTask(Activity activity, String col, String value, Runnable runnable) {
         this.activity = activity;
@@ -30,19 +44,24 @@ public class PersonalModifyTask extends AsyncTask<Void, Void, UiResult> {
 
     @Override
     protected void onPreExecute() {
-        dialog = new ProgressDialog(activity);
-        dialog.setMessage(activity.getString(R.string.changing));
-        dialog.setCancelable(false);
-        dialog.show();
+        handler.postDelayed(showDialogRunnable, 1000);
     }
 
     @Override
     protected UiResult doInBackground(Void... params) {
-        return UserController.getInstance().modify(activity, col, value);
+        SleepTime sleepTime = new SleepTime();
+        UiResult result = UserController.getInstance().modify(activity, col, value);
+        if (dialog != null) {
+            sleepTime.sleep(3000);
+        } else {
+            handler.removeCallbacks(showDialogRunnable);
+        }
+        return result;
     }
 
     @Override
     protected void onPostExecute(UiResult result) {
+        handler.removeCallbacks(showDialogRunnable);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }

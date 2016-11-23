@@ -302,8 +302,9 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     public void onClickAge(View view) {
         YearMonthDayPickerView pickerView = new YearMonthDayPickerView(this, YearMonthDayPickerView.Type.YEAR_MONTH_DAY);
-        pickerView.setRange(1916, Calendar.getInstance().get(Calendar.YEAR));
-        pickerView.setTime(birthCalendar.getTime());
+        Calendar calendar = Calendar.getInstance();
+        pickerView.setRange(1916, calendar);
+        pickerView.setTime(Math.min(birthCalendar.getTimeInMillis(), calendar.getTimeInMillis()));
         pickerView.setCyclic(false);
         pickerView.setCancelable(true);
         pickerView.setOnTimeSelectListener(new YearMonthDayPickerView.OnTimeSelectListener() {

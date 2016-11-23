@@ -31,6 +31,9 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
     private Paint textPaint1 = new Paint();
     private Paint textPaint2 = new Paint();
     private Paint textPaint3 = new Paint();
+    private Paint massagePaint = new Paint();
+    private Paint massageBgPaint = new Paint();
+    private Paint massageConnectPaint = new Paint();
     private Rect boundText1 = new Rect();
     private Rect boundText2 = new Rect();
     private RectF rectF = new RectF();
@@ -74,6 +77,23 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         textPaint3.setAntiAlias(true);
         textPaint3.setColor(0xfff0f0f0);
         textPaint3.setTypeface(font);
+
+        massagePaint.setAntiAlias(true);
+        massagePaint.setStyle(Paint.Style.STROKE);
+        massagePaint.setStrokeWidth(strokeWidth * 50 / 100);
+        massagePaint.setColor(0xffed73ac);
+        massagePaint.setStrokeCap(Paint.Cap.ROUND);
+
+        massageBgPaint.setAntiAlias(true);
+        massageBgPaint.setStyle(Paint.Style.STROKE);
+        massageBgPaint.setStrokeWidth(strokeWidth);
+        massageBgPaint.setColor(0xfff8f9ff);
+        massageBgPaint.setStrokeCap(Paint.Cap.ROUND);
+
+        massageConnectPaint.setAntiAlias(true);
+        massageConnectPaint.setStyle(Paint.Style.STROKE);
+        massageConnectPaint.setStrokeWidth(strokeWidth / 5);
+        massageConnectPaint.setColor(0xffed73ac);
     }
 
     @Override
@@ -153,10 +173,16 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         final long time = calendar.getTimeInMillis() - startCalendar.getTimeInMillis();
         final int angle = Math.max(0, (int) time / 120000);
         drawDial(canvas, w, h, angle);
-        drawProgress(canvas, cx, cy, w / 2 - strokeWidth / 2, angle);
+        // drawProgress(canvas, cx, cy, w / 2 - strokeWidth / 2, angle);
         if (dataList != null && !dataList.isEmpty()) {
             drawProgress(canvas, cx, cy, w / 2 - strokeWidth / 2, dataList);
         }
+
+//        paint.setStyle(Paint.Style.FILL);
+//        paint.setStrokeWidth(1);
+//        paint.setColor(Color.RED);
+//        canvas.drawLine(0, cy, getWidth(), cy, paint);
+//        canvas.drawLine(cx, 0, cx, getHeight(), paint);
     }
 
     private void drawDial(Canvas canvas, int w, int h, int angle) {
@@ -164,23 +190,23 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         int sx = 0;
         int ex = 0;
         int sy = 0;
-        for (int i = angle; i <= 360; i++) {
+        for (int i = 0; i <= 360; i++) {
             if (i % 90 == 0) {
                 sx = w - strokeWidth + dialPadding;
                 ex = w - dialPadding;
-                sy = h / 2 - dialStrokeWidth2;
+                sy = h / 2;
                 paint.setStrokeWidth(dialStrokeWidth2);
                 paint.setColor(0xffea5b9d);
             } else if (i % 30 == 0) {
                 sx = w - strokeWidth + dialPadding;
                 ex = w - dialPadding;
-                sy = h / 2 - dialStrokeWidth2;
+                sy = h / 2;
                 paint.setStrokeWidth(dialStrokeWidth2);
                 paint.setColor(0xfff7bdd8);
             } else if (i % 5 == 0) {
                 sx = w - strokeWidth + dialPadding * 2;
                 ex = w - dialPadding;
-                sy = h / 2 - dialStrokeWidth;
+                sy = h / 2;
                 paint.setStrokeWidth(dialStrokeWidth);
                 paint.setColor(0xfff4d6e6);
             }
@@ -207,17 +233,17 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
     }
 
     private void drawProgress(Canvas canvas, int cx, int cy, float radius, List<CenterData> dataList) {
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth * 60 / 100);
-        paint.setColor(0xffed73ac);
-        paint.setStrokeCap(Paint.Cap.ROUND);
+        float startAngle = dataList.get(0).startAngle;
+        float endAngle = dataList.get(dataList.size() - 1).endAngle;
+        canvas.drawArc(oval, 270 + startAngle, endAngle - startAngle, false, massageBgPaint);
+        canvas.drawArc(oval, 270 + startAngle, endAngle - startAngle, false, massageConnectPaint);
         for (CenterData data : dataList) {
             oval.left = cx - radius;
             oval.top = cy - radius;
             oval.right = cx + radius;
             oval.bottom = cy + radius;
             Log.i(TAG, "drawProgress " + data.startAngle + " " + data.endAngle);
-            canvas.drawArc(oval, 270 + data.startAngle, data.endAngle - data.startAngle, false, paint);
+            canvas.drawArc(oval, 270 + data.startAngle, data.endAngle - data.startAngle, false, massagePaint);
         }
     }
 

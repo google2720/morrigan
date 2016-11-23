@@ -9,7 +9,6 @@ import com.bigkoo.pickerview.view.BasePickerView;
 import com.bigkoo.pickerview.view.YearMonthDayWheelTime;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * 时间选择器
@@ -63,15 +62,20 @@ public class YearMonthDayPickerView extends BasePickerView implements View.OnCli
     }
 
     /**
-     * 设置选中时间
-     *
-     * @param date 时间
+     * 设置可以选择的时间范围
+     * 要在setTime之前调用才有效果
      */
-    public void setTime(Date date) {
+    public void setRange(int startYear, Calendar calendar) {
+        wheelTime.setStartYear(startYear);
+        wheelTime.setEndCalendar(calendar);
+    }
+
+    /**
+     * 设置选中时间
+     */
+    public void setTime(long time) {
         Calendar calendar = Calendar.getInstance();
-        if (date != null) {
-            calendar.setTime(date);
-        }
+        calendar.setTimeInMillis(time);
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);

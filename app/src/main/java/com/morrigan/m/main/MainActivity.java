@@ -5,8 +5,9 @@ import android.os.Bundle;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleController;
+import com.morrigan.m.c.MassageController;
 
-public class MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener {
+public class MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener, MenuLayout.Callback {
 
     private static final int REQUEST_ENABLE_BT = 1;
     private MenuLayout mainLayout;
@@ -18,15 +19,16 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainLayout = (MenuLayout) findViewById(R.id.mainLayout);
+        mainLayout.setCallback(this);
         mainFragment = MainFragment.newInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, mainFragment).commitAllowingStateLoss();
+        // MassageController.getInstance().test(this);
     }
 
     @Override
     public void onMenuClick() {
         if (mainLayout.isMenuOpen()) {
             mainLayout.closeMenu();
-            mainFragment.refresh();
         } else {
             mainLayout.openMenu();
         }
@@ -36,9 +38,15 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
     public void onBackPressed() {
         if (mainLayout.isMenuOpen()) {
             mainLayout.closeMenu();
-            mainFragment.refresh();
         } else {
             exitApp();
+        }
+    }
+
+    @Override
+    public void onMenuOpenStatusChange(boolean openStatus) {
+        if (!openStatus) {
+            mainFragment.refresh();
         }
     }
 }

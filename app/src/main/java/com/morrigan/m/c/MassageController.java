@@ -37,12 +37,12 @@ public class MassageController {
 
     public void test(Context context) {
         Calendar c1 = Calendar.getInstance();
-        c1.set(Calendar.HOUR_OF_DAY, 21);
+        c1.set(Calendar.HOUR_OF_DAY, 18);
         c1.set(Calendar.MINUTE, 4);
         c1.set(Calendar.SECOND, 0);
         c1.set(Calendar.MILLISECOND, 0);
         Calendar c2 = Calendar.getInstance();
-        c2.set(Calendar.HOUR_OF_DAY, 21);
+        c2.set(Calendar.HOUR_OF_DAY, 19);
         c2.set(Calendar.MINUTE, 8);
         c2.set(Calendar.SECOND, 0);
         c2.set(Calendar.MILLISECOND, 0);
