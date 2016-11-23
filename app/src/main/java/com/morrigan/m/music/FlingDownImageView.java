@@ -10,7 +10,7 @@ import android.widget.ImageView;
  * Created by fei on 2016/11/6.
  */
 
-public class FlingUpImageView extends ImageView {
+public class FlingDownImageView extends ImageView {
 
     private GestureDetector mGD;
     private OpenPopup openPopup;
@@ -19,15 +19,15 @@ public class FlingUpImageView extends ImageView {
         this.openPopup = openPopup;
     }
 
-    public FlingUpImageView(Context context, AttributeSet attrs) {
+    public FlingDownImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mGD = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 int dy = (int) (e2.getY() - e1.getY()); //计算滑动的距离
                 if (Math.abs(dy) > 10 && Math.abs(velocityY) > Math.abs(velocityX)) { //降噪处理，必须有较大的动作才识别
-                    if (velocityY < -10) {
+                    if (velocityY >10) {
                         if (openPopup != null) {
-                            openPopup.openPopup();
+                            openPopup.closePopup();
                         }
 
                     }
@@ -40,7 +40,7 @@ public class FlingUpImageView extends ImageView {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 if (openPopup != null) {
-                    openPopup.openPopup();
+                    openPopup.closePopup();
                 }
                 return super.onSingleTapConfirmed(e);
             }

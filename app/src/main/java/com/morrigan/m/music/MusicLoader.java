@@ -68,7 +68,12 @@ public class MusicLoader {
                         if (filename.endsWith(ext[j])) {
                             MusicInfo info = new MusicInfo();
                             info.setAssertsMusic(true);
-                            String absoluteName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + filename;
+                            File objFile=new File(Environment.getExternalStorageDirectory(),"/Android/data/" + context.getPackageName() + "/music/");
+                            if (!objFile.exists()){
+                                objFile.mkdirs();
+                            }
+                           // String absoluteName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + filename;
+                            String absoluteName = objFile.getAbsolutePath()+"/"+filename;
                             File file = new File(absoluteName);
                             if (!file.exists()) {
                                 FileUtils.copy(context.getAssets().open("music/" + filename), file);
@@ -93,11 +98,6 @@ public class MusicLoader {
                                         }
 
                                     });
-//                            Uri uri = Uri.parse(absoluteName);
-//                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
-//                            context.sendBroadcast(intent);
-                            //  info.fileName = absoluteName;
-                            // musicList.add(info);
                             break;
                         }
                     }
@@ -159,19 +159,21 @@ public class MusicLoader {
         }
         List<MusicInfo> musicInfoList1 = new ArrayList<>();
         List<MusicInfo> musicInfoList2 = new ArrayList<>();
+        List<MusicInfo> musicInfoList3 = new ArrayList<>();
         for (int i = 0; i < musicList.size(); i++) {
             MusicInfo info = musicList.get(i);
-            if ("G.E.M. 邓紫棋 - 喜欢你".equals(info.getTitle())) {
+            if ("G.E.M.邓紫棋 - 喜欢你.mp3".equals(info.getTitle())) {
                 musicInfoList1.add(info);
-            } else if ("卡农 - 钢琴小提琴二重奏".equals(info.getTitle())) {
-                musicInfoList1.add(info);
-            } else {
+            } else if ("卡农 - 钢琴小提琴二重奏.mp3".equals(info.getTitle())) {
                 musicInfoList2.add(info);
+            } else {
+                musicInfoList3.add(info);
             }
         }
-        musicList=new ArrayList<>();
+        musicList = new ArrayList<>();
         musicList.addAll(musicInfoList1);
         musicList.addAll(musicInfoList2);
+        musicList.addAll(musicInfoList3);
     }
 
 

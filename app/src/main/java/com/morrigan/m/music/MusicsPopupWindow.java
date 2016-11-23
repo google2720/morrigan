@@ -19,6 +19,7 @@ import com.github.yzeaho.popupwindow.BottomPushPopupWindow;
 import com.morrigan.m.R;
 
 import java.util.List;
+
 import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 /**
@@ -28,30 +29,32 @@ import com.morrigan.m.music.MusicLoader.MusicInfo;
  * @author fei
  * @version [NMOA, 2015-12-22]
  */
-public class MusicsPopupWindow extends BottomPushPopupWindow<Activity > {
+public class MusicsPopupWindow extends BottomPushPopupWindow<Activity> {
 
     RecyclerView listView;
     Activity activity;
     MusicAdapter adapter;
     List<MusicLoader.MusicInfo> musicInfos;
+    FlingDownImageView downImageView;
 
     public MusicsPopupWindow(Activity activity) {
-
         super(activity, activity);
-
-
     }
-    public void setData(List<MusicLoader.MusicInfo> musicInfos){
-        this.musicInfos=musicInfos;
+
+    public void setData(List<MusicLoader.MusicInfo> musicInfos) {
+        this.musicInfos = musicInfos;
         adapter.setData(musicInfos);
 
     }
 
+    public void setOpenPopup(OpenPopup openPopup) {
+        downImageView.setOpenPopup(openPopup);
+    }
 
     @Override
     protected View generateCustomView(Activity activity) {
         setOutsideTouchable(true);
-        this.activity=activity;
+        this.activity = activity;
         View root = View.inflate(context, R.layout.popup_musics, null);
         root.findViewById(R.id.tv_close).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +68,7 @@ public class MusicsPopupWindow extends BottomPushPopupWindow<Activity > {
                 dismiss();
             }
         });
-
+        downImageView = (FlingDownImageView) root.findViewById(R.id.iv_top);
         intiListView(root);
         return root;
     }
@@ -74,12 +77,13 @@ public class MusicsPopupWindow extends BottomPushPopupWindow<Activity > {
         listView = (RecyclerView) root.findViewById(R.id.rw_music);
         listView.setLayoutManager(new LinearLayoutManager(context));
         listView.addItemDecoration(new com.morrigan.m.view.DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
-        adapter=new MusicAdapter(activity);
+        adapter = new MusicAdapter(activity);
         adapter.setCallback((MusicAdapter.Callback) activity);
         listView.setAdapter(adapter);
     }
+
     public void setPlayIndex(int playIndex) {
-        if (adapter==null){
+        if (adapter == null) {
             return;
         }
         adapter.setPlayIndex(playIndex);

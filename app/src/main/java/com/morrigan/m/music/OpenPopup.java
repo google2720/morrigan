@@ -6,5 +6,5 @@ package com.morrigan.m.music;
 
 public interface OpenPopup {
     void openPopup();
-
+    void closePopup();
 }

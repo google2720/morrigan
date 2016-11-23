@@ -13,7 +13,7 @@
 
     </LinearLayout>
 
-    <ImageView
+    <com.morrigan.m.music.FlingDownImageView
         android:id="@+id/iv_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
