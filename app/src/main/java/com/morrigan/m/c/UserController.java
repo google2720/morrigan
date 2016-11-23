@@ -60,13 +60,11 @@ public class UserController {
         preferences.edit().putBoolean("auto_login", b).apply();
     }
 
-    private void setUserInfo(Context context, UserInfo userInfo) {
+    private void saveUserInfo(Context context, UserInfo userInfo, String mobile, String password) {
         SharedPreferences preferences = getSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("userId", userInfo.userId);
-        editor.putString("password", userInfo.password);
         editor.putString("nickname", userInfo.nickName);
-        editor.putString("mobile", userInfo.mobile);
         editor.putString("sex", userInfo.sex);
         editor.putString("age", userInfo.age);
         editor.putString("emotion", userInfo.emotion);
@@ -76,6 +74,8 @@ public class UserController {
         editor.putString("authCode", userInfo.authCode);
         editor.putString("imgUrl", userInfo.imgUrl);
         editor.putBoolean("auto_login", true);
+        editor.putString("mobile", mobile);
+        editor.putString("password", password);
         editor.apply();
     }
 
@@ -203,7 +203,7 @@ public class UserController {
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
             if (uiResult.success) {
-                setUserInfo(context, r.userInfo);
+                saveUserInfo(context, r.userInfo, mobile, pw);
                 DeviceController.getInstance().fetchAsync(context);
             }
         } catch (Exception e) {

@@ -23,7 +23,6 @@ import com.morrigan.m.HttpProxy;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
-import com.morrigan.m.c.UserController;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -263,9 +262,6 @@ public class RegisterActivity extends BaseActivity {
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
                 uiResult.t = r.userId;
-                if (uiResult.success) {
-                    UserController.getInstance().setUserId(activity, r.userId);
-                }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to register", e);
                 uiResult.message = HttpProxy.parserError(activity, e);

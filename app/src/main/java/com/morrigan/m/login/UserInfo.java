@@ -10,11 +10,7 @@ public class UserInfo {
     @Keep
     public String userId;
     @Keep
-    public String password;
-    @Keep
     public String nickName;
-    @Keep
-    public String mobile;
     @Keep
     public String sex;
     @Keep
