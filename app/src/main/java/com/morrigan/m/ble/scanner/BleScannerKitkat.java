@@ -2,7 +2,6 @@ package com.morrigan.m.ble.scanner;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.util.Log;
 
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.ble.AbstractBleController;
@@ -32,7 +31,10 @@ public class BleScannerKitkat implements BleScanner {
 
     @Override
     public void startLeScan() {
-        boolean r = mBleAdapter.startLeScan(mLeScanCallback);
+        boolean r = false;
+        if (mBleAdapter != null) {
+            r = mBleAdapter.startLeScan(mLeScanCallback);
+        }
         if (!r) {
             mBle.getCallbacks().onLeScanFailed(0);
         }
@@ -40,6 +42,8 @@ public class BleScannerKitkat implements BleScanner {
 
     @Override
     public void stopLeScan() {
-        mBleAdapter.stopLeScan(mLeScanCallback);
+        if (mBleAdapter != null) {
+            mBleAdapter.stopLeScan(mLeScanCallback);
+        }
     }
 }

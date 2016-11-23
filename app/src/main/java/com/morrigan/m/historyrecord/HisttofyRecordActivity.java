@@ -25,15 +25,12 @@ public class HisttofyRecordActivity extends ToolbarActivity {
     private List<Fragment> fragments;
     private static final String TAG = "HisttofyRecordActivity";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_record);
         initView();
     }
-
-
 
     private void initView() {
         radio1 = findViewById(R.id.contact_radio1);
@@ -57,7 +54,6 @@ public class HisttofyRecordActivity extends ToolbarActivity {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -66,13 +62,11 @@ public class HisttofyRecordActivity extends ToolbarActivity {
                     showDay();
                 } else if (position == 1) {
                     showWeek();
-
                 }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -86,22 +80,19 @@ public class HisttofyRecordActivity extends ToolbarActivity {
         mViewPager.setAdapter(tabAdapter);
         showDay();
         mViewPager.setCurrentItem(0);
-
     }
 
     private void showDay() {
         radio1.setActivated(true);
         radio2.setActivated(false);
-        setTitle(R.string.history_title_today);
+        setTitle(R.string.history_title);
     }
 
     private void showWeek() {
         radio1.setActivated(false);
         radio2.setActivated(true);
-        setTitle(R.string.history_title_week);
+        setTitle(R.string.history_title);
     }
-
-
 
     public static class TabAdapter extends FragmentPagerAdapter {
 

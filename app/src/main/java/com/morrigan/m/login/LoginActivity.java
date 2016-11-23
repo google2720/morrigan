@@ -38,6 +38,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 phoneView.setText(null);
+                pwView.setText(null);
             }
         });
         findViewById(R.id.showPassword).setOnClickListener(new View.OnClickListener() {

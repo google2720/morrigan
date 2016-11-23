@@ -79,8 +79,8 @@
     <!-- 设定目标 -->
     <string name="goal_title">"设定目标"</string>
     <string name="minute">"分"</string>
-    <string name="goal_title_tip">"设定您的每日分钟目标"</string>
-    <string name="goal_title_message">"设置合理的目的进行挑战"</string>
+    <string name="goal_title_tip">"设定您的每日分钟数"</string>
+    <string name="goal_title_message">"设置合理的目标进行挑战"</string>
     <string name="goal_title_message2">"趣味从达到目标开始"</string>
     <!-- 关联设备 -->
     <string name="device_title">"关联设备"</string>
@@ -132,6 +132,7 @@
     <string name="massage_no_drag_tip">"正在按摩，不能拖动"</string>
     <string name="massage_start_tip">"请先选择组合模式"</string>
     <!-- 历史记录 -->
+    <string name="history_title">"历史记录"</string>
     <string name="history_title_today">"今天一览"</string>
     <string name="history_title_week">"本周一阅"</string>
     <string name="history_today">"日"</string>

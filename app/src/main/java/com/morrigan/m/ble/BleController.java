@@ -89,7 +89,12 @@ public class BleController extends AbstractBleController {
         EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
             @Override
             public void run() {
-                new BleBindHelper().connectAndBind(mContext, address, deviceName);
+                try {
+                    new BleBindHelper().connectAndBind(mContext, address, deviceName);
+                } catch (Exception e) {
+                    Lg.w(TAG, "failed to connectAndBind device", e);
+                    getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
+                }
             }
         });
     }
@@ -98,8 +103,13 @@ public class BleController extends AbstractBleController {
         EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
             @Override
             public void run() {
-                String address = getBindDeviceAddress();
-                new BleBindHelper().reconnect(mContext, address);
+                try {
+                    String address = getBindDeviceAddress();
+                    new BleBindHelper().reconnect(mContext, address);
+                } catch (Exception e) {
+                    Lg.w(TAG, "failed to reconnect device", e);
+                    getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
+                }
             }
         });
     }

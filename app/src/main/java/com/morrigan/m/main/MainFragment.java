@@ -37,13 +37,17 @@ public class MainFragment extends Fragment implements CenterView.Callback {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            loadData(centerView.getAm());
+            loadMassageData(centerView.getAm());
         }
     };
     private LoadDataTask loadDataTask;
 
     public static MainFragment newInstance() {
         return new MainFragment();
+    }
+
+    public void refresh() {
+        loadMassageData();
     }
 
     public interface Listener {
@@ -114,7 +118,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
 
     @Override
     public void onAmChange(boolean am) {
-        loadData(am);
+        loadMassageData(am);
     }
 
     @Override
@@ -125,7 +129,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
         getContext().registerReceiver(receiver, filter);
     }
 
-    private void loadData(boolean am) {
+    private void loadMassageData(boolean am) {
         if (loadDataTask != null) {
             loadDataTask.cancel(true);
         }
@@ -177,8 +181,12 @@ public class MainFragment extends Fragment implements CenterView.Callback {
     public void onStart() {
         super.onStart();
         loadRank();
+        loadMassageData();
+    }
+
+    private void loadMassageData() {
         centerView.setDate(Calendar.getInstance());
-        loadData(centerView.getAm());
+        loadMassageData(centerView.getAm());
     }
 
     private void loadRank() {

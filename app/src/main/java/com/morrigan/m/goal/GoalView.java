@@ -45,7 +45,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
     private String tip;
     private String tip2;
     private int minValue = 0;
-    private int maxValue = 300;
+    private int maxValue = 180;
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {

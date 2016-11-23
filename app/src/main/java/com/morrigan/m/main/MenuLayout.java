@@ -3,6 +3,7 @@ package com.morrigan.m.main;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.annotation.Keep;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -20,6 +21,7 @@ public class MenuLayout extends FrameLayout {
     private static final String TAG = "MainLayout";
     private ViewDragHelper dragHelper;
     private boolean open;
+    private boolean touchDownCloseEnable;
 
     public MenuLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -97,11 +99,33 @@ public class MenuLayout extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        int action = MotionEventCompat.getActionMasked(event);
+        if (action == MotionEvent.ACTION_DOWN) {
+            if (open) {
+                View view = getChildAt(1);
+                if (pointInView(view, event.getX(), event.getY())) {
+                    closeMenu();
+                    touchDownCloseEnable = true;
+                    return true;
+                }
+            }
+        }
         return dragHelper.shouldInterceptTouchEvent(event);
+    }
+
+    private boolean pointInView(View view, float x, float y) {
+        return x >= view.getLeft() && x <= view.getRight() && y >= view.getTop() && y <= view.getBottom();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (touchDownCloseEnable) {
+            int action = MotionEventCompat.getActionMasked(event);
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                touchDownCloseEnable = false;
+            }
+            return true;
+        }
         dragHelper.processTouchEvent(event);
         return true;
     }
@@ -138,7 +162,7 @@ public class MenuLayout extends FrameLayout {
         animator.setDuration(250);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.start();
-        dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_RIGHT);
+        dragHelper.setEdgeTrackingEnabled(0);
     }
 
     @Keep

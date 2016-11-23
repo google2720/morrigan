@@ -187,7 +187,7 @@ public class WeekHistotyRecordFragment extends Fragment {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            ToastUtils.show(activity, result.message);
+            // ToastUtils.show(activity, result.message);
             data = (HistoryResult) result.t;
             refreshData();
         }

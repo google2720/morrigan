@@ -12,16 +12,17 @@ import com.morrigan.m.personal.PersonalModifyTask;
 public class GoalActivity extends ToolbarActivity {
 
     private GoalView goalView;
+    private String defaultValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal);
         goalView = (GoalView) findViewById(R.id.goal);
-        String v = UserController.getInstance().getTarget(this);
+        defaultValue = UserController.getInstance().getTarget(this);
         int value = 0;
         try {
-            value = Integer.parseInt(v);
+            value = Integer.parseInt(defaultValue);
         } catch (Exception e) {
             // ignore
         }
@@ -30,6 +31,10 @@ public class GoalActivity extends ToolbarActivity {
 
     public void onClickComplete(View view) {
         final String value = String.valueOf(goalView.getValue());
+        if (defaultValue == null || value.equals(defaultValue)) {
+            finish();
+            return;
+        }
         PersonalModifyTask task = new PersonalModifyTask(this, "target", value, new Runnable() {
             @Override
             public void run() {
