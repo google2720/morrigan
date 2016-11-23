@@ -65,7 +65,6 @@ public class WeekHistotyRecordFragment extends Fragment {
         txt_sulplus_min = (TextView) view.findViewById(R.id.txt_sulplus_min);
         txt_average_nursing_min = (TextView) view.findViewById(R.id.txt_average_nursing_min);
         initData();
-
     }
 
     private void initData() {
@@ -147,7 +146,6 @@ public class WeekHistotyRecordFragment extends Fragment {
 
         GetHistTask(Activity activity) {
             this.activity = activity;
-
         }
 
         @Override
@@ -176,7 +174,7 @@ public class WeekHistotyRecordFragment extends Fragment {
                     uiResult.t = r;
                 }
             } catch (Exception e) {
-                Lg.w(TAG, "failed to login", e);
+                Lg.w(TAG, "failed to get history", e);
                 uiResult.message = e.getMessage();
             }
             return uiResult;

@@ -6,6 +6,7 @@ import com.github.yzeaho.http.HttpInterface;
 import com.morrigan.m.utils.NetUtils;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 import okhttp3.Request;
 
@@ -33,6 +34,10 @@ public class HttpProxy {
 
     public static String parserError(Context context, Throwable e) {
         if (e instanceof NoNetException) {
+            return context.getString(R.string.error_no_net);
+        } else if (e instanceof SocketException) {
+            return context.getString(R.string.error_no_net);
+        } else if (e instanceof IOException) {
             return context.getString(R.string.error_no_net);
         } else {
             return e.getMessage();
