@@ -20,7 +20,7 @@ public class GoalActivity extends ToolbarActivity {
         setContentView(R.layout.activity_goal);
         goalView = (GoalView) findViewById(R.id.goal);
         defaultValue = UserController.getInstance().getTarget(this);
-        int value = 0;
+        int value = 60;
         try {
             value = Integer.parseInt(defaultValue);
         } catch (Exception e) {

@@ -150,12 +150,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
         @Override
         protected List<CenterData> doInBackground(Void... params) {
             String userId = UserController.getInstance().getUserId(context);
-            int target = 60;
-            try {
-                target = Integer.parseInt(UserController.getInstance().getTarget(getContext()));
-            } catch (Exception e) {
-                // ignore
-            }
+            int target = UserController.getInstance().getTargetInt(context);
             int sum = Massage.sum(context, userId) / 60000;
             publishProgress(Math.max(0, target - sum));
             return Massage.queryToday(context, userId, am);

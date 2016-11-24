@@ -1,7 +1,6 @@
 package com.morrigan.m.historyrecord;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.yzeaho.common.ToastUtils;
 import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
@@ -23,14 +21,15 @@ import com.morrigan.m.utils.DateUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
 
 /**
+ * 本周护养
  * Created by fei on 2016/10/12.
  */
-
 public class WeekHistotyRecordFragment extends Fragment {
     WeekView weekView;
     GetHistTask getHistTask;
@@ -56,7 +55,6 @@ public class WeekHistotyRecordFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         weekView = (WeekView) view.findViewById(R.id.weekView);
         txt_total_min = (TextView) view.findViewById(R.id.txt_total_min);
         txt_date = (TextView) view.findViewById(R.id.txt_date);
@@ -64,6 +62,11 @@ public class WeekHistotyRecordFragment extends Fragment {
         txt_nursing_min = (TextView) view.findViewById(R.id.txt_nursing_min);
         txt_sulplus_min = (TextView) view.findViewById(R.id.txt_sulplus_min);
         txt_average_nursing_min = (TextView) view.findViewById(R.id.txt_average_nursing_min);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         initData();
     }
 
@@ -76,35 +79,42 @@ public class WeekHistotyRecordFragment extends Fragment {
     }
 
     public void refreshData() {
-        SimpleDateFormat sd = new SimpleDateFormat("MM月dd日");
+        SimpleDateFormat sd = new SimpleDateFormat("MM月dd日", Locale.CHINA);
         String monday = DateUtils.getMondayOfThisWeek(sd);
         String sunday = DateUtils.getSundayOfThisWeek(sd);
         txt_date.setText(monday + "-" + sunday);
-        if (data != null && data.llInfo != null) {
-            int total = 0;
+        if (data != null && data.hlInfo != null) {
             int nursing = 0;
-            int sulplus = 0;
-            int average = 0;
-            for (int i = 0; i < data.llInfo.size(); i++) {
-                if (data.llInfo.get(i) != null) {
-                    int totalTem=data.llInfo.get(i).goalLong == null ? 0 : Integer.parseInt(data.llInfo.get(i).goalLong);
-                    total = total + totalTem;
-                    int nursingTem=data.llInfo.get(i).timeLong == null ? 0 : Integer.parseInt(data.llInfo.get(i).timeLong);
-                    nursing = nursing + nursingTem;
+            int size = data.hlInfo.size();
+            for (int i = 0; i < size; i++) {
+                final HlInfo info = data.hlInfo.get(i);
+                if (info != null) {
+                    nursing = nursing + info.timeLong;
                 }
             }
-            if (total > 0) {
-                sulplus = total - nursing;
-                average = (int) (nursing / 7.0);
-                txt_total_min.setText(total + "分钟");
-                txt_goal_min.setText(total + "分钟");
-                txt_nursing_min.setText(nursing + "分钟");
-                txt_sulplus_min.setText(sulplus + "分钟");
-                txt_average_nursing_min.setText(average + "分钟/日");
-                txt_total_min.setCompoundDrawables(null, null, null, null);
-                txt_goal_min.setCompoundDrawables(null, null, null, null);
+
+            // 本周目标
+            int target = UserController.getInstance().getTargetInt(getContext());
+            int targetWeek = target * 7;
+            txt_goal_min.setText(getString(R.string.history_time, targetWeek));
+            txt_goal_min.setCompoundDrawables(null, null, null, null);
+
+            // 剩余目标值
+            txt_sulplus_min.setText(getString(R.string.history_time, targetWeek - nursing));
+            txt_sulplus_min.setCompoundDrawables(null, null, null, null);
+
+            // 本周护养
+            if (nursing != 0) {
+                txt_nursing_min.setText(getString(R.string.history_time, nursing));
                 txt_nursing_min.setCompoundDrawables(null, null, null, null);
-                txt_sulplus_min.setCompoundDrawables(null, null, null, null);
+                txt_total_min.setText(getString(R.string.history_time, nursing));
+                txt_total_min.setCompoundDrawables(null, null, null, null);
+            }
+
+            // 平均护养
+            int average = (int) (nursing / 7.0);
+            if (average != 0) {
+                txt_average_nursing_min.setText(getString(R.string.history_time_average, average));
                 txt_average_nursing_min.setCompoundDrawables(null, null, null, null);
             }
         }
@@ -114,7 +124,7 @@ public class WeekHistotyRecordFragment extends Fragment {
     private void refreshBarChart() {
         List<HlInfo> llInfo = new ArrayList<>();
         if (data != null) {
-            llInfo = data.llInfo;
+            llInfo = data.hlInfo;
         }
         if (llInfo == null) {
             llInfo = new ArrayList<>();
@@ -130,19 +140,17 @@ public class WeekHistotyRecordFragment extends Fragment {
             if (llInfo.get(i) == null) {
                 datas.add(0);
             } else {
-                String str = llInfo.get(i).timeLong;
-                datas.add(str == null ? 0 : Integer.parseInt(str));
+                datas.add(llInfo.get(i).timeLong);
             }
-
         }
         weekView.refreshData(datas);
     }
 
-    class GetHistTask extends AsyncTask<Void, Void, UiResult> {
+    class GetHistTask extends AsyncTask<Void, Void, UiResult<HistoryResult>> {
 
         private Activity activity;
         private HttpInterface.Result result;
-        private ProgressDialog dialog;
+        //private ProgressDialog dialog;
 
         GetHistTask(Activity activity) {
             this.activity = activity;
@@ -150,15 +158,15 @@ public class WeekHistotyRecordFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            dialog = new ProgressDialog(activity);
-            dialog.setMessage(activity.getString(R.string.history_record_ing_message));
-            dialog.setCancelable(false);
-            dialog.show();
+//            dialog = new ProgressDialog(activity);
+//            dialog.setMessage(activity.getString(R.string.history_record_ing_message));
+//            dialog.setCancelable(false);
+//            dialog.show();
         }
 
         @Override
-        protected UiResult doInBackground(Void... params) {
-            UiResult uiResult = new UiResult();
+        protected UiResult<HistoryResult> doInBackground(Void... params) {
+            UiResult<HistoryResult> uiResult = new UiResult<>();
             try {
                 String url = activity.getString(R.string.host) + "/rest/moli/get-record-list";
                 FormBody.Builder b = new FormBody.Builder();
@@ -181,14 +189,13 @@ public class WeekHistotyRecordFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(UiResult result) {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-            }
+        protected void onPostExecute(UiResult<HistoryResult> result) {
+//            if (dialog != null && dialog.isShowing()) {
+//                dialog.dismiss();
+//            }
             // ToastUtils.show(activity, result.message);
-            data = (HistoryResult) result.t;
+            data = result.t;
             refreshData();
         }
     }
-
 }

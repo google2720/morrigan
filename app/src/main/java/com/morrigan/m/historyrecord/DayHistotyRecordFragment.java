@@ -22,17 +22,16 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * 当天记录
  * Created by fei on 2016/10/12.
  */
 public class DayHistotyRecordFragment extends Fragment {
 
-    private static final String TAG = "DayHistotyRecordFragment";
     private TextView txt_total_min;
     private TextView txt_date;
     private TextView txt_goal_min;
     private TextView txt_nursing_min;
     private TextView txt_sulplus_min;
-    private TextView txt_average_nursing_min;
     private DayView dayView;
     private DataTask task;
 
@@ -51,7 +50,6 @@ public class DayHistotyRecordFragment extends Fragment {
         txt_goal_min = (TextView) view.findViewById(R.id.txt_goal_min);
         txt_nursing_min = (TextView) view.findViewById(R.id.txt_nursing_min);
         txt_sulplus_min = (TextView) view.findViewById(R.id.txt_sulplus_min);
-        txt_average_nursing_min = (TextView) view.findViewById(R.id.txt_average_nursing_min);
     }
 
     @Override
@@ -96,26 +94,30 @@ public class DayHistotyRecordFragment extends Fragment {
             if (getActivity() == null) {
                 return;
             }
-            String str = UserController.getInstance().getTarget(context);
-            int total = str == null ? 0 : Integer.parseInt(str);
+            int total = UserController.getInstance().getTargetInt(context);
             int nursing = 0;
-            int sulplus = 0;
             for (int i = 0; i < data.records.length; i++) {
                 nursing = nursing + data.records[i];
             }
-            sulplus = total - nursing;
+
+            // 目标值
             if (total != 0) {
-                txt_total_min.setText(total + "分钟");
-                txt_goal_min.setText(total + "分钟");
-                txt_total_min.setCompoundDrawables(null, null, null, null);
+                txt_goal_min.setText(getString(R.string.history_time, total));
                 txt_goal_min.setCompoundDrawables(null, null, null, null);
             }
+
+            // 护养时间
             if (nursing != 0) {
-                txt_nursing_min.setText(nursing + "分钟");
+                txt_total_min.setText(getString(R.string.history_time, nursing));
+                txt_total_min.setCompoundDrawables(null, null, null, null);
+                txt_nursing_min.setText(getString(R.string.history_time, nursing));
                 txt_nursing_min.setCompoundDrawables(null, null, null, null);
             }
+
+            // 剩余目标值
+            int sulplus = total - nursing;
             if (sulplus != 0) {
-                txt_sulplus_min.setText(sulplus + "分钟");
+                txt_sulplus_min.setText(getString(R.string.history_time, sulplus));
                 txt_sulplus_min.setCompoundDrawables(null, null, null, null);
             }
             refreshBarChart(data);

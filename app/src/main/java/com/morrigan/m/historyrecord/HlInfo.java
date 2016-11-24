@@ -14,8 +14,7 @@ public class HlInfo {
     @Keep
     public String date;
     @Keep
-    public String timeLong;
+    public int timeLong;
     @Keep
     public String goalLong;
-
 }

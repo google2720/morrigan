@@ -145,6 +145,16 @@ public class UserController {
         return getSharedPreferences(context).getString("target", "60");
     }
 
+    public int getTargetInt(Context context) {
+        int value = 60;
+        try {
+            value = Integer.parseInt(getTarget(context));
+        } catch (Exception e) {
+            // ignore
+        }
+        return value;
+    }
+
     public void setTarget(Context context, String target) {
         SharedPreferences preferences = getSharedPreferences(context);
         preferences.edit().putString("target", target).apply();

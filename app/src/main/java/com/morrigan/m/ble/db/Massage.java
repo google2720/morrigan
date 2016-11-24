@@ -90,7 +90,7 @@ public class Massage extends Data {
             while (cursor != null && cursor.moveToNext()) {
                 int h = cursor.getInt(cursor.getColumnIndex("_hour"));
                 int d = cursor.getInt(cursor.getColumnIndex("_duration"));
-                todayRecord.records[h] = (d < 60000 ? 1 : d / 60000);
+                todayRecord.records[h] = d / 60000;
             }
         } finally {
             close(cursor);
@@ -173,7 +173,8 @@ public class Massage extends Data {
                 data.userId = userId;
                 data.goalLong = goal;
                 data.date = cursor.getString(cursor.getColumnIndex("_date"));
-                data.timeLong = cursor.getString(cursor.getColumnIndex("_duration"));
+                final long duration = cursor.getLong(cursor.getColumnIndex("_duration"));
+                data.timeLong = String.valueOf(duration / 60000);
                 result.add(data);
             }
         } finally {

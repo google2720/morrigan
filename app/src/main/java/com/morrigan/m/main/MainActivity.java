@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleController;
-import com.morrigan.m.c.MassageController;
 
 public class MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener, MenuLayout.Callback {
 
@@ -23,6 +22,7 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         mainFragment = MainFragment.newInstance();
         getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, mainFragment).commitAllowingStateLoss();
         // MassageController.getInstance().test(this);
+        UploadHistoryDataService.startAction(this);
     }
 
     @Override

@@ -53,6 +53,7 @@ public class UploadHistoryDataService extends IntentService {
     }
 
     private void upload() throws Exception {
+        Log.i(TAG, "start upload massage data");
         String userId = UserController.getInstance().getUserId(this);
         String goalLong = UserController.getInstance().getTarget(this);
         Calendar calendar = Calendar.getInstance();
@@ -63,12 +64,15 @@ public class UploadHistoryDataService extends IntentService {
         long todayStartTime = calendar.getTimeInMillis();
         List<Data> dataList = Massage.queryUploadData(this, userId, goalLong, todayStartTime);
         if (dataList.isEmpty()) {
+            Log.i(TAG, "no data need to upload");
             return;
         }
+        String json = new Gson().toJson(dataList);
+        Log.i(TAG, "json: " + json);
         String url = getString(R.string.host) + "/rest/moli/upload-record-list";
         FormBody.Builder b = new FormBody.Builder();
         b.add("userId", userId);
-        b.add("hlInfo", new Gson().toJson(dataList));
+        b.add("hlInfo", json);
         Request.Builder builder = new Request.Builder();
         builder.url(url);
         builder.post(b.build());

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cf7f7f7"
@@ -25,9 +24,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_total_min"
-                android:text="分钟"
                 android:drawablePadding="5dp"
-                android:textColor="@color/cffbe8ef2"/>
+                android:text="分钟"
+                android:textColor="@color/cffbe8ef2" />
 
             <TextView
                 android:id="@+id/txt_date"
@@ -35,15 +34,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="7月22日-7月28日"
-                android:textColor="@color/cffbe8ef2"
-                />
+                android:textColor="@color/cffbe8ef2" />
 
             <com.morrigan.m.historyrecord.DayView
                 android:id="@+id/dayView"
                 android:layout_width="match_parent"
                 android:layout_height="260dp"
-                android:layout_marginTop="15dp"
-                />
+                android:layout_marginTop="15dp" />
 
         </RelativeLayout>
 
@@ -56,9 +53,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/cf3f3f3"></View>
-
+                android:layout_height="1px"
+                android:background="@color/cf3f3f3" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -68,18 +64,17 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:paddingTop="10dp"
-                >
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/txt_goal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_history_goal"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="@string/history_day_goal"
-                    android:drawablePadding="5dp"
-                    android:textColor="@color/c5a5a5a"/>
+                    android:textColor="@color/c5a5a5a" />
 
                 <TextView
                     android:id="@+id/txt_goal_min"
@@ -87,18 +82,18 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@drawable/ic_min"
+                    android:drawablePadding="3dp"
                     android:gravity="center"
                     android:text="分钟"
-                    android:drawablePadding="3dp"
-                    android:textColor="@color/c5a5a5a"/>
+                    android:textColor="@color/c5a5a5a" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_marginLeft="15dp"
-                android:background="@color/cf3f3f3"></View>
+                android:background="@color/cf3f3f3" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -108,18 +103,17 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:paddingTop="10dp"
-                >
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/txt_nursing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_history_nursing"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="@string/history_day_nursing"
-                    android:drawablePadding="5dp"
-                    android:textColor="@color/c5a5a5a"/>
+                    android:textColor="@color/c5a5a5a" />
 
                 <TextView
                     android:id="@+id/txt_nursing_min"
@@ -127,18 +121,18 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@drawable/ic_min"
+                    android:drawablePadding="3dp"
                     android:gravity="center"
                     android:text="分钟"
-                    android:drawablePadding="3dp"
-                    android:textColor="@color/c5a5a5a"/>
+                    android:textColor="@color/c5a5a5a" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 android:layout_marginLeft="15dp"
-                android:background="@color/cf3f3f3"></View>
+                android:background="@color/cf3f3f3" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -148,18 +142,17 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:paddingTop="10dp"
-                >
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/txt_sulplus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_history_sulplus"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="@string/history_week_surplus"
-                    android:drawablePadding="5dp"
-                    android:textColor="@color/c5a5a5a"/>
+                    android:textColor="@color/c5a5a5a" />
 
                 <TextView
                     android:id="@+id/txt_sulplus_min"
@@ -167,17 +160,17 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@drawable/ic_min"
+                    android:drawablePadding="3dp"
                     android:gravity="center"
                     android:text="分钟"
-                    android:drawablePadding="3dp"
-                    android:textColor="@color/c5a5a5a"/>
+                    android:textColor="@color/c5a5a5a" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/cf3f3f3"></View>
+                android:layout_height="1px"
+                android:background="@color/cf3f3f3"/>
         </LinearLayout>
     </LinearLayout>
 
