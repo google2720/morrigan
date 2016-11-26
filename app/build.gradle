@@ -25,12 +25,14 @@ android {
         debug {
             signingConfig signingConfigs.config
             buildConfigField "boolean", "WAVE_ON", "false"
+            buildConfigField "boolean", "TEST_MUSIC", "true"
         }
         release {
             signingConfig signingConfigs.config
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "WAVE_ON", "false"
+            buildConfigField "boolean", "TEST_MUSIC", project.hasProperty('test_music') ? test_music : "false"
         }
     }
     applicationVariants.all { variant ->

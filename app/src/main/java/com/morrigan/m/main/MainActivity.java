@@ -4,13 +4,10 @@ import android.os.Bundle;
 
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
-import com.morrigan.m.ble.BleController;
 
 public class MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener, MenuLayout.Callback {
 
-    private static final int REQUEST_ENABLE_BT = 1;
     private MenuLayout mainLayout;
-    private BleController ble = BleController.getInstance();
     private MainFragment mainFragment;
 
     @Override

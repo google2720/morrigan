@@ -2,6 +2,7 @@ package com.morrigan.m.music;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
@@ -10,18 +11,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.morrigan.m.BaseActivity;
+import com.morrigan.m.BuildConfig;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleController;
 import com.morrigan.m.c.MassageController;
+import com.morrigan.m.c.UserController;
 import com.morrigan.m.main.VisualizerView;
 import com.morrigan.m.music.MusicLoader.MusicInfo;
 
@@ -32,9 +37,8 @@ import java.util.List;
  * 音乐跟随界面
  * Created by y on 2016/10/19.
  */
-public class MusicActivity extends BaseActivity implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, SeekBar.OnSeekBarChangeListener
-        , MusicAdapter.Callback, OpenPopup {
-
+public class MusicActivity extends BaseActivity implements MediaPlayer.OnCompletionListener,
+        MediaPlayer.OnErrorListener, SeekBar.OnSeekBarChangeListener, MusicAdapter.Callback, OpenPopup {
 
     private MediaPlayer mediaPlayer;
     private Visualizer visualizer;
@@ -62,17 +66,28 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     MusicLoader loader;
     private FlingUpImageView iv_up;
     MusicsPopupWindow popupWindow;
-    long time;
-    int sendIndex = 0;
+    private long updateUiTime;
+    private long sendMassageTime;
+    private long sendMassageTimeInterval;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         activity = this;
+        sendMassageTimeInterval = UserController.getInstance().getMusicTimeInterval(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         setContentView(R.layout.activity_music);
         tv_currTime = (TextView) this.findViewById(R.id.tv_currTime);
+        if (BuildConfig.TEST_MUSIC) {
+            findViewById(R.id.back).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showTestMusicDialog();
+                    return true;
+                }
+            });
+        }
         tv_totalTime = (TextView) this.findViewById(R.id.tv_totalTime);
         tv_showName = (TextView) this.findViewById(R.id.tv_showName);
         tv_artist = (TextView) this.findViewById(R.id.tv_artist);
@@ -93,12 +108,29 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         initMusic();
     }
 
+    private void showTestMusicDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_test_music, null);
+        final EditText editText = (EditText) view.findViewById(R.id.edit);
+        editText.setText(String.valueOf(sendMassageTimeInterval));
+        builder.setView(view);
+        builder.setTitle("修改音乐模式时间间隔");
+        builder.setNegativeButton(R.string.action_cancel, null);
+        builder.setPositiveButton(R.string.action_confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                sendMassageTimeInterval = Integer.parseInt(editText.getText().toString().trim());
+                UserController.getInstance().setMusicTimeInterval(getApplicationContext(), sendMassageTimeInterval);
+            }
+        });
+        builder.show();
+    }
+
     private void initMusic() {
         new Thread(new Runnable() {
             public void run() {
                 loader = MusicLoader.instance(context.getApplicationContext());
                 loader.init();
-                ;
                 musics = loader.getMusicList();
                 hander.sendEmptyMessage(SEARCH_MUSIC_SUCCESS);
             }
@@ -120,7 +152,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             popupWindow.dismiss();
         }
     }
-
 
     private Handler hander = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -204,23 +235,23 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
                 @Override
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-                    if (SystemClock.elapsedRealtime() - time > 200) {
+                    if (SystemClock.elapsedRealtime() - updateUiTime > 200) {
                         Log.i("music", "onWaveFormDataCapture " + bytes.length);
-                        time = SystemClock.elapsedRealtime();
+                        updateUiTime = SystemClock.elapsedRealtime();
                         visualizerView.updateVisualizer(bytes);
+                    }
+                    if (SystemClock.elapsedRealtime() - sendMassageTime > sendMassageTimeInterval) {
+                        Log.i("music", "onWaveFormDataCapture " + bytes.length);
+                        sendMassageTime = SystemClock.elapsedRealtime();
                         long sum = 0;
-                        for (int i = 0; i < bytes.length; i++) {
-                            sum += bytes[i];
+                        for (byte b : bytes) {
+                            sum += b;
                         }
                         int tem = (int) (sum / (bytes.length + 0.0));
-                        Log.e("平均", tem + "");
+                        Log.i("music", "average " + tem);
                         int vol = 128 - Math.abs(tem);
                         int decibel = (int) (vol * 160 / 128.0);
-                        sendIndex = (sendIndex + 1) % 10;
-                        if (sendIndex == 0) {
-                            BleController.getInstance().musicMassageAsync(decibel);
-                        }
-
+                        BleController.getInstance().musicMassageAsync(decibel);
                     }
                 }
 
@@ -300,7 +331,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     //监听器，当当前歌曲播放完时触发，播放下一首
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-
         if (musics != null && musics.size() > 0) {
             next();
         } else {

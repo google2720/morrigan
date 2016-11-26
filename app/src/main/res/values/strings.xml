@@ -27,6 +27,7 @@
     <string name="input_pw_hint">"请输入密码"</string>
     <string name="forget_password">"忘记密码?"</string>
     <string name="login_ing_message">"正在登录"</string>
+    <string name="login_error_no_register">"该帐号不存在，请先注册"</string>
     <!-- 注册 -->
     <string name="select_sex">"选择性别"</string>
     <string name="select_sex_tip">"一旦选择 性别 注册后不可更改"</string>

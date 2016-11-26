@@ -160,6 +160,15 @@ public class UserController {
         preferences.edit().putString("target", target).apply();
     }
 
+    public void setMusicTimeInterval(Context context, long timeInterval) {
+        SharedPreferences preferences = getSharedPreferences(context);
+        preferences.edit().putLong("MusicTimeInterval", timeInterval).apply();
+    }
+
+    public long getMusicTimeInterval(Context context) {
+        return getSharedPreferences(context).getLong("MusicTimeInterval", 2000);
+    }
+
     public UiResult modify(Context context, String col, String value) {
         UiResult uiResult = new UiResult();
         try {
@@ -199,8 +208,8 @@ public class UserController {
         return uiResult;
     }
 
-    public UiResult<Void> login(Context context, String mobile, String pw) {
-        UiResult<Void> uiResult = new UiResult<>();
+    public UiResult<LoginResult> login(Context context, String mobile, String pw) {
+        UiResult<LoginResult> uiResult = new UiResult<>();
         try {
             String url = context.getString(R.string.host) + "/rest/moli/login";
             FormBody.Builder b = new FormBody.Builder();
@@ -212,6 +221,7 @@ public class UserController {
             LoginResult r = new HttpProxy().execute(context, builder.build(), LoginResult.class);
             uiResult.success = r.isSuccessful();
             uiResult.message = r.retMsg;
+            uiResult.t = r;
             if (uiResult.success) {
                 saveUserInfo(context, r.userInfo, mobile, pw);
                 DeviceController.getInstance().fetchAsync(context);

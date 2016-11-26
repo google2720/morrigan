@@ -157,8 +157,9 @@ public class RegisterActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            sendSmsCodeView.setText(R.string.fetching_sms_code);
+//            sendSmsCodeView.setText(R.string.fetching_sms_code);
             sendSmsCodeView.setClickable(false);
+            handler.sendEmptyMessage(MSG_TIME);
         }
 
         @Override
@@ -184,8 +185,15 @@ public class RegisterActivity extends BaseActivity {
         @Override
         protected void onPostExecute(UiResult result) {
             task = null;
+            if (isFinishing()) {
+                return;
+            }
             if (result.success) {
-                handler.sendEmptyMessage(MSG_TIME);
+                // handler.sendEmptyMessage(MSG_TIME);
+            } else {
+                handler.removeMessages(MSG_TIME);
+                sendSmsCodeView.setText(R.string.fetch_sms_code);
+                sendSmsCodeView.setClickable(true);
             }
             ToastUtils.show(context, result.message);
         }

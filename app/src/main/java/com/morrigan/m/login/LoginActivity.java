@@ -2,10 +2,12 @@ package com.morrigan.m.login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.os.AsyncTaskCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 
 import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.BaseActivity;
+import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
@@ -107,7 +110,7 @@ public class LoginActivity extends BaseActivity {
         AsyncTaskCompat.executeParallel(task);
     }
 
-    class LoginTask extends AsyncTask<Void, Void, UiResult<Void>> {
+    class LoginTask extends AsyncTask<Void, Void, UiResult<LoginResult>> {
 
         private Activity activity;
         private String mobile;
@@ -129,20 +132,38 @@ public class LoginActivity extends BaseActivity {
         }
 
         @Override
-        protected UiResult<Void> doInBackground(Void... params) {
+        protected UiResult<LoginResult> doInBackground(Void... params) {
             return UserController.getInstance().login(activity, mobile, pw);
         }
 
         @Override
-        protected void onPostExecute(UiResult<Void> result) {
+        protected void onPostExecute(UiResult<LoginResult> result) {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            ToastUtils.show(activity, result.message);
-            if (result.success) {
-                gotoMain();
+            if (result.t != null && result.t.retCode == HttpResult.CODE_NO_REGISTER) {
+                showNoRegisterDialog();
+            } else {
+                ToastUtils.show(activity, result.message);
+                if (result.success) {
+                    gotoMain();
+                }
             }
         }
+    }
+
+    private void showNoRegisterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.login_error_no_register);
+        builder.setNegativeButton(R.string.action_cancel, null);
+        builder.setPositiveButton(R.string.action_register, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_REGISTER);
+            }
+        });
+        builder.show();
     }
 
     private void gotoMain() {

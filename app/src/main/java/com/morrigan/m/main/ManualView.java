@@ -16,6 +16,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.animation.LinearInterpolator;
 
+import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BuildConfig;
 
 /**
@@ -96,25 +97,29 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
 
         @Override
         public void run() {
-            // 不停绘制界面
-            while (drawCreated) {
-                long startTime = SystemClock.uptimeMillis();
-                Canvas canvas = getHolder().lockCanvas();
-                if (canvas != null) {
-                    try {
-                        // 清屏
-                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-                        canvas.drawPaint(paint);
-                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-                        drawImpl(canvas);
-                    } finally {
-                        if (drawCreated) {
-                            getHolder().unlockCanvasAndPost(canvas);
+            try {
+                // 不停绘制界面
+                while (drawCreated) {
+                    long startTime = SystemClock.uptimeMillis();
+                    Canvas canvas = getHolder().lockCanvas();
+                    if (canvas != null) {
+                        try {
+                            // 清屏
+                            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+                            canvas.drawPaint(paint);
+                            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+                            drawImpl(canvas);
+                        } finally {
+                            if (drawCreated) {
+                                getHolder().unlockCanvasAndPost(canvas);
+                            }
                         }
                     }
+                    long endTime = SystemClock.uptimeMillis();
+                    SystemClock.sleep(Math.max(0, 1000 / 60 - (endTime - startTime)));
                 }
-                long endTime = SystemClock.uptimeMillis();
-                SystemClock.sleep(Math.max(0, 1000 / 60 - (endTime - startTime)));
+            } catch (Exception e) {
+                Lg.w("ManualView", "", e);
             }
         }
     }
