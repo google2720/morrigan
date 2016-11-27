@@ -44,6 +44,13 @@ public class UserController {
         DBHelper.getInstance(context).clear();
     }
 
+    public void quit(Context context) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean("modify_user_info", false);
+        editor.putBoolean("auto_login", false);
+        editor.apply();
+    }
+
     public void setUserId(Context context, String userId) {
         SharedPreferences preferences = getSharedPreferences(context);
         preferences.edit().putString("userId", userId).apply();

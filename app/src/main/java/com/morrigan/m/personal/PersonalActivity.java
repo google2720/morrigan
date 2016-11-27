@@ -345,7 +345,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         builder.setPositiveButton(R.string.action_confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                UserController.getInstance().setAutoLogin(PersonalActivity.this, false);
+                UserController.getInstance().quit(PersonalActivity.this);
                 BleController.getInstance().quit();
                 Intent intent = new Intent(PersonalActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
