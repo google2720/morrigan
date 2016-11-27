@@ -13,6 +13,8 @@ import com.morrigan.m.device.DeviceController;
 import com.morrigan.m.login.LoginResult;
 import com.morrigan.m.login.UserInfo;
 
+import java.io.IOException;
+
 import okhttp3.FormBody;
 import okhttp3.Request;
 
@@ -101,44 +103,59 @@ public class UserController {
     }
 
     public void setNickname(Context context, String nickname) {
-        SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putString("nickname", nickname).apply();
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString("nickname", nickname);
+        editor.putBoolean("modify_user_info", true);
+        editor.apply();
+        UploadUserInfoService.startAction(context);
     }
 
     public String getAge(Context context) {
-        return getSharedPreferences(context).getString("age", null);
+        return getSharedPreferences(context).getString("age", "");
     }
 
     public void setAge(Context context, String age) {
-        SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putString("age", age).apply();
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString("age", age);
+        editor.putBoolean("modify_user_info", true);
+        editor.apply();
+        UploadUserInfoService.startAction(context);
     }
 
     public String getEmotion(Context context) {
-        return getSharedPreferences(context).getString("emotion", null);
+        return getSharedPreferences(context).getString("emotion", "");
     }
 
     public void setEmotion(Context context, String emotion) {
-        SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putString("emotion", emotion).apply();
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString("emotion", emotion);
+        editor.putBoolean("modify_user_info", true);
+        editor.apply();
+        UploadUserInfoService.startAction(context);
     }
 
     public String getHeight(Context context) {
-        return getSharedPreferences(context).getString("height", null);
+        return getSharedPreferences(context).getString("height", "");
     }
 
     public void setHeight(Context context, String h) {
-        SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putString("height", h).apply();
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString("height", h);
+        editor.putBoolean("modify_user_info", true);
+        editor.apply();
+        UploadUserInfoService.startAction(context);
     }
 
     public String getWeight(Context context) {
-        return getSharedPreferences(context).getString("weight", null);
+        return getSharedPreferences(context).getString("weight", "");
     }
 
     public void setWeight(Context context, String w) {
-        SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putString("weight", w).apply();
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString("weight", w);
+        editor.putBoolean("modify_user_info", true);
+        editor.apply();
+        UploadUserInfoService.startAction(context);
     }
 
     public String getTarget(Context context) {
@@ -156,8 +173,20 @@ public class UserController {
     }
 
     public void setTarget(Context context, String target) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString("target", target);
+        editor.putBoolean("modify_user_info", true);
+        editor.apply();
+        UploadUserInfoService.startAction(context);
+    }
+
+    private boolean getModifyUserInfo(Context context) {
+        return getSharedPreferences(context).getBoolean("modify_user_info", false);
+    }
+
+    public void setModifyUserInfo(Context context, boolean modify) {
         SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putString("target", target).apply();
+        preferences.edit().putBoolean("modify_user_info", modify).apply();
     }
 
     public void setMusicTimeInterval(Context context, long timeInterval) {
@@ -223,11 +252,61 @@ public class UserController {
             uiResult.message = r.retMsg;
             uiResult.t = r;
             if (uiResult.success) {
-                saveUserInfo(context, r.userInfo, mobile, pw);
+                if (getModifyUserInfo(context)) {
+                    UploadUserInfoService.startAction(context);
+                } else {
+                    saveUserInfo(context, r.userInfo, mobile, pw);
+                }
                 DeviceController.getInstance().fetchAsync(context);
             }
         } catch (Exception e) {
             Lg.w(TAG, "failed to login", e);
+            uiResult.message = HttpProxy.parserError(context, e);
+        }
+        return uiResult;
+    }
+
+    public HttpResult sendSmsCode(Context context, String mobile) throws IOException {
+        String url = context.getString(R.string.host) + "/rest/moli/send-msg";
+        FormBody.Builder b = new FormBody.Builder();
+        b.add("mobile", mobile);
+        Request.Builder builder = new Request.Builder();
+        builder.url(url);
+        builder.post(b.build());
+        return new HttpProxy().execute(context, builder.build(), HttpResult.class);
+    }
+
+    public boolean checkRegister(Context context, String mobile) throws IOException {
+        String url = context.getString(R.string.host) + "/rest/moli/isregister";
+        FormBody.Builder b = new FormBody.Builder();
+        b.add("mobile", mobile);
+        Request.Builder builder = new Request.Builder();
+        builder.url(url);
+        builder.post(b.build());
+        HttpResult r = new HttpProxy().execute(context, builder.build(), HttpResult.class);
+        return r.isSuccessful();
+    }
+
+    public UiResult<Void> upload(Context context) {
+        UiResult<Void> uiResult = new UiResult<>();
+        try {
+            String url = context.getString(R.string.host) + "/rest/moli/eidt-user-info";
+            FormBody.Builder b = new FormBody.Builder();
+            b.add("userId", getUserId(context));
+            b.add("high", getHeight(context));
+            b.add("weight", getWeight(context));
+            b.add("age", getAge(context));
+            b.add("nickName", getNickname(context));
+            b.add("target", getTarget(context));
+            b.add("emotion", getEmotion(context));
+            Request.Builder builder = new Request.Builder();
+            builder.url(url);
+            builder.post(b.build());
+            HttpResult r = new HttpProxy().execute(context, builder.build(), HttpResult.class);
+            uiResult.success = r.isSuccessful();
+            uiResult.message = r.retMsg;
+        } catch (Exception e) {
+            Lg.w("user", "failed to modify user info", e);
             uiResult.message = HttpProxy.parserError(context, e);
         }
         return uiResult;

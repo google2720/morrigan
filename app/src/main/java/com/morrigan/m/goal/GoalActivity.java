@@ -1,13 +1,12 @@
 package com.morrigan.m.goal;
 
 import android.os.Bundle;
-import android.support.v4.os.AsyncTaskCompat;
 import android.view.View;
 
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
+import com.morrigan.m.c.UploadUserInfoService;
 import com.morrigan.m.c.UserController;
-import com.morrigan.m.personal.PersonalModifyTask;
 
 public class GoalActivity extends ToolbarActivity {
 
@@ -31,17 +30,11 @@ public class GoalActivity extends ToolbarActivity {
 
     public void onClickComplete(View view) {
         final String value = String.valueOf(goalView.getValue());
-        if (defaultValue == null || value.equals(defaultValue)) {
+        if (defaultValue != null && value.equals(defaultValue)) {
             finish();
             return;
         }
-        PersonalModifyTask task = new PersonalModifyTask(this, "target", value, new Runnable() {
-            @Override
-            public void run() {
-                UserController.getInstance().setTarget(GoalActivity.this, value);
-                finish();
-            }
-        });
-        AsyncTaskCompat.executeParallel(task);
+        UserController.getInstance().setTarget(this, value);
+        finish();
     }
 }

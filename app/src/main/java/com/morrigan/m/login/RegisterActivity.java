@@ -23,6 +23,7 @@ import com.morrigan.m.HttpProxy;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.c.UserController;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -30,10 +31,11 @@ import okhttp3.Request;
 public class RegisterActivity extends BaseActivity {
 
     private static final String TAG = "RegisterActivity";
+    private static final int DEFAULT_TIME = 60;
     private View manView;
     private View womenView;
     private TextView sendSmsCodeView;
-    private int time = 60;
+    private int time = DEFAULT_TIME;
     private static final int MSG_TIME = 1;
     private Handler handler = new Handler() {
         @Override
@@ -159,6 +161,7 @@ public class RegisterActivity extends BaseActivity {
         protected void onPreExecute() {
 //            sendSmsCodeView.setText(R.string.fetching_sms_code);
             sendSmsCodeView.setClickable(false);
+            time = DEFAULT_TIME;
             handler.sendEmptyMessage(MSG_TIME);
         }
 
@@ -166,20 +169,25 @@ public class RegisterActivity extends BaseActivity {
         protected UiResult doInBackground(Void... params) {
             UiResult uiResult = new UiResult();
             try {
-                String url = context.getString(R.string.host) + "/rest/moli/send-msg";
-                FormBody.Builder b = new FormBody.Builder();
-                b.add("mobile", mobile);
-                Request.Builder builder = new Request.Builder();
-                builder.url(url);
-                builder.post(b.build());
-                HttpResult r = http.execute(context, builder.build(), HttpResult.class);
-                uiResult.success = r.isSuccessful();
-                uiResult.message = r.retMsg;
+                UserController c = UserController.getInstance();
+                if (c.checkRegister(context, mobile)) {
+                    uiResult.success = false;
+                    uiResult.message = context.getString(R.string.login_error_register);
+                } else {
+                    HttpResult r = c.sendSmsCode(context, mobile);
+                    uiResult.success = r.isSuccessful();
+                    uiResult.message = r.retMsg;
+                }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to send sms code", e);
                 uiResult.message = HttpProxy.parserError(context, e);
             }
             return uiResult;
+        }
+
+        @Override
+        protected void onCancelled() {
+            task = null;
         }
 
         @Override

@@ -101,17 +101,19 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
                 // 不停绘制界面
                 while (drawCreated) {
                     long startTime = SystemClock.uptimeMillis();
-                    Canvas canvas = getHolder().lockCanvas();
-                    if (canvas != null) {
-                        try {
-                            // 清屏
-                            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-                            canvas.drawPaint(paint);
-                            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-                            drawImpl(canvas);
-                        } finally {
-                            if (drawCreated) {
-                                getHolder().unlockCanvasAndPost(canvas);
+                    if (getHolder() != null) {
+                        Canvas canvas = getHolder().lockCanvas();
+                        if (canvas != null) {
+                            try {
+                                // 清屏
+                                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+                                canvas.drawPaint(paint);
+                                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+                                drawImpl(canvas);
+                            } finally {
+                                if (drawCreated && getHolder() != null) {
+                                    getHolder().unlockCanvasAndPost(canvas);
+                                }
                             }
                         }
                     }

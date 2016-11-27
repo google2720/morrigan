@@ -128,15 +128,19 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         final String[] emotionNames = getResources().getStringArray(R.array.emotion_names);
         final String[] emotionValues = getResources().getStringArray(R.array.emotion_values);
         String emotion = UserController.getInstance().getEmotion(this);
-        int index = 0;
-        int length = emotionValues.length;
-        for (int i = 0; i < length; i++) {
-            if (emotionValues[i].equals(emotion)) {
-                index = i;
-                break;
+        if (TextUtils.isEmpty(emotion)) {
+            emotionView.setText(R.string.please_input);
+        } else {
+            int index = 0;
+            int length = emotionValues.length;
+            for (int i = 0; i < length; i++) {
+                if (emotionValues[i].equals(emotion)) {
+                    index = i;
+                    break;
+                }
             }
+            emotionView.setText(emotionNames[index]);
         }
-        emotionView.setText(emotionNames[index]);
 
         // 身高
         String h = c.getHeight(this);
@@ -193,7 +197,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     public void onClickEmotion(View view) {
         final String[] emotionValues = getResources().getStringArray(R.array.emotion_values);
         String emotion = UserController.getInstance().getEmotion(this);
-        int index = 2;
+        int index = 0;
         int length = emotionValues.length;
         for (int i = 0; i < length; i++) {
             if (emotionValues[i].equals(emotion)) {
@@ -214,16 +218,10 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
-                final String emotion = emotionValues[options1];
-                final String emotionText = emotionNames[options1];
-                PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "emotion", emotion, new Runnable() {
-                    @Override
-                    public void run() {
-                        UserController.getInstance().setEmotion(PersonalActivity.this, emotion);
-                        emotionView.setText(emotionText);
-                    }
-                });
-                AsyncTaskCompat.executeParallel(task);
+                String emotion = emotionValues[options1];
+                String emotionText = emotionNames[options1];
+                UserController.getInstance().setEmotion(PersonalActivity.this, emotion);
+                emotionView.setText(emotionText);
             }
         });
         optionsPickerView.setCancelable(true);
@@ -250,15 +248,9 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
-                final String h = items.get(options1).getName();
-                PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "high", h, new Runnable() {
-                    @Override
-                    public void run() {
-                        UserController.getInstance().setHeight(PersonalActivity.this, h);
-                        heightView.setText(h + "cm");
-                    }
-                });
-                AsyncTaskCompat.executeParallel(task);
+                String h = items.get(options1).getName();
+                UserController.getInstance().setHeight(getApplicationContext(), h);
+                heightView.setText(h + "cm");
             }
         });
         optionsPickerView.setCancelable(true);
@@ -285,15 +277,9 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
-                final String w = items.get(options1).getName();
-                PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "weight", w, new Runnable() {
-                    @Override
-                    public void run() {
-                        UserController.getInstance().setWeight(PersonalActivity.this, w);
-                        weightView.setText(w + "kg");
-                    }
-                });
-                AsyncTaskCompat.executeParallel(task);
+                String w = items.get(options1).getName();
+                UserController.getInstance().setWeight(getApplicationContext(), w);
+                weightView.setText(w + "kg");
             }
         });
         optionsPickerView.setCancelable(true);
@@ -311,18 +297,12 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             @Override
             public void onTimeSelect(final int year, final int month, final int dayOfMonth) {
                 int m = month + 1;
-                final String age = year + "-" + (m < 10 ? "0" + m : m) + "-" + (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth);
-                PersonalModifyTask task = new PersonalModifyTask(PersonalActivity.this, "age", age, new Runnable() {
-                    @Override
-                    public void run() {
-                        UserController.getInstance().setAge(PersonalActivity.this, age);
-                        birthCalendar.set(Calendar.YEAR, year);
-                        birthCalendar.set(Calendar.MONTH, month);
-                        birthCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        updateAgeView();
-                    }
-                });
-                AsyncTaskCompat.executeParallel(task);
+                String age = year + "-" + (m < 10 ? "0" + m : m) + "-" + (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth);
+                UserController.getInstance().setAge(getApplicationContext(), age);
+                birthCalendar.set(Calendar.YEAR, year);
+                birthCalendar.set(Calendar.MONTH, month);
+                birthCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateAgeView();
             }
         });
         pickerView.show();
