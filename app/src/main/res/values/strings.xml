@@ -78,6 +78,8 @@
     <string name="capture_permission">"拍照功能需要读写SD的权限。"</string>
     <string name="uploading">"正在上传"</string>
     <string name="age_message">"%d岁"</string>
+    <string name="height_info">"%scm"</string>
+    <string name="weight_info">"%skg"</string>
     <!-- 设定目标 -->
     <string name="goal_title">"设定目标"</string>
     <string name="minute">"分"</string>

@@ -26,6 +26,9 @@ public class BleScannerLollipop implements BleScanner {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             Lg.i(TAG, "onLeScan " + result.getDevice().getName() + " " + result.getDevice().getAddress() + " " + result.getRssi());
+            if (result.getScanRecord() != null) {
+                Lg.i(TAG, " onLeScan " + result.getScanRecord());
+            }
             mBle.getCallbacks().onLeScan(result.getDevice());
         }
 

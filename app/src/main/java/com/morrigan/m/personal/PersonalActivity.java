@@ -5,12 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -23,11 +20,11 @@ import android.widget.TextView;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.YearMonthDayPickerView;
 import com.bigkoo.pickerview.model.ItemBean;
+import com.github.yzeaho.capture.CaptureHelper;
 import com.github.yzeaho.common.ToastUtils;
 import com.github.yzeaho.file.Closeables;
 import com.github.yzeaho.file.FileApi;
 import com.github.yzeaho.log.Lg;
-import com.morrigan.m.Dirs;
 import com.morrigan.m.HttpProxy;
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
@@ -41,7 +38,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -77,10 +73,12 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
     private File captureOutFile;
     private ImageView avatarView;
     private Calendar birthCalendar = Calendar.getInstance();
+    private CaptureHelper captureHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        captureHelper = CaptureHelper.Factory.create();
         setContentView(R.layout.activity_personal);
         avatarView = (ImageView) findViewById(R.id.avatar);
         nicknameView = (TextView) findViewById(R.id.nickname);
@@ -147,7 +145,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         if (TextUtils.isEmpty(h)) {
             heightView.setText(R.string.please_input);
         } else {
-            heightView.setText(h + "cm");
+            heightView.setText(getString(R.string.height_info, h));
         }
 
         // 体重
@@ -155,7 +153,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         if (TextUtils.isEmpty(w)) {
             weightView.setText(R.string.please_input);
         } else {
-            weightView.setText(w + "kg");
+            weightView.setText(getString(R.string.weight_info, w));
         }
     }
 
@@ -250,7 +248,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             public void onOptionsSelect(int options1, int options2, int options3) {
                 String h = items.get(options1).getName();
                 UserController.getInstance().setHeight(getApplicationContext(), h);
-                heightView.setText(h + "cm");
+                heightView.setText(getString(R.string.height_info, h));
             }
         });
         optionsPickerView.setCancelable(true);
@@ -279,7 +277,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             public void onOptionsSelect(int options1, int options2, int options3) {
                 String w = items.get(options1).getName();
                 UserController.getInstance().setWeight(getApplicationContext(), w);
-                weightView.setText(w + "kg");
+                weightView.setText(getString(R.string.weight_info, w));
             }
         });
         optionsPickerView.setCancelable(true);
@@ -319,12 +317,11 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                startPhotoZoom(data.getData(), getResources().getDimensionPixelSize(R.dimen.avatar_width));
+                captureHelper.startPhotoZoom(this, REQUEST_CODE_CUT, data.getData(), getResources().getDimensionPixelSize(R.dimen.avatar_width));
             }
         } else if (requestCode == REQUEST_CODE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                Uri outputUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", captureOutFile);
-                startPhotoZoom(outputUri, getResources().getDimensionPixelSize(R.dimen.avatar_width));
+                captureHelper.startPhotoZoom(this, REQUEST_CODE_CUT, captureOutFile, getResources().getDimensionPixelSize(R.dimen.avatar_width));
             }
         } else if (requestCode == REQUEST_CODE_CUT) {
             if (resultCode == RESULT_OK) {
@@ -354,22 +351,6 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
             }
         });
         builder.show();
-    }
-
-    private void startPhotoZoom(Uri uri, int size) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.setDataAndType(uri, "image/*");
-        // crop为true是设置在开启的intent中设置显示的view可以剪裁
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX,outputY 是剪裁图片的宽高
-        intent.putExtra("outputX", size);
-        intent.putExtra("outputY", size);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, REQUEST_CODE_CUT);
     }
 
     class UploadTask extends AsyncTask<Void, Void, UiResult<String>> {
@@ -460,19 +441,10 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     @Override
     public void onClickCapture() {
-        try {
-            File dir = Dirs.getCaptureDir(this);
-            FileApi.checkDir(dir);
-            captureOutFile = new File(dir, "tmp.png");
-            // noinspection ResultOfMethodCallIgnored
-            captureOutFile.createNewFile();
-            Uri outputUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", captureOutFile);
-            Lg.i(TAG, "capture:" + outputUri.toString());
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
-            startActivityForResult(intent, REQUEST_CODE_CAPTURE);
-        } catch (IOException e) {
-            Lg.w(TAG, "", e);
+        captureOutFile = captureHelper.createFile(this, "capture");
+        Lg.i(TAG, "captureOutFile: " + captureOutFile);
+        if (captureOutFile != null) {
+            captureHelper.start(this, REQUEST_CODE_CAPTURE, captureOutFile);
         }
     }
 }
