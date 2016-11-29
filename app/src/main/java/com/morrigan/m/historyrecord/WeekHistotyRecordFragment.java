@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.os.AsyncTaskCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,13 @@ import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.ble.db.Massage;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.utils.DateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -195,6 +198,14 @@ public class WeekHistotyRecordFragment extends Fragment {
 //            }
             // ToastUtils.show(activity, result.message);
             data = result.t;
+            if (data != null && data.hlInfo.size() == 7) {
+                Calendar calendar = Calendar.getInstance();
+                int index = calendar.get(Calendar.DAY_OF_WEEK);
+                index = (index - 2 + 7) % 7;
+                data.hlInfo.get(index).timeLong = Massage.sum(getContext().getApplicationContext()
+                        , UserController.getInstance().getUserId(getContext().getApplicationContext()));
+            }
+
             refreshData();
         }
     }

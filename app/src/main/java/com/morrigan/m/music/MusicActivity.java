@@ -31,6 +31,9 @@ import com.morrigan.m.main.VisualizerView;
 import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 import java.io.IOException;
+import java.security.Timestamp;
+import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,6 +72,9 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private long updateUiTime;
     private long sendMassageTime;
     private long sendMassageTimeInterval;
+    private MusicInfo currentMusicInfo;
+    private long startTime = new Date().getTime();
+    boolean isMassageing = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -156,10 +162,19 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private Handler hander = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
-                case SEARCH_MUSIC_SUCCESS:
-                    popupWindow.setData(musics);
+                case SEARCH_MUSIC_SUCCESS: {
                     //搜索音乐文件结束时
-                    break;
+                    popupWindow.setData(musics);
+                    if (loader.getMusicList() != null && loader.getMusicList().size() > 0) {
+                        currentMusicInfo = loader.getMusicList().get(0);
+                        tv_currTime.setText("00:00");
+                        tv_totalTime.setText(loader.toTime(loader.getMusicList().get(0).getDuration()));
+                        refreshTitle();
+                    }
+
+                }
+
+                break;
                 case CURR_TIME_VALUE:
                     //设置当前时间
                     tv_currTime.setText(msg.obj.toString());
@@ -175,14 +190,14 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
 
     //开始播放
     private void start() {
-        if (musics != null && musics.size() > 0) {
-            MusicInfo info = musics.get(currIndex);
+        currentMusicInfo = loader.getMusicList().get(currIndex);
+        if (currentMusicInfo != null) {
             mediaPlayer.reset();
             try {
-                if (info.isAssertsMusic()) {
-                    mediaPlayer.setDataSource(info.fileName);
+                if (currentMusicInfo.isAssertsMusic()) {
+                    mediaPlayer.setDataSource(currentMusicInfo.fileName);
                 } else {
-                    mediaPlayer.setDataSource(info.getUrl());
+                    mediaPlayer.setDataSource(currentMusicInfo.getUrl());
                 }
 
                 mediaPlayer.prepare();
@@ -190,8 +205,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 initSeekBar();
                 flag = true;
                 updateSeek(0);
-                tv_showName.setText(info.getTitle());
-                tv_artist.setText(info.getArtist());
+                tv_showName.setText(currentMusicInfo.getTitle());
+                tv_artist.setText(currentMusicInfo.getArtist());
                 btnPlay.setImageResource(R.drawable.music_pause);
                 currState = PAUSE;
                 popupWindow.setPlayIndex(currIndex);
@@ -252,6 +267,10 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                         int vol = 128 - Math.abs(tem);
                         int decibel = (int) (vol * 160 / 128.0);
                         BleController.getInstance().musicMassageAsync(decibel);
+                        if (!isMassageing) {
+                            isMassageing = true;
+                            startTime = new Date().getTime();
+                        }
                     }
                 }
 
@@ -276,7 +295,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         mediaPlayer.stop();
         mediaPlayer.release();
         visualizer.setEnabled(false);
-        BleController.getInstance().massageStopAsync();
+        massageStopAsync();
     }
 
     public void onClickPrev(View view) {
@@ -297,7 +316,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 start();
                 break;
             case PAUSE:
-                BleController.getInstance().massageStopAsync();
+                massageStopAsync();
                 visualizer.setEnabled(false);
                 mediaPlayer.pause();
                 btnPlay.setImageResource(R.drawable.music_play);
@@ -315,7 +334,13 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private void previous() {
         if (musics != null && musics.size() > 0) {
             currIndex = (currIndex - 1 + currIndex) % musics.size();
-            start();
+            currentMusicInfo = loader.getMusicList().get(currIndex);
+            if (currState == PAUSE) {
+                start();
+            } else {
+                refreshTitle();
+            }
+
         }
 
     }
@@ -324,25 +349,37 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private void next() {
         if (musics != null && musics.size() > 0) {
             currIndex = (currIndex + 1) % musics.size();
-            start();
+            currentMusicInfo = loader.getMusicList().get(currIndex);
+            if (currState == PAUSE) {
+                start();
+            } else {
+                refreshTitle();
+            }
         }
     }
+
+    private void refreshTitle() {
+        tv_showName.setText(currentMusicInfo.getTitle());
+        tv_artist.setText(currentMusicInfo.getArtist());
+    }
+
 
     //监听器，当当前歌曲播放完时触发，播放下一首
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if (musics != null && musics.size() > 0) {
-            next();
-        } else {
-            visualizer.setEnabled(false);
-            Toast.makeText(this, "播放列表为空", Toast.LENGTH_SHORT).show();
-        }
+        start();
+//        if (musics != null && musics.size() > 0) {
+//            next();
+//        } else {
+//            visualizer.setEnabled(false);
+//            Toast.makeText(this, "播放列表为空", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
         visualizer.setEnabled(false);
-        BleController.getInstance().massageStopAsync();
+        massageStopAsync();
         mediaPlayer.reset();
         return false;
     }
@@ -365,5 +402,14 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     public void onListItemClick(View v, int index) {
         currIndex = index;
         start();
+    }
+
+    private void massageStopAsync() {
+        isMassageing = false;
+        BleController.getInstance().massageStopAsync();
+        long endTime = new Date().getTime();
+        String address = BleController.getInstance().getBindDeviceAddress();
+        MassageController.getInstance().save(this, address,
+                startTime, endTime);
     }
 }
