@@ -84,7 +84,7 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
         if (ble.isDeviceReady()) {
             BluetoothDevice device = ble.getConnectDevice();
             if (device != null && device.getAddress().equals(data.address)) {
-                ToastUtils.show(this, "¸ÃÉè±¸´¦ÓÚÁ¬½Ó×´Ì¬£¬Ôİ²»ÄÜ½â°ó");
+                ToastUtils.show(this, "è¯¥è®¾å¤‡å¤„äºè¿æ¥çŠ¶æ€ï¼Œæš‚ä¸èƒ½è§£ç»‘");
                 return;
             }
         }
