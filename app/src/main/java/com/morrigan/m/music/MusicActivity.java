@@ -167,8 +167,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                     popupWindow.setData(musics);
                     if (loader.getMusicList() != null && loader.getMusicList().size() > 0) {
                         currentMusicInfo = loader.getMusicList().get(0);
-                        tv_currTime.setText("00:00");
-                        tv_totalTime.setText(loader.toTime(loader.getMusicList().get(0).getDuration()));
                         refreshTitle();
                     }
 
@@ -359,8 +357,13 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     private void refreshTitle() {
-        tv_showName.setText(currentMusicInfo.getTitle());
-        tv_artist.setText(currentMusicInfo.getArtist());
+        if (currentMusicInfo != null) {
+            tv_currTime.setText("00:00");
+            tv_totalTime.setText(loader.toTime(currentMusicInfo.getDuration()));
+            tv_showName.setText(currentMusicInfo.getTitle());
+            tv_artist.setText(currentMusicInfo.getArtist());
+        }
+
     }
 
 
