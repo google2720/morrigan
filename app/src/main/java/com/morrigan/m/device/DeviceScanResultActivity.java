@@ -122,6 +122,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
                     Device device = Device.restoreByAddress(context, userId, d.address);
                     if (device != null) {
                         d.name = device.name;
+                        d.showIcon = true;
                     }
                 }
             }

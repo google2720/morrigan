@@ -15,4 +15,5 @@ public class UiData implements Serializable {
     public String name;
     public String address;
     public int num;
+    public boolean showIcon;
 }

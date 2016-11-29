@@ -117,6 +117,10 @@ public class MassageController {
     }
 
     private void gotoDeviceScanActivity(Activity activity) {
+        BleController ble = BleController.getInstance();
+        ble.setAutoConnect(false);
+        ble.setAutoReconnect(false);
+        ble.disconnect();
         Intent intent = new Intent(activity, DeviceScanActivity.class);
         activity.startActivity(intent);
     }

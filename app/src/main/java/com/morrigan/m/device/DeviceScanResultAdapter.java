@@ -12,7 +12,7 @@ import com.morrigan.m.R;
 import java.util.List;
 
 /**
- * 选择系统通讯录联系人界面的列表适配器
+ * 扫描设备的结果适配器
  * Created by y on 2016/10/12.
  */
 public class DeviceScanResultAdapter extends RecyclerView.Adapter<DeviceScanResultAdapter.DeviceScanResultViewHolder> implements View.OnClickListener {
@@ -52,6 +52,7 @@ public class DeviceScanResultAdapter extends RecyclerView.Adapter<DeviceScanResu
         holder.itemView.setTag(device);
         holder.numView.setText(activity.getString(R.string.device_result_num, String.valueOf(position)));
         holder.nameView.setText(device.name);
+        holder.iconView.setVisibility(device.showIcon ? View.VISIBLE : View.GONE);
     }
 
     @Override

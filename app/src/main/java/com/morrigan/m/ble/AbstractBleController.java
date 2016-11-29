@@ -229,6 +229,7 @@ public abstract class AbstractBleController {
 
     public void disconnect() {
         Lg.i(TAG, "disconnect");
+        stopLeScan();
         disconnectInner();
         mBleConnection.disconnect();
     }
@@ -281,6 +282,5 @@ public abstract class AbstractBleController {
 
     protected void disconnectInner() {
         mDeviceReady = false;
-        stopLeScan();
     }
 }
