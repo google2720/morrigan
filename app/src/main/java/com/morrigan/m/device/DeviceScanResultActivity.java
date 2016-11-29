@@ -135,6 +135,12 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
                 return;
             }
             adapter.setData(result);
+            if (result != null && result.size() == 1) {
+                UiData data = result.get(0);
+                if (data.showIcon) {
+                    onListItemClick(null, data);
+                }
+            }
         }
     }
 }

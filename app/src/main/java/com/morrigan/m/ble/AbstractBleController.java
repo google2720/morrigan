@@ -227,6 +227,10 @@ public abstract class AbstractBleController {
         mBleConnection.connect(device);
     }
 
+    public BluetoothDevice getConnectDevice() {
+        return mBleConnection == null ? null : mBleConnection.getDevice();
+    }
+
     public void disconnect() {
         Lg.i(TAG, "disconnect");
         stopLeScan();
@@ -257,6 +261,22 @@ public abstract class AbstractBleController {
         checkConnectionState();
         synchronized (mLock) {
             mBleConnection.write(mDataCharacteristic, data);
+        }
+    }
+
+    protected void writeWithNoRead(byte[] data, long timeout) {
+        checkThread();
+        checkConnectionState();
+        synchronized (mLock) {
+            mBleConnection.write(mDataCharacteristic, data, timeout);
+        }
+    }
+
+    protected byte[] read(long timeout) {
+        checkThread();
+        checkConnectionState();
+        synchronized (mLock) {
+            return mBleConnection.read(mNotifyCharacteristic, timeout);
         }
     }
 

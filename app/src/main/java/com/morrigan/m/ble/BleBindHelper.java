@@ -18,11 +18,8 @@ public class BleBindHelper {
 
     private static final String TAG = "BleBindHelper";
     private BleController ble = BleController.getInstance();
-    private CountDownLatch latch;
-    private volatile boolean connectSuccess;
-    private volatile boolean connectInterrupt;
 
-    public void connectAndBind(Context context, String address, String deviceName) {
+    public void connectAndBind(Context context, String address, String deviceName) throws InterruptedException {
         Lg.i(TAG, "start connect and bind " + deviceName + " " + address);
         UiResult<Boolean> result = DeviceController.getInstance().check(context, address);
         if (result.t) {
@@ -39,52 +36,38 @@ public class BleBindHelper {
         connect(device, 5, true);
     }
 
-    private void connect(BluetoothDevice device, int retryCount, boolean sendToServer) {
-        SimpleBleCallback cb = new SimpleBleCallback() {
-            @Override
-            public void onBluetoothOff() {
-                connectInterrupt = true;
-                latch.countDown();
-            }
-
-            @Override
-            public void onGattServicesDiscovered(BluetoothDevice device) {
-                connectSuccess = true;
-                latch.countDown();
-            }
-
-            @Override
-            public void onGattDisconnected(BluetoothDevice device) {
-                latch.countDown();
-            }
-        };
-        try {
-            boolean firstBind = device.getAddress().equals(ble.getBindDeviceAddress());
-            ble.addCallback(cb);
-            for (int i = 0; i < retryCount; i++) {
-                latch = new CountDownLatch(1);
-                connectSuccess = false;
-                ble.connect(device);
-                latch.await(20, TimeUnit.SECONDS);
-                if (connectInterrupt) {
+    private void connect(BluetoothDevice device, int retryCount, boolean sendToServer) throws InterruptedException {
+        boolean firstBind = device.getAddress().equals(ble.getBindDeviceAddress());
+        for (int i = 0; i < retryCount; i++) {
+            ConnectBleCallback cb = new ConnectBleCallback();
+            try {
+                ble.addCallback(cb);
+                if (!ble.isEnabled()) {
                     ble.getCallbacks().onBindDeviceFailed(BleError.BLE_OFF);
                     return;
-                } else if (connectSuccess) {
+                }
+                ble.connect(device);
+                cb.await(20, TimeUnit.SECONDS);
+                if (cb.interrupt) {
+                    ble.getCallbacks().onBindDeviceFailed(BleError.BLE_OFF);
+                    return;
+                } else if (cb.success) {
                     if (ble.bindDevice(device, sendToServer)) {
                         ble.getCallbacks().onBindDeviceSuccess(device, firstBind);
-                        return;
+                    } else {
+                        ble.disconnect();
+                        ble.getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
                     }
+                    return;
                 }
+            } finally {
+                ble.removeCallback(cb);
             }
-        } catch (Exception e) {
-            Lg.w(TAG, "failed to connect device", e);
-        } finally {
-            ble.removeCallback(cb);
         }
         ble.getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
     }
 
-    public void reconnect(Context context, String address) {
+    public void reconnect(Context context, String address) throws InterruptedException {
         Lg.i(TAG, "start reconnect " + address);
         BluetoothDevice device = ble.getRemoteDevice(address);
         if (device == null) {
@@ -92,5 +75,33 @@ public class BleBindHelper {
             return;
         }
         connect(device, 5, false);
+    }
+
+    private class ConnectBleCallback extends SimpleBleCallback {
+
+        private CountDownLatch latch = new CountDownLatch(1);
+        private volatile boolean success;
+        private volatile boolean interrupt;
+
+        @Override
+        public void onBluetoothOff() {
+            interrupt = true;
+            latch.countDown();
+        }
+
+        @Override
+        public void onGattServicesDiscovered(BluetoothDevice device) {
+            success = true;
+            latch.countDown();
+        }
+
+        @Override
+        public void onGattDisconnected(BluetoothDevice device) {
+            latch.countDown();
+        }
+
+        private void await(int time, TimeUnit timeUnit) throws InterruptedException {
+            latch.await(20, timeUnit);
+        }
     }
 }

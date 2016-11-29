@@ -34,8 +34,13 @@ public class FloatConnectImageView extends ImageButton {
     };
     private BleCallback cb = new SimpleBleCallback() {
         @Override
-        public void onGattConnected(BluetoothDevice device) {
+        public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
             post(showConnectRunnable);
+        }
+
+        @Override
+        public void onBindDeviceFailed(int error) {
+            post(showNoConnectRunnable);
         }
 
         @Override
@@ -58,6 +63,11 @@ public class FloatConnectImageView extends ImageButton {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         BleController.getInstance().addCallback(cb);
+        if (BleController.getInstance().isDeviceReady()) {
+            post(showConnectRunnable);
+        } else {
+            post(showNoConnectRunnable);
+        }
     }
 
     @Override
@@ -75,15 +85,6 @@ public class FloatConnectImageView extends ImageButton {
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
         Log.i(TAG, "onWindowVisibilityChanged " + visibility);
-        if (visibility == VISIBLE) {
-            if (BleController.getInstance().isDeviceReady()) {
-                post(showConnectRunnable);
-            } else {
-                post(showNoConnectRunnable);
-            }
-        } else if (visibility == GONE) {
-            post(showConnectRunnable);
-        }
     }
 
     private void showNoConnect() {

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.os.AsyncTaskCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -172,7 +173,7 @@ public class RegisterActivity extends BaseActivity {
                 UserController c = UserController.getInstance();
                 if (c.checkRegister(context, mobile)) {
                     uiResult.success = false;
-                    uiResult.message = context.getString(R.string.login_error_register);
+                    publishProgress();
                 } else {
                     HttpResult r = c.sendSmsCode(context, mobile);
                     uiResult.success = r.isSuccessful();
@@ -183,6 +184,11 @@ public class RegisterActivity extends BaseActivity {
                 uiResult.message = HttpProxy.parserError(context, e);
             }
             return uiResult;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            showRegisteredDialog();
         }
 
         @Override
@@ -210,6 +216,13 @@ public class RegisterActivity extends BaseActivity {
             http.cancel();
             cancel(true);
         }
+    }
+
+    private void showRegisteredDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.login_error_register);
+        builder.setPositiveButton(R.string.action_confirm, null);
+        builder.show();
     }
 
     private void register() {

@@ -50,7 +50,7 @@ public class Massage extends Data {
         values.put("_endTime", endTime);
         values.put("_date", date);
         values.put("_hour", hour);
-        values.put("_duration", endTime - startTime);
+        values.put("_duration", duration);
         return values;
     }
 

@@ -54,9 +54,6 @@ public class MassageController {
     }
 
     public void save(Context _context, final String address, final long startTime, final long endTime) {
-        if (endTime - startTime < 60000) {
-            return;
-        }
         final Context context = _context.getApplicationContext();
         final String userId = UserController.getInstance().getUserId(context);
         BackgroundHandler.post(new Runnable() {
@@ -73,29 +70,39 @@ public class MassageController {
         c1.setTimeInMillis(startTime);
         Calendar c2 = Calendar.getInstance();
         c2.setTimeInMillis(startTime);
-        c2.set(Calendar.MINUTE, 59);
+        int m = c2.get(Calendar.MINUTE);
+        c2.add(Calendar.MINUTE, 9 - (m % 10));
         c2.set(Calendar.SECOND, 59);
         c2.set(Calendar.MILLISECOND, 999);
-        if (c2.getTimeInMillis() >= endTime) {
-            Massage massage = new Massage();
-            massage.userId = userId;
-            massage.address = address;
-            massage.startTime = startTime;
-            massage.endTime = endTime;
-            massage.hour = c2.get(Calendar.HOUR_OF_DAY);
-            massage.date = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(c2.getTime());
-            massage.save(context);
-            UploadHistoryDataService.startAction(context);
+        long time = c2.getTimeInMillis();
+        if (time >= endTime) {
+            if (endTime - startTime >= 60000) {
+                Massage massage = new Massage();
+                massage.userId = userId;
+                massage.address = address;
+                massage.startTime = startTime;
+                massage.endTime = endTime;
+                massage.duration = (endTime - startTime) / 60000 * 60000;
+                massage.hour = c2.get(Calendar.HOUR_OF_DAY);
+                massage.date = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(c2.getTime());
+                massage.save(context);
+                Lg.i(TAG, "save massage time " + massage.duration);
+                UploadHistoryDataService.startAction(context);
+            }
         } else {
-            Massage massage = new Massage();
-            massage.userId = userId;
-            massage.address = address;
-            massage.startTime = startTime;
-            massage.endTime = c2.getTimeInMillis();
-            massage.hour = c2.get(Calendar.HOUR_OF_DAY);
-            massage.date = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(c2.getTime());
-            massage.save(context);
-            saveImpl(context, userId, address, c2.getTimeInMillis() + 1, endTime);
+            if (time - startTime >= 60000) {
+                Massage massage = new Massage();
+                massage.userId = userId;
+                massage.address = address;
+                massage.startTime = startTime;
+                massage.endTime = time;
+                massage.duration = (time - startTime) / 60000 * 60000;
+                massage.hour = c2.get(Calendar.HOUR_OF_DAY);
+                massage.date = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(c2.getTime());
+                massage.save(context);
+                Lg.i(TAG, "save massage time " + massage.duration);
+            }
+            saveImpl(context, userId, address, time + 1, endTime);
         }
     }
 

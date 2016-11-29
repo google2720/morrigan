@@ -5,8 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -33,7 +33,6 @@ public class AutoLayout extends FrameLayout {
     private int bgColor = 0xff7128bd;
     private String startTip;
     private Rect boundText = new Rect();
-    private Drawable drawable;
     private Drawable drawableY;
     private Rect rect = new Rect();
     private long startSystemTime;
@@ -50,8 +49,7 @@ public class AutoLayout extends FrameLayout {
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setColor(Color.WHITE);
         startTip = getResources().getString(R.string.massage_ready);
-        drawable = getResources().getDrawable(R.drawable.massage_soft_ing);
-        drawableY = getResources().getDrawable(R.drawable.auto_y);
+        drawableY = ContextCompat.getDrawable(context, R.drawable.auto_y);
     }
 
     @Override
@@ -163,15 +161,18 @@ public class AutoLayout extends FrameLayout {
         drawableY.draw(canvas);
 
         if (start) {
-            int vw = massage1View.getMeasuredWidth();
-            int vh = massage1View.getMeasuredHeight();
-            rect.left = cx - vw / 2;
-            rect.top = cy - vh;
-            rect.right = rect.left + vw;
-            rect.bottom = rect.top + vh;
-            paint.setColor(0x7fff0000);
-            drawable.setBounds(rect);
-            drawable.draw(canvas);
+            final Drawable drawable = getDrawable();
+            if (drawable != null) {
+                int vw = massage1View.getMeasuredWidth();
+                int vh = massage1View.getMeasuredHeight();
+                rect.left = cx - vw / 2;
+                rect.top = cy - vh;
+                rect.right = rect.left + vw;
+                rect.bottom = rect.top + vh;
+                paint.setColor(0x7fff0000);
+                drawable.setBounds(rect);
+                drawable.draw(canvas);
+            }
             // canvas.drawRect(rect, paint);
         } else {
             textPaint.setTextSize(w / 22);
@@ -183,6 +184,10 @@ public class AutoLayout extends FrameLayout {
 
         // canvas.drawLine(cx - radius, cy, cx + radius, cy, paint);
         // canvas.drawLine(cx, cy - radius, cx, cy + radius, paint);
+    }
+
+    private Drawable getDrawable() {
+        return ContextCompat.getDrawable(getContext(), R.drawable.massage_intense);
     }
 
     private float generateRadius(int w, int h) {
@@ -242,7 +247,7 @@ public class AutoLayout extends FrameLayout {
     }
 
     public boolean isModeEmpty() {
-        return !massage1View.isModeFill() && !massage2View.isModeFill() && !massage3View.isModeFill()
-                && !massage4View.isModeFill() && !massage5View.isModeFill();
+        return massage1View.isModeEmpty() && massage2View.isModeEmpty() && massage3View.isModeEmpty()
+                && massage4View.isModeEmpty() && massage5View.isModeEmpty();
     }
 }

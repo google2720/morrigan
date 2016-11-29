@@ -177,7 +177,15 @@ public class BleController extends AbstractBleController {
             try {
                 Lg.i(TAG, "massage start");
                 for (int i = 0; i < 5; i++) {
-                    MassageDataResult r = MassageDataResult.parser(write(data.toValue(), 1000));
+                    MassageDataResult r = null;
+                    writeWithNoRead(data.toValue(), 1000);
+                    byte[] bytes = read(1000);
+                    if (bytes != null) {
+                        r = MassageDataResult.parser(bytes);
+                        if (r == null) {
+                            r = MassageDataResult.parser(read(1000));
+                        }
+                    }
                     if (r != null) {
                         mCallbacks.onMassageSuccess();
                         return null;

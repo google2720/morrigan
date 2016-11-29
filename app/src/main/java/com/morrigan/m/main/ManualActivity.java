@@ -46,6 +46,7 @@ public class ManualActivity extends BaseActivity {
             });
         }
     };
+    private View startView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class ManualActivity extends BaseActivity {
         braLeftView.setActivated(true);
         braRightView = findViewById(R.id.bar_right);
         braRightView.setActivated(true);
+        startView = findViewById(R.id.start);
         BleController.getInstance().addCallback(cb);
     }
 
@@ -129,6 +131,7 @@ public class ManualActivity extends BaseActivity {
     }
 
     private void stop() {
+        startView.setActivated(false);
         manualView.stop();
         BleController.getInstance().massageStopAsync();
         saveRecord();

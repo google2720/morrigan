@@ -49,7 +49,14 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/transparent_half_bg</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Toast</item>
+        <item name="android:windowAnimationStyle">@style/Animation.ReConnect</item>
+    </style>
+
+    <style name="Animation.ReConnect" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_open_enter_reconnect</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_open_exit_reconnect</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_close_enter_reconnect</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_close_exit_reconnect</item>
     </style>
 
 </resources>

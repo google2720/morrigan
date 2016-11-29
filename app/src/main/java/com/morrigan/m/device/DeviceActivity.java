@@ -2,6 +2,7 @@ package com.morrigan.m.device;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import com.morrigan.m.R;
 import com.morrigan.m.SpacingDecoration;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.ble.BleController;
 import com.morrigan.m.c.UserController;
 
 import java.util.List;
@@ -78,6 +80,14 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
 
     @Override
     public void onListItemDeleteClick(View v, final UiData data) {
+        BleController ble = BleController.getInstance();
+        if (ble.isDeviceReady()) {
+            BluetoothDevice device = ble.getConnectDevice();
+            if (device != null && device.getAddress().equals(data.address)) {
+                ToastUtils.show(this, "该设备处于连接状态，暂不能解绑");
+                return;
+            }
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.device_remove);
         builder.setMessage(R.string.device_remove_msg);

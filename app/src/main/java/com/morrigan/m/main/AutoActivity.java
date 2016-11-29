@@ -45,18 +45,35 @@ public class AutoActivity extends BaseActivity {
             });
         }
     };
+    private View startView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BleController.getInstance().addCallback(cb);
         setContentView(R.layout.activity_auto);
+        startView = findViewById(R.id.start);
         autoLayout = (AutoLayout) findViewById(R.id.auto);
-        findViewById(R.id.massage_soft).setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_SOFT, R.drawable.massage_soft_check)));
-        findViewById(R.id.massage_wave).setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_WAVE, R.drawable.massage_wave_check)));
-        findViewById(R.id.massage_dynamic).setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_DYNAMIC, R.drawable.massage_dynamic_check)));
-        findViewById(R.id.massage_gently).setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_GENTLY, R.drawable.massage_gently_check)));
-        findViewById(R.id.massage_intense).setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_INTENSE, R.drawable.massage_intense_check)));
+
+        AutoImageView view = (AutoImageView) findViewById(R.id.massage_soft);
+        view.setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_SOFT, R.drawable.massage_soft_check)));
+        view.setOnClickListener(new AutoClickListener(this, AutoItem.TYPE_SOFT));
+
+        view = (AutoImageView) findViewById(R.id.massage_wave);
+        view.setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_WAVE, R.drawable.massage_wave_check)));
+        view.setOnClickListener(new AutoClickListener(this, AutoItem.TYPE_WAVE));
+
+        view = (AutoImageView) findViewById(R.id.massage_dynamic);
+        view.setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_DYNAMIC, R.drawable.massage_dynamic_check)));
+        view.setOnClickListener(new AutoClickListener(this, AutoItem.TYPE_DYNAMIC));
+
+        view = (AutoImageView) findViewById(R.id.massage_gently);
+        view.setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_GENTLY, R.drawable.massage_gently_check)));
+        view.setOnClickListener(new AutoClickListener(this, AutoItem.TYPE_GENTLY));
+
+        view = (AutoImageView) findViewById(R.id.massage_intense);
+        view.setOnTouchListener(new AutoTouchListener(this, new AutoItem(AutoItem.TYPE_INTENSE, R.drawable.massage_intense_check)));
+        view.setOnClickListener(new AutoClickListener(this, AutoItem.TYPE_INTENSE));
     }
 
     @Override
@@ -83,7 +100,6 @@ public class AutoActivity extends BaseActivity {
             return;
         }
         boolean a = view.isActivated();
-        view.setActivated(!a);
         if (a) {
             stop();
         } else {
@@ -93,19 +109,16 @@ public class AutoActivity extends BaseActivity {
 
     private void showNoDeviceReady() {
         ToastUtils.show(this, R.string.device_no_connect_tip);
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle(R.string.device_no_connect);
-//        builder.setMessage(R.string.device_no_connect_tip);
-//        builder.setPositiveButton(R.string.action_confirm, null);
-//        builder.show();
     }
 
     private void start() {
+        startView.setActivated(true);
         autoLayout.start();
         BleController.getInstance().autoMassageAsync(autoLayout.getMode());
     }
 
     private void stop() {
+        startView.setActivated(false);
         autoLayout.stop();
         BleController.getInstance().massageStopAsync();
         saveRecord();
@@ -126,15 +139,17 @@ public class AutoActivity extends BaseActivity {
         MassageController.getInstance().save(this, address, startTime, endTime);
     }
 
-    public boolean onTouchDown() {
+    public boolean onModeViewTouchDown() {
         if (autoLayout.isStart()) {
             ToastUtils.show(this, R.string.massage_no_drag_tip);
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setMessage(R.string.massage_no_drag_tip);
-//            builder.setPositiveButton(R.string.action_confirm, null);
-//            builder.show();
             return true;
         }
         return false;
+    }
+
+    public void onModeViewClick(View v, int type) {
+        if (BleController.getInstance().isDeviceReady() && !autoLayout.isStart()) {
+            ToastUtils.show(this, "体验一下 " + type);
+        }
     }
 }

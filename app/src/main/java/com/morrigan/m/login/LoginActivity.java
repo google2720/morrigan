@@ -14,6 +14,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 
+import com.github.yzeaho.common.SleepTime;
 import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.HttpResult;
@@ -133,7 +134,10 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         protected UiResult<LoginResult> doInBackground(Void... params) {
-            return UserController.getInstance().login(activity, mobile, pw);
+            SleepTime sleepTime = new SleepTime();
+            UiResult<LoginResult> result = UserController.getInstance().login(activity, mobile, pw);
+            sleepTime.sleep(1500);
+            return result;
         }
 
         @Override
