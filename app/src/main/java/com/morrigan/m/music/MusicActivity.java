@@ -264,7 +264,9 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                         Log.i("music", "average " + tem);
                         int vol = 128 - Math.abs(tem);
                         int decibel = (int) (vol * 160 / 128.0);
-                        BleController.getInstance().musicMassageAsync(decibel);
+                        if (currState==PAUSE){
+                            BleController.getInstance().musicMassageAsync(decibel);
+                        }
                         if (!isMassageing) {
                             isMassageing = true;
                             startTime = new Date().getTime();
@@ -314,11 +316,11 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 start();
                 break;
             case PAUSE:
-                massageStopAsync();
                 visualizer.setEnabled(false);
                 mediaPlayer.pause();
                 btnPlay.setImageResource(R.drawable.music_play);
                 currState = START;
+                massageStopAsync();
                 break;
             case START:
                 visualizer.setEnabled(true);
