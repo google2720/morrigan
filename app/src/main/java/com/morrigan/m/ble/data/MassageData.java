@@ -13,6 +13,7 @@ public class MassageData extends Data {
     private byte gear;
     private byte bra;
     private byte[] autoMode;
+    private byte autoSingleMode = -1;
     private byte decibel_1;
     private byte decibel_2;
 
@@ -29,18 +30,22 @@ public class MassageData extends Data {
         this.autoMode = autoMode;
     }
 
-    public MassageData(boolean s,int decibel) {
+    public MassageData(boolean s, byte autoSingleMode) {
+        this.s = s;
+        this.mode = 0x02;
+        this.autoSingleMode = autoSingleMode;
+    }
+
+    public MassageData(boolean s, int decibel) {
         this.s = s;
         this.mode = 0x03;
-        if (decibel<127){
-            this.decibel_1=(byte) decibel;
+        if (decibel < 127) {
+            this.decibel_1 = (byte) decibel;
             this.decibel_2 = 0;
-        }else {
-
-            this.decibel_1=127;
-            this.decibel_2 = (byte) (decibel-127);
+        } else {
+            this.decibel_1 = 127;
+            this.decibel_2 = (byte) (decibel - 127);
         }
-
     }
 
     public MassageData(boolean s) {
@@ -62,6 +67,8 @@ public class MassageData extends Data {
             value[9] = autoMode[2];
             value[10] = autoMode[3];
             value[11] = autoMode[4];
+        } else if (autoSingleMode != -1) {
+            value[7] = autoSingleMode;
         }
         value[12] = decibel_1;
         value[13] = decibel_2;

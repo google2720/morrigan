@@ -84,7 +84,7 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
         if (ble.isDeviceReady()) {
             BluetoothDevice device = ble.getConnectDevice();
             if (device != null && device.getAddress().equals(data.address)) {
-                ToastUtils.show(this, "该设备处于连接状态，暂不能解绑");
+                ToastUtils.show(this, R.string.device_unbind_error);
                 return;
             }
         }

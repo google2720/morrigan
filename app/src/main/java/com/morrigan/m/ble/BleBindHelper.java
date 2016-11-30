@@ -74,7 +74,7 @@ public class BleBindHelper {
             ble.getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
             return;
         }
-        connect(device, 5, false);
+        connect(device, 20, false);
     }
 
     private class ConnectBleCallback extends SimpleBleCallback {

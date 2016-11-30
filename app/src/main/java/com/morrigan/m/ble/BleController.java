@@ -215,6 +215,11 @@ public class BleController extends AbstractBleController {
         massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
     }
 
+    public void autoMassageSingleModeAsync(byte autoSingleMode) {
+        MassageTask massageTask = new MassageTask(new MassageData(true, autoSingleMode));
+        massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
+    }
+
     public void musicMassageAsync(int decibel) {
         MassageTask massageTask = new MassageTask(new MassageData(true, decibel));
         massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);

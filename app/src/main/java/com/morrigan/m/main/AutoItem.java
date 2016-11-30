@@ -1,5 +1,11 @@
 package com.morrigan.m.main;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+
+import com.morrigan.m.R;
+
 import java.io.Serializable;
 
 /**
@@ -20,5 +26,41 @@ public class AutoItem implements Serializable {
     public AutoItem(int type, int resId) {
         this.type = type;
         this.resId = resId;
+    }
+
+    public static byte getMassageMode(int type) {
+        switch (type) {
+            case AutoItem.TYPE_WAVE:
+                return 0x02;
+            case AutoItem.TYPE_DYNAMIC:
+                return 0x05;
+            case AutoItem.TYPE_GENTLY:
+                return 0x03;
+            case AutoItem.TYPE_INTENSE:
+                return 0x04;
+            case AutoItem.TYPE_SOFT:
+            default:
+                return 0x01;
+        }
+    }
+
+    public static int getModeDrawableResId(int type) {
+        switch (type) {
+            case AutoItem.TYPE_WAVE:
+                return R.drawable.massage_wave;
+            case AutoItem.TYPE_DYNAMIC:
+                return R.drawable.massage_dynamic;
+            case AutoItem.TYPE_GENTLY:
+                return R.drawable.massage_gently;
+            case AutoItem.TYPE_INTENSE:
+                return R.drawable.massage_intense;
+            case AutoItem.TYPE_SOFT:
+            default:
+                return R.drawable.massage_soft;
+        }
+    }
+
+    public Drawable getDrawable(Context context) {
+        return ContextCompat.getDrawable(context, getModeDrawableResId(type));
     }
 }

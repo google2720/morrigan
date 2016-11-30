@@ -110,22 +110,7 @@ public class AutoItemView extends ImageButton implements View.OnDragListener, Vi
         return autoItem == null;
     }
 
-    public byte getMode() {
-        if (autoItem == null) {
-            return 0;
-        }
-        switch (autoItem.type) {
-            case AutoItem.TYPE_WAVE:
-                return 0x02;
-            case AutoItem.TYPE_DYNAMIC:
-                return 0x05;
-            case AutoItem.TYPE_GENTLY:
-                return 0x03;
-            case AutoItem.TYPE_INTENSE:
-                return 0x04;
-            case AutoItem.TYPE_SOFT:
-            default:
-                return 0x01;
-        }
+    public AutoItem getAutoItem() {
+        return autoItem;
     }
 }

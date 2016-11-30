@@ -12,6 +12,7 @@ import com.morrigan.m.ble.db.DBHelper;
 import com.morrigan.m.device.DeviceController;
 import com.morrigan.m.login.LoginResult;
 import com.morrigan.m.login.UserInfo;
+import com.morrigan.m.main.UploadHistoryDataService;
 
 import java.io.IOException;
 
@@ -265,6 +266,7 @@ public class UserController {
                     saveUserInfo(context, r.userInfo, mobile, pw);
                 }
                 DeviceController.getInstance().fetchAsync(context);
+                UploadHistoryDataService.startAction(context);
             }
         } catch (Exception e) {
             Lg.w(TAG, "failed to login", e);

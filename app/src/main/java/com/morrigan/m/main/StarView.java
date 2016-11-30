@@ -107,7 +107,7 @@ public class StarView extends View {
                 rankStr = "2.5";
                 break;
             case 5:
-                drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star5);
+                drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star6);
                 rankStr = "3";
                 break;
             case -1:

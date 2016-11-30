@@ -19,10 +19,8 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         setContentView(R.layout.activity_main);
         mainLayout = (MenuLayout) findViewById(R.id.mainLayout);
         mainLayout.setCallback(this);
-        mainFragment = MainFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, mainFragment).commitAllowingStateLoss();
+        mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content);
         // MassageController.getInstance().test(this);
-        UploadHistoryDataService.startAction(this);
     }
 
     @Override
@@ -53,15 +51,15 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
     @Override
     public void exitApp() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("不爱美的都休息去了！让我再美一下");
-        builder.setNegativeButton("不要", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.exit_tip);
+        builder.setNegativeButton(R.string.exit_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 BleController.getInstance().quit();
                 finish();
             }
         });
-        builder.setPositiveButton("美一下", null);
+        builder.setPositiveButton(R.string.exit_no, null);
         builder.show();
     }
 }

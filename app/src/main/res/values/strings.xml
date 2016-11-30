@@ -103,6 +103,7 @@
     <string name="device_remove">"解除绑定"</string>
     <string name="device_remove_msg">"是否需要解绑"</string>
     <string name="device_massage_start_tip">"开始养护"</string>
+    <string name="device_unbind_error">"该设备处于连接状态，暂不能解绑"</string>
     <!-- 关于界面 -->
     <string name="about_title">"关于摩莉"</string>
     <string name="about_product_team">"产品团队"</string>
@@ -116,6 +117,9 @@
     <string name="knead_manual">"手动按摩"</string>
     <string name="knead_auto">"自动按摩"</string>
     <string name="knead_music">"音乐随动"</string>
+    <string name="exit_tip">"不爱美的都休息去了！让我再美一下"</string>
+    <string name="exit_yes">"不要"</string>
+    <string name="exit_no">"美一下"</string>
     <!-- 手动按摩界面-->
     <string name="bra_left">"左胸"</string>
     <string name="bra_right">"右胸"</string>

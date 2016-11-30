@@ -14,6 +14,9 @@ import android.widget.FrameLayout;
 
 import com.morrigan.m.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 自动界面
  * Created by y on 2016/10/18.
@@ -37,6 +40,7 @@ public class AutoLayout extends FrameLayout {
     private Rect rect = new Rect();
     private long startSystemTime;
     private long stopSystemTime;
+    private Drawable drawable;
 
     public AutoLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -161,7 +165,6 @@ public class AutoLayout extends FrameLayout {
         drawableY.draw(canvas);
 
         if (start) {
-            final Drawable drawable = getDrawable();
             if (drawable != null) {
                 int vw = massage1View.getMeasuredWidth();
                 int vh = massage1View.getMeasuredHeight();
@@ -184,10 +187,6 @@ public class AutoLayout extends FrameLayout {
 
         // canvas.drawLine(cx - radius, cy, cx + radius, cy, paint);
         // canvas.drawLine(cx, cy - radius, cx, cy + radius, paint);
-    }
-
-    private Drawable getDrawable() {
-        return ContextCompat.getDrawable(getContext(), R.drawable.massage_intense);
     }
 
     private float generateRadius(int w, int h) {
@@ -236,18 +235,30 @@ public class AutoLayout extends FrameLayout {
         return start;
     }
 
-    public byte[] getMode() {
-        byte[] bytes = new byte[5];
-        bytes[0] = massage1View.getMode();
-        bytes[1] = massage2View.getMode();
-        bytes[2] = massage3View.getMode();
-        bytes[3] = massage4View.getMode();
-        bytes[4] = massage5View.getMode();
-        return bytes;
+    public List<AutoItem> getAutoItemList() {
+        List<AutoItem> autoItemList = new ArrayList<>();
+        addAutoItem(massage1View, autoItemList);
+        addAutoItem(massage2View, autoItemList);
+        addAutoItem(massage3View, autoItemList);
+        addAutoItem(massage4View, autoItemList);
+        addAutoItem(massage5View, autoItemList);
+        return autoItemList;
     }
 
-    public boolean isModeEmpty() {
+    private void addAutoItem(AutoItemView view, List<AutoItem> autoItemList) {
+        AutoItem autoItem = view.getAutoItem();
+        if (autoItem != null) {
+            autoItemList.add(autoItem);
+        }
+    }
+
+    public boolean isEmpty() {
         return massage1View.isModeEmpty() && massage2View.isModeEmpty() && massage3View.isModeEmpty()
                 && massage4View.isModeEmpty() && massage5View.isModeEmpty();
+    }
+
+    public void setAutoModeDrawable(Drawable drawable) {
+        this.drawable = drawable;
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 }

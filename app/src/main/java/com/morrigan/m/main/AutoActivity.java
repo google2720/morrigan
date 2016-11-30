@@ -2,6 +2,7 @@ package com.morrigan.m.main;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
 
@@ -12,6 +13,8 @@ import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
 import com.morrigan.m.ble.SimpleBleCallback;
 import com.morrigan.m.c.MassageController;
+
+import java.util.List;
 
 /**
  * 自动按摩界面
@@ -46,6 +49,25 @@ public class AutoActivity extends BaseActivity {
         }
     };
     private View startView;
+    private Handler handler = new Handler();
+    private Runnable stopMassageRunnable = new Runnable() {
+        @Override
+        public void run() {
+            BleController.getInstance().massageStopAsync();
+        }
+    };
+    private int index;
+    private int total;
+    private List<AutoItem> autoItemList;
+    private Runnable autoMassageSingleModeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            AutoItem autoItem = autoItemList.get(index++ % total);
+            autoLayout.setAutoModeDrawable(autoItem.getDrawable(getApplicationContext()));
+            BleController.getInstance().autoMassageSingleModeAsync(AutoItem.getMassageMode(autoItem.type));
+            handler.postDelayed(autoMassageSingleModeRunnable, 6000);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +113,7 @@ public class AutoActivity extends BaseActivity {
     }
 
     public void onClickStart(View view) {
-        if (autoLayout.isModeEmpty()) {
+        if (autoLayout.isEmpty()) {
             ToastUtils.show(this, R.string.massage_start_tip);
             return;
         }
@@ -114,13 +136,19 @@ public class AutoActivity extends BaseActivity {
     private void start() {
         startView.setActivated(true);
         autoLayout.start();
-        BleController.getInstance().autoMassageAsync(autoLayout.getMode());
+        handler.removeCallbacks(stopMassageRunnable);
+        autoItemList = autoLayout.getAutoItemList();
+        index = 0;
+        total = autoItemList.size();
+        handler.post(autoMassageSingleModeRunnable);
     }
 
     private void stop() {
+        handler.removeCallbacks(autoMassageSingleModeRunnable);
+        handler.removeCallbacks(stopMassageRunnable);
+        handler.post(stopMassageRunnable);
         startView.setActivated(false);
         autoLayout.stop();
-        BleController.getInstance().massageStopAsync();
         saveRecord();
     }
 
@@ -149,7 +177,9 @@ public class AutoActivity extends BaseActivity {
 
     public void onModeViewClick(View v, int type) {
         if (BleController.getInstance().isDeviceReady() && !autoLayout.isStart()) {
-            ToastUtils.show(this, "体验一下 " + type);
+            handler.removeCallbacks(stopMassageRunnable);
+            handler.postDelayed(stopMassageRunnable, 3000);
+            BleController.getInstance().autoMassageSingleModeAsync(AutoItem.getMassageMode(type));
         }
     }
 }
