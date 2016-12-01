@@ -45,7 +45,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="@string/pickerview_submit"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?attr/colorPrimary" />
     </FrameLayout>
 </LinearLayout>

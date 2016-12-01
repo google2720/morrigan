@@ -45,7 +45,7 @@
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_kneading"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
             <com.morrigan.m.main.NavigateTextView
@@ -63,7 +63,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_my_information"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
             <com.morrigan.m.main.NavigateTextView
@@ -81,7 +81,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_goal"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
             <com.morrigan.m.main.NavigateTextView
@@ -99,7 +99,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_history"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
             <com.morrigan.m.main.NavigateTextView
@@ -116,7 +116,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_relate_account"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd"
                 android:visibility="gone" />
 
@@ -135,7 +135,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_relate_device"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
             <TextView
@@ -147,7 +147,7 @@
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_about_app"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
             <com.morrigan.m.main.NavigateTextView
@@ -165,7 +165,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_about"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
             <com.morrigan.m.main.NavigateTextView
@@ -182,7 +182,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_firmware_upgrade"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd"
                 android:visibility="gone" />
 
@@ -201,7 +201,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_feedback"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
             <com.morrigan.m.main.NavigateTextView
@@ -219,7 +219,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_quit"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
         </LinearLayout>
     </ScrollView>

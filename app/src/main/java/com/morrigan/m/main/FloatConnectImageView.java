@@ -89,7 +89,7 @@ public class FloatConnectImageView extends ImageButton {
 
     private void showNoConnect() {
         animator = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 0f);
-        animator.setDuration(1500);
+        animator.setDuration(750);
         animator.setInterpolator(new LinearInterpolator());
         animator.setAutoCancel(true);
         animator.setRepeatCount(ValueAnimator.INFINITE);

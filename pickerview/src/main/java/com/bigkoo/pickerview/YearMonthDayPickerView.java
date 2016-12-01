@@ -36,8 +36,15 @@ public class YearMonthDayPickerView extends BasePickerView implements View.OnCli
     private void createView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.pickerview_time, container);
         // 确定按钮
-        View btnSubmit = view.findViewById(R.id.btnSubmit);
+        View btnSubmit = view.findViewById(R.id.ok);
         btnSubmit.setOnClickListener(this);
+        // 取消按钮
+        findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         // 时间转轮
         View timePickerView = view.findViewById(R.id.timepicker);
         wheelTime = new YearMonthDayWheelTime(timePickerView, type);

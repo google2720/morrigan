@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/massage_tip2"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="@dimen/app_text_tiny"
             android:textColor="#7128bd" />
 
         <LinearLayout

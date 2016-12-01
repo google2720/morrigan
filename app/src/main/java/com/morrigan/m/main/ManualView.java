@@ -29,6 +29,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     private static final int MAX_GEAR = 3;
     private Paint paint = new Paint();
     private Paint timePaint = new Paint();
+    private Paint textPaint = new Paint();
     private int offset = 2;
     private int textPadding = 10;
     private int gear = 1;
@@ -50,18 +51,22 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         wave *= density;
 
         paint.setAntiAlias(true);
-        paint.setFakeBoldText(true);
-        paint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltcxh.ttf"));
+
+        textPaint.setAntiAlias(true);
+        textPaint.setStrokeWidth(1);
+        textPaint.setColor(Color.WHITE);
+        textPaint.setFakeBoldText(true);
+        // textPaint.setTextSkewX(-0.2f);
+        textPaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltcxh.ttf"));
 
         timePaint.setAntiAlias(true);
+        timePaint.setStrokeWidth(1);
         timePaint.setColor(Color.WHITE);
         timePaint.setTextAlign(Paint.Align.CENTER);
 
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         getHolder().addCallback(this);
-
-
     }
 
     @Override
@@ -197,14 +202,12 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
 
         int saveCount = canvas.save();
         canvas.translate(cx, cy);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setStrokeWidth(1);
-        paint.setTextSize(w / 6);
-        paint.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(String.valueOf(gear), 0, 0, paint);
-        paint.setTextSize(w / 18);
-        paint.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText("gear", textPadding, 0, paint);
+        textPaint.setTextSize(w / 5);
+        textPaint.setTextAlign(Paint.Align.RIGHT);
+        canvas.drawText(String.valueOf(gear), 0, 0, textPaint);
+        textPaint.setTextSize(w / 18);
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        canvas.drawText("gear", textPadding, 0, textPaint);
         canvas.restoreToCount(saveCount);
     }
 

@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f7f7f7"
-    android:orientation="vertical">
+    android:divider="?android:attr/dividerVertical"
+    android:orientation="vertical"
+    android:showDividers="middle">
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,12 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/item_line_background"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:gravity="center"
         android:minHeight="@dimen/line_min_height"
         android:text="@string/from_photo"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#333" />
 
     <TextView
@@ -33,25 +35,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/item_line_bottom_background"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:gravity="center"
         android:minHeight="@dimen/line_min_height"
         android:text="@string/capture"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#333" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#fff" />
 
     <TextView
         android:id="@+id/cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/item_line_background"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:gravity="center"
         android:minHeight="@dimen/line_min_height"
         android:text="@string/action_cancel"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#666" />
 </LinearLayout>

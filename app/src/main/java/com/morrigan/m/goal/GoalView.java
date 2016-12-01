@@ -109,12 +109,13 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltqh.ttf");
         valuePaint = new Paint();
         valuePaint.setColor(0xff7d1db6);
+        valuePaint.setStrokeWidth(1);
         valuePaint.setAntiAlias(true);
         valuePaint.setTypeface(font);
         valuePaint.setTextAlign(Paint.Align.CENTER);
 
         unitPaint = new Paint();
-        unitPaint.setColor(0x7f000000);
+        unitPaint.setColor(0xff7f7f7f);
         unitPaint.setAntiAlias(true);
         unitPaint.setTypeface(font);
 
