@@ -3,9 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f7f7f7"
-    android:divider="?android:attr/dividerVertical"
-    android:orientation="vertical"
-    android:showDividers="middle">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,7 +13,12 @@
         android:minHeight="@dimen/line_min_height"
         android:text="@string/select_avatar"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#999" />
+        android:textColor="#9e9e9e" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="?android:attr/dividerVertical" />
 
     <TextView
         android:id="@+id/pick_photo"
@@ -28,7 +31,12 @@
         android:minHeight="@dimen/line_min_height"
         android:text="@string/from_photo"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#333" />
+        android:textColor="#323232" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="?android:attr/dividerVertical" />
 
     <TextView
         android:id="@+id/capture"
@@ -41,7 +49,7 @@
         android:minHeight="@dimen/line_min_height"
         android:text="@string/capture"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#333" />
+        android:textColor="#323232" />
 
     <View
         android:layout_width="match_parent"
@@ -59,5 +67,5 @@
         android:minHeight="@dimen/line_min_height"
         android:text="@string/action_cancel"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#666" />
+        android:textColor="#555" />
 </LinearLayout>
