@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="@color/c8126e4"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:paddingRight="3dp"
             android:paddingTop="20dp">
 
             <TextView
@@ -41,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="260dp"
                 android:layout_marginTop="15dp" />
+
 
         </RelativeLayout>
 

@@ -9,5 +9,5 @@ import java.util.Date;
  */
 public class TodayRecord implements Serializable {
     public int[] records = new int[24];
-    //public int[] records = new int[]{1, 379, 8, 5, 9, 5, 1, 37, 8, 5, 9, 5, 1, 37, 8, 5, 9, 5, 1, 37, 8, 5, 9, 5, 1, 37, 8, 5, 9, 5, 1, 37, 8, 5, 9, 5};
+    //public int[] records = new int[]{1, 379, 0, 5, 9, 5, 1, 37, 8, 5, 9, 5, 1, 37, 8, 5, 9, 5, 1, 37, 8, 5, 9, 5};
 }

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.Collections;
@@ -18,6 +19,8 @@ public class DayView extends View {
 
     List<Integer> datas;
     int max;
+    int showNum;
+    int showIndex;
     Paint mPaint;
 
     public DayView(Context context) {
@@ -41,27 +44,31 @@ public class DayView extends View {
         super.onDraw(canvas);
         if (datas != null) {
 
-            canvas.drawLine(0, (float) 0.85 * getHeight(), getWidth() - 3, (float) 0.85 * getHeight() + 2, mPaint);
+            canvas.drawLine(0, (float) 0.85 * getHeight(), getWidth() - 3 - (int) ((1 / 49.0) * getWidth() * 2), (float) 0.85 * getHeight() + 2, mPaint);
             for (int i = 0; i < datas.size(); i++) {
-                int w = (int) ((1 / 47.0) * getWidth());
-                int l = (int) ((i * 2 / 47.0) * getWidth());
+                int w = (int) ((1 / 49.0) * getWidth());
+                int l = (int) ((i * 2 / 49.0) * getWidth());
                 int t = (int) (getHeight() * (0.2 + 0.6 * (1 - (datas.get(i) * 1.0 / max))));
                 int r = l + w;
-                int b = (int) (getHeight() * 0.85+1);
-                if (max==0){
-                    t=b-5;//数据全为0时。//默认画出高度为5px柱形
-                }else {
-                    if(b-t<5){
-                        t=b-5; //数据小于默认值时。画出高度为5px柱形
+                int b = (int) (getHeight() * 0.85 + 1);
+                if (max == 0) {
+                    t = b - 5;//数据全为0时。//默认画出高度为5px柱形
+                } else {
+                    if (b - t < 5) {
+                        t = b - 5; //数据小于默认值时。画出高度为5px柱形
                     }
 
                 }
+                if (datas.get(i) == 0) {
+                    t = b - 5;//数据为0时。//默认画出高度为5px柱形
+                }
                 canvas.drawRect(l, t, r, b, mPaint);
-                if (max == datas.get(i) && max != 0) {//画出最大值数字
-                    String str = max + "";
+                if (showIndex == i && showNum != 0 && showNum == datas.get(i)) {//画出显示数字
+                    String str = showNum + "";
                     Rect bounds = new Rect();
                     mPaint.getTextBounds(str, 0, str.length(), bounds);
-                    int baseline = (int) (0.2 * getMeasuredHeight() / 2) + bounds.height() / 2;
+                    //int baseline = (int) (0.2 * getMeasuredHeight() / 2) + bounds.height() / 2;
+                    int baseline = t - bounds.height();
                     canvas.drawText(str, l + w / 2 - bounds.width() / 2, baseline, mPaint);
                 }
                 int hour = i + 1;
@@ -78,7 +85,9 @@ public class DayView extends View {
                     mPaint.setTextSize(35);
                     float x = 0;
                     if (hour == 24) {
-                        x = l + w / 2 - bounds.width() / 2 - w;
+                        x = l + w - bounds.width() / 2;
+                    } else if (hour == 1) {
+                        x = l;
                     } else {
                         x = l + w / 2 - bounds.width() / 2;
                     }
@@ -93,9 +102,38 @@ public class DayView extends View {
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_DOWN:
+                //获取屏幕上点击的坐标
+                float x = event.getX();
+                float y = event.getY();
+                int w = (int) ((1 / 49.0) * getWidth());
+                int index = (int) x / (2 * w);
+                if (index < 24 && datas.get(index) != 0) {
+                    int t = (int) (getHeight() * (0.2 + 0.6 * (1 - (datas.get(index) * 1.0 / max))));
+                    if (y >= t) {
+                        showIndex = index;
+                        showNum = datas.get(index);
+                        invalidate();
+                        ;
+                    }
+                }
+                return true;
+            case MotionEvent.ACTION_UP:
+                return true;
+        }
+        //这句话不要修改
+        return super.onTouchEvent(event);
+    }
+
     public void refreshData(List<Integer> datas) {
         this.datas = datas;
         max = Collections.max(datas);
+        showIndex = datas.indexOf(max);
+        showNum = max;
         invalidate();
     }
 }
