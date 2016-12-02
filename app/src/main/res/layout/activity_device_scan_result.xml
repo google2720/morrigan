@@ -41,9 +41,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/activity_horizontal_margin"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp"
             android:paddingTop="@dimen/activity_horizontal_margin"
             android:text="@string/device_please_select"
             android:textAppearance="?android:attr/textAppearanceSmall"

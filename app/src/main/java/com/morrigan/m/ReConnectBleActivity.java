@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.morrigan.m.ble.BleBindHelper;
 import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
 import com.morrigan.m.ble.SimpleBleCallback;
@@ -26,6 +27,7 @@ public class ReConnectBleActivity extends BaseActivity {
             finish();
         }
     };
+    private BleBindHelper helper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,12 +35,15 @@ public class ReConnectBleActivity extends BaseActivity {
         setContentView(R.layout.activity_re_connect);
         ble.setAutoReconnect(false);
         ble.addCallback(cb);
-        ble.reconnectAsync();
+        helper = ble.reconnectAsync();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ble.removeCallback(cb);
+        if (helper != null) {
+            helper.cancel();
+        }
     }
 }

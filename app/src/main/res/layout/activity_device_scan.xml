@@ -30,27 +30,16 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.github.yzeaho.common.CircleFrameLayout
+        <ImageView
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_gravity="center"
-            android:background="#974ce8">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawablePadding="10dp"
-                android:drawableTop="@drawable/device_search"
-                android:text="@string/device_scan_tip"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#fff" />
-        </com.github.yzeaho.common.CircleFrameLayout>
+            android:src="@drawable/device_scanning" />
 
         <ProgressBar
             android:id="@+id/progress"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
             android:layout_gravity="center"
             android:indeterminateDrawable="@drawable/progress_loading" />
 

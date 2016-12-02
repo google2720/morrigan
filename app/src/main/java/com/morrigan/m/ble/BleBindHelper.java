@@ -18,6 +18,7 @@ public class BleBindHelper {
 
     private static final String TAG = "BleBindHelper";
     private BleController ble = BleController.getInstance();
+    private boolean canceled;
 
     public void connectAndBind(Context context, String address, String deviceName) throws InterruptedException {
         Lg.i(TAG, "start connect and bind " + deviceName + " " + address);
@@ -39,6 +40,9 @@ public class BleBindHelper {
     private void connect(BluetoothDevice device, int retryCount, boolean sendToServer) throws InterruptedException {
         boolean firstBind = device.getAddress().equals(ble.getBindDeviceAddress());
         for (int i = 0; i < retryCount; i++) {
+            if (canceled) {
+                return;
+            }
             ConnectBleCallback cb = new ConnectBleCallback();
             try {
                 ble.addCallback(cb);
@@ -75,6 +79,10 @@ public class BleBindHelper {
             return;
         }
         connect(device, 20, false);
+    }
+
+    public void cancel() {
+        canceled = true;
     }
 
     private class ConnectBleCallback extends SimpleBleCallback {

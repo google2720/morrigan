@@ -23,7 +23,10 @@ public class SemiParkTextView extends TextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawCircle(getWidth() / 2, getHeight(), getWidth() / 2, paint);
+        final int w = getWidth();
+        final int h = getHeight();
+        final int r = w / 2;
+        canvas.drawCircle(w / 2, h, r, paint);
         super.onDraw(canvas);
     }
 }

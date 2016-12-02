@@ -99,19 +99,21 @@ public class BleController extends AbstractBleController {
         });
     }
 
-    public void reconnectAsync() {
+    public BleBindHelper reconnectAsync() {
+        final BleBindHelper helper = new BleBindHelper();
         EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
             @Override
             public void run() {
                 try {
                     String address = getBindDeviceAddress();
-                    new BleBindHelper().reconnect(mContext, address);
+                    helper.reconnect(mContext, address);
                 } catch (Exception e) {
                     Lg.w(TAG, "failed to reconnect device", e);
                     getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
                 }
             }
         });
+        return helper;
     }
 
     public boolean bindDevice(final BluetoothDevice device, final boolean sendToServer) {
