@@ -103,11 +103,11 @@ public class WeekHistotyRecordFragment extends Fragment {
             txt_goal_min.setCompoundDrawables(null, null, null, null);
 
             // 剩余目标值
-            txt_sulplus_min.setText(getString(R.string.history_time, targetWeek - nursing));
+            txt_sulplus_min.setText(getString(R.string.history_time, Math.max(0, targetWeek - nursing)));
             txt_sulplus_min.setCompoundDrawables(null, null, null, null);
 
             // 本周护养
-            if (nursing != 0) {
+            if (nursing > 0) {
                 txt_nursing_min.setText(getString(R.string.history_time, nursing));
                 txt_nursing_min.setCompoundDrawables(null, null, null, null);
                 txt_total_min.setText(getString(R.string.history_time, nursing));
@@ -183,6 +183,12 @@ public class WeekHistotyRecordFragment extends Fragment {
                 uiResult.message = r.retMsg;
                 if (uiResult.success) {
                     uiResult.t = r;
+                    if (r.hlInfo.size() == 7) {
+                        Calendar calendar = Calendar.getInstance();
+                        int index = calendar.get(Calendar.DAY_OF_WEEK);
+                        index = (index - 2 + 7) % 7;
+                        data.hlInfo.get(index).timeLong = Massage.sum(getContext(), UserController.getInstance().getUserId(getContext()));
+                    }
                 }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to get history", e);
@@ -198,14 +204,6 @@ public class WeekHistotyRecordFragment extends Fragment {
 //            }
             // ToastUtils.show(activity, result.message);
             data = result.t;
-            if (data != null && data.hlInfo.size() == 7) {
-                Calendar calendar = Calendar.getInstance();
-                int index = calendar.get(Calendar.DAY_OF_WEEK);
-                index = (index - 2 + 7) % 7;
-                data.hlInfo.get(index).timeLong = Massage.sum(getContext().getApplicationContext()
-                        , UserController.getInstance().getUserId(getContext().getApplicationContext()));
-            }
-
             refreshData();
         }
     }

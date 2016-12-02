@@ -183,9 +183,9 @@ public class BleController extends AbstractBleController {
                     writeWithNoRead(data.toValue(), 1000);
                     byte[] bytes = read(1000);
                     if (bytes != null) {
-                        r = MassageDataResult.parser(bytes);
+                        r = MassageDataResult.parse(bytes);
                         if (r == null) {
-                            r = MassageDataResult.parser(read(1000));
+                            r = MassageDataResult.parse(read(1000));
                         }
                     }
                     if (r != null) {
@@ -223,7 +223,29 @@ public class BleController extends AbstractBleController {
     }
 
     public void musicMassageAsync(int decibel) {
-        MassageTask massageTask = new MassageTask(new MassageData(true, decibel));
+        MassageMusicTask massageTask = new MassageMusicTask(new MassageData(true, decibel));
         massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
+    }
+
+    private class MassageMusicTask extends AsyncTask<Void, Void, Void> {
+
+        private MassageData data;
+
+        private MassageMusicTask(MassageData data) {
+            this.data = data;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Lg.i(TAG, "massage music start");
+                writeWithNoRead(data.toValue(), 1000);
+                mCallbacks.onMassageSuccess();
+            } catch (Exception e) {
+                Lg.w(TAG, "failed to massage music", e);
+                mCallbacks.onMassageFailed(BleError.SYSTEM);
+            }
+            return null;
+        }
     }
 }

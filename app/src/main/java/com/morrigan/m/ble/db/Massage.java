@@ -208,7 +208,7 @@ public class Massage extends Data {
             String[] selectionArgs = new String[]{userId, String.valueOf(todayStartTime), String.valueOf(todayEndTime)};
             cursor = getReadableDatabase(context).query(TABLE_MASSAGE, columns, selection, selectionArgs, null, null, null);
             if (cursor != null && cursor.moveToNext()) {
-                return cursor.getInt(cursor.getColumnIndex("_duration"));
+                return cursor.getInt(cursor.getColumnIndex("_duration")) / 60000;
             }
         } finally {
             close(cursor);

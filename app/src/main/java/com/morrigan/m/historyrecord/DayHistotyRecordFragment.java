@@ -101,13 +101,11 @@ public class DayHistotyRecordFragment extends Fragment {
             }
 
             // 目标值
-            if (total != 0) {
-                txt_goal_min.setText(getString(R.string.history_time, total));
-                txt_goal_min.setCompoundDrawables(null, null, null, null);
-            }
+            txt_goal_min.setText(getString(R.string.history_time, total));
+            txt_goal_min.setCompoundDrawables(null, null, null, null);
 
             // 护养时间
-            if (nursing != 0) {
+            if (nursing > 0) {
                 txt_total_min.setText(getString(R.string.history_time, nursing));
                 txt_total_min.setCompoundDrawables(null, null, null, null);
                 txt_nursing_min.setText(getString(R.string.history_time, nursing));
@@ -115,11 +113,9 @@ public class DayHistotyRecordFragment extends Fragment {
             }
 
             // 剩余目标值
-            int sulplus = total - nursing;
-            if (sulplus != 0) {
-                txt_sulplus_min.setText(getString(R.string.history_time, sulplus));
-                txt_sulplus_min.setCompoundDrawables(null, null, null, null);
-            }
+            txt_sulplus_min.setText(getString(R.string.history_time, Math.max(0, total - nursing)));
+            txt_sulplus_min.setCompoundDrawables(null, null, null, null);
+
             refreshBarChart(data);
         }
     }

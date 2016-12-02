@@ -18,6 +18,6 @@ public class NotifyDataHelper {
         if (r != null) {
             return r;
         }
-        return MassageDataResult.parser(data);
+        return MassageDataResult.parse(data);
     }
 }

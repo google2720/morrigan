@@ -19,11 +19,11 @@ import java.util.List;
  */
 
 public class HisttofyRecordActivity extends ToolbarActivity {
+
     private View radio1;
     private View radio2;
     private MyViewPager mViewPager;
     private List<Fragment> fragments;
-    private static final String TAG = "HisttofyRecordActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class HisttofyRecordActivity extends ToolbarActivity {
 
         fragments = new ArrayList<>();
         DayHistotyRecordFragment day = new DayHistotyRecordFragment();
-        WeekHistotyRecordFragment week=new WeekHistotyRecordFragment();
+        WeekHistotyRecordFragment week = new WeekHistotyRecordFragment();
         fragments.add(day);
         fragments.add(week);
         HisttofyRecordActivity.TabAdapter tabAdapter = new HisttofyRecordActivity.TabAdapter(getSupportFragmentManager(), fragments);
