@@ -31,9 +31,7 @@ import com.morrigan.m.main.VisualizerView;
 import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 import java.io.IOException;
-import java.security.Timestamp;
-import java.sql.Time;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,6 +40,8 @@ import java.util.List;
  */
 public class MusicActivity extends BaseActivity implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnErrorListener, SeekBar.OnSeekBarChangeListener, MusicAdapter.Callback, OpenPopup {
+
+    private static final String TAG = "music";
 
     private MediaPlayer mediaPlayer;
     private Visualizer visualizer;
@@ -73,8 +73,27 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private long sendMassageTime;
     private long sendMassageTimeInterval;
     private MusicInfo currentMusicInfo;
-    private long startTime = new Date().getTime();
-    boolean isMassageing = false;
+    private long startTime = System.currentTimeMillis();
+    private BleController ble = BleController.getInstance();
+    private byte[] decibel = new byte[5];
+    private static final int MSG_MASSAGE = 1;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_MASSAGE:
+                    if (isFinishing() || currState != PAUSE || !ble.isDeviceReady()) {
+                        return;
+                    }
+                    Log.i("yy", "massage " + Arrays.toString(decibel));
+                    ble.musicMassageAsync(decibel);
+                    sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,6 +154,9 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private void initMusic() {
         new Thread(new Runnable() {
             public void run() {
+                if (isFinishing()) {
+                    return;
+                }
                 loader = MusicLoader.instance(context.getApplicationContext());
                 loader.init();
                 musics = loader.getMusicList();
@@ -162,17 +184,14 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private Handler hander = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
-                case SEARCH_MUSIC_SUCCESS: {
+                case SEARCH_MUSIC_SUCCESS:
                     //搜索音乐文件结束时
                     popupWindow.setData(musics);
                     if (loader.getMusicList() != null && loader.getMusicList().size() > 0) {
                         currentMusicInfo = loader.getMusicList().get(0);
                         refreshTitle();
                     }
-
-                }
-
-                break;
+                    break;
                 case CURR_TIME_VALUE:
                     //设置当前时间
                     tv_currTime.setText(msg.obj.toString());
@@ -209,6 +228,11 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 currState = PAUSE;
                 popupWindow.setPlayIndex(currIndex);
                 visualizer.setEnabled(true);
+                if (ble.isDeviceReady()) {
+                    startTime = System.currentTimeMillis();
+                    // ble.musicRandomMassageAsync();
+                    handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -225,7 +249,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         if (flag) {
             if (mediaPlayer.getCurrentPosition() <= seekBar.getMax()) {
                 seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                Message msg = hander.obtainMessage(CURR_TIME_VALUE, loader.toTime(mediaPlayer.getCurrentPosition()));
+                Message msg = hander.obtainMessage(CURR_TIME_VALUE, MusicLoader.toTime(mediaPlayer.getCurrentPosition()));
                 hander.sendMessageDelayed(msg, delay);
             } else {
                 flag = false;
@@ -237,7 +261,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private void initSeekBar() {
         seekBar.setMax(mediaPlayer.getDuration());
         seekBar.setProgress(0);
-        tv_totalTime.setText(loader.toTime(mediaPlayer.getDuration()));
+        tv_totalTime.setText(MusicLoader.toTime(mediaPlayer.getDuration()));
     }
 
     private void setupVisualizerFxAndUI() {
@@ -249,29 +273,36 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 @Override
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
                     if (SystemClock.elapsedRealtime() - updateUiTime > 200) {
-                        Log.i("music", "onWaveFormDataCapture " + bytes.length);
                         updateUiTime = SystemClock.elapsedRealtime();
                         visualizerView.updateVisualizer(bytes);
+//                        int temp = 0;
+//                        int temp2 = 0;
+//                        for (byte b : bytes) {
+//                            temp += b;
+//                            temp2 += (b + 128);
+//                        }
+//                        int w = 256;
+//                        float temp3 = temp2 * 1f / bytes.length;
+                        // int temp = bytes[bytes.length / 2] + 128;
+//                        decibel = (int) Math.round(30 * Math.sin(2 * Math.PI / (w * 4) * temp3));
                     }
-                    if (SystemClock.elapsedRealtime() - sendMassageTime > sendMassageTimeInterval) {
-                        Log.i("music", "onWaveFormDataCapture " + bytes.length);
-                        sendMassageTime = SystemClock.elapsedRealtime();
-                        long sum = 0;
-                        for (byte b : bytes) {
-                            sum += b;
-                        }
-                        int tem = (int) (sum / (bytes.length + 0.0));
-                        Log.i("music", "average " + tem);
-                        int vol = 128 - Math.abs(tem);
-                        int decibel = (int) (vol * 160 / 128.0);
-                        if (currState==PAUSE){
-                            BleController.getInstance().musicMassageAsync(decibel);
-                        }
-                        if (!isMassageing) {
-                            isMassageing = true;
-                            startTime = new Date().getTime();
-                        }
-                    }
+                    byte[] bytes1 = new byte[5];
+                    bytes1[0] = bytes[0];
+                    bytes1[1] = bytes[1];
+                    bytes1[2] = bytes[2];
+                    bytes1[3] = bytes[3];
+                    bytes1[4] = bytes[4];
+                    // Log.i("yy", "onWaveFormDataCapture1 " + Arrays.toString(bytes1));
+                    decibel[0] = p(bytes1[0]);
+                    decibel[1] = p(bytes1[1]);
+                    decibel[2] = p(bytes1[2]);
+                    decibel[3] = p(bytes1[3]);
+                    decibel[4] = p(bytes1[4]);
+                    Log.i("yyyyy", "onWaveFormDataCapture2 " + Arrays.toString(decibel));
+                }
+
+                private byte p(byte b) {
+                    return (byte) Math.round(30f * (b + 128) / 256);
                 }
 
                 @Override
@@ -279,10 +310,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 }
             }, Visualizer.getMaxCaptureRate() / 2, true, false);
         } catch (Throwable e) {
-            Log.e("e", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
-
-
     }
 
     public void onClickBack(View view) {
@@ -292,6 +321,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        hander.removeMessages(MSG_MASSAGE);
+        currState = START;
         mediaPlayer.stop();
         mediaPlayer.release();
         visualizer.setEnabled(false);
@@ -316,6 +347,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 start();
                 break;
             case PAUSE:
+                hander.removeMessages(MSG_MASSAGE);
                 visualizer.setEnabled(false);
                 mediaPlayer.pause();
                 btnPlay.setImageResource(R.drawable.music_play);
@@ -327,6 +359,14 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 mediaPlayer.start();
                 btnPlay.setImageResource(R.drawable.music_pause);
                 currState = PAUSE;
+                if (ble.isDeviceReady()) {
+                    startTime = System.currentTimeMillis();
+                    handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
+                    // ble.musicRandomMassageAsync();
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -340,9 +380,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             } else {
                 refreshTitle();
             }
-
         }
-
     }
 
     //下一自首
@@ -361,13 +399,11 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private void refreshTitle() {
         if (currentMusicInfo != null) {
             tv_currTime.setText("00:00");
-            tv_totalTime.setText(loader.toTime(currentMusicInfo.getDuration()));
+            tv_totalTime.setText(MusicLoader.toTime(currentMusicInfo.getDuration()));
             tv_showName.setText(currentMusicInfo.getTitle());
             tv_artist.setText(currentMusicInfo.getArtist());
         }
-
     }
-
 
     //监听器，当当前歌曲播放完时触发，播放下一首
     @Override
@@ -410,11 +446,9 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     private void massageStopAsync() {
-        isMassageing = false;
         BleController.getInstance().massageStopAsync();
-        long endTime = new Date().getTime();
+        long endTime = System.currentTimeMillis();
         String address = BleController.getInstance().getBindDeviceAddress();
-        MassageController.getInstance().save(this, address,
-                startTime, endTime);
+        MassageController.getInstance().save(this, address, startTime, endTime);
     }
 }

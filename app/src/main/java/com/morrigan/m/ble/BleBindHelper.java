@@ -23,6 +23,11 @@ public class BleBindHelper {
     public void connectAndBind(Context context, String address, String deviceName) throws InterruptedException {
         Lg.i(TAG, "start connect and bind " + deviceName + " " + address);
         UiResult<Boolean> result = DeviceController.getInstance().check(context, address);
+        if (!result.success) {
+            Lg.w(TAG, deviceName + "(" + address + ") is check error");
+            ble.getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
+            return;
+        }
         if (result.t) {
             Lg.w(TAG, deviceName + "(" + address + ") is already connectAndBind by other user");
             ble.getCallbacks().onBindDeviceFailed(BleError.BIND_BY_OTHER);

@@ -203,7 +203,7 @@ public class UserController {
     }
 
     public long getMusicTimeInterval(Context context) {
-        return getSharedPreferences(context).getLong("MusicTimeInterval", 2000);
+        return getSharedPreferences(context).getLong("MusicTimeInterval", 500);
     }
 
     public UiResult modify(Context context, String col, String value) {

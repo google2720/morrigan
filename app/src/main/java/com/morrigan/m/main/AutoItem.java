@@ -47,16 +47,16 @@ public class AutoItem implements Serializable {
     public static int getModeDrawableResId(int type) {
         switch (type) {
             case AutoItem.TYPE_WAVE:
-                return R.drawable.massage_wave;
+                return R.drawable.massage_wave_s;
             case AutoItem.TYPE_DYNAMIC:
-                return R.drawable.massage_dynamic;
+                return R.drawable.massage_dynamic_s;
             case AutoItem.TYPE_GENTLY:
-                return R.drawable.massage_gently;
+                return R.drawable.massage_gently_s;
             case AutoItem.TYPE_INTENSE:
-                return R.drawable.massage_intense;
+                return R.drawable.massage_intense_s;
             case AutoItem.TYPE_SOFT:
             default:
-                return R.drawable.massage_soft;
+                return R.drawable.massage_soft_s;
         }
     }
 

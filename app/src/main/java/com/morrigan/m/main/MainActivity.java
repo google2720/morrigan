@@ -48,8 +48,7 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         }
     }
 
-    @Override
-    public void exitApp() {
+    private void exitApp() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.exit_tip);
         builder.setNegativeButton(R.string.exit_yes, new DialogInterface.OnClickListener() {

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.os.AsyncTaskCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -171,9 +170,10 @@ public class WeekHistotyRecordFragment extends Fragment {
         protected UiResult<HistoryResult> doInBackground(Void... params) {
             UiResult<HistoryResult> uiResult = new UiResult<>();
             try {
+                String userId = UserController.getInstance().getUserId(activity);
                 String url = activity.getString(R.string.host) + "/rest/moli/get-record-list";
                 FormBody.Builder b = new FormBody.Builder();
-                b.add("userId", UserController.getInstance().getUserId(activity));
+                b.add("userId", userId);
                 Request.Builder builder = new Request.Builder();
                 builder.url(url);
                 builder.post(b.build());
@@ -187,7 +187,7 @@ public class WeekHistotyRecordFragment extends Fragment {
                         Calendar calendar = Calendar.getInstance();
                         int index = calendar.get(Calendar.DAY_OF_WEEK);
                         index = (index - 2 + 7) % 7;
-                        data.hlInfo.get(index).timeLong = Massage.sum(getContext(), UserController.getInstance().getUserId(getContext()));
+                        r.hlInfo.get(index).timeLong = Massage.sum(activity, userId);
                     }
                 }
             } catch (Exception e) {

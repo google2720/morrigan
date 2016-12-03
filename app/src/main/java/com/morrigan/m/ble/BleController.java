@@ -222,9 +222,21 @@ public class BleController extends AbstractBleController {
         massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
     }
 
-    public void musicMassageAsync(int decibel) {
-        MassageMusicTask massageTask = new MassageMusicTask(new MassageData(true, decibel));
+    public void musicRandomMassageAsync() {
+        MassageData data = new MassageData(true);
+        data.setMode((byte) 0x04);
+        MassageTask massageTask = new MassageTask(data);
         massageTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
+    }
+
+    private MassageMusicTask musicTask;
+
+    public void musicMassageAsync(@Size(5) byte[] decibel) {
+        if (musicTask != null) {
+            musicTask.cancel(true);
+        }
+        musicTask = new MassageMusicTask(new MassageData(true, decibel[0], decibel[1], decibel[2], decibel[3], decibel[4]));
+        musicTask.executeOnExecutor(EXECUTOR_SERVICE_SINGLE);
     }
 
     private class MassageMusicTask extends AsyncTask<Void, Void, Void> {

@@ -2,9 +2,7 @@ package com.morrigan.m.main;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * 音乐振幅
@@ -41,26 +38,31 @@ public class VisualizerView extends View {
         mForePaint2.setAntiAlias(true);
         mForePaint2.setColor(0xffB269FE);
         vols = new ArrayList<>();
-        Random random=new Random();
+        Random random = new Random();
         for (int i = 0; i < 41; i++) {
-            int tem1=i%3;
-            int tem2=128;
-            switch (tem1){
-                case 0:{
-                     tem2=60;
-                }break;
-                case 1:{
-                     tem2=80;
-                }break;
-                case 2:{
-                     tem2=128;
-                }break;
+            int tem1 = i % 3;
+            int tem2 = 128;
+            switch (tem1) {
+                case 0: {
+                    tem2 = 60;
+                }
+                break;
+                case 1: {
+                    tem2 = 80;
+                }
+                break;
+                case 2: {
+                    tem2 = 128;
+                }
+                break;
             }
-            float tem3=random.nextInt(tem2);
-            vols.add( tem3);
+            float tem3 = random.nextInt(tem2);
+            vols.add(tem3);
         }
         max = Collections.max(vols);
     }
+
+    private Random random = new Random();
 
     public void updateVisualizer(byte[] bytes) {
         mBytes = bytes;
@@ -72,19 +74,17 @@ public class VisualizerView extends View {
                 vols.add(vol);
             }
             max = Collections.max(vols);
-            float min=Collections.min(vols);
-            if (max==0||max==min){
+            float min = Collections.min(vols);
+            if (max == 0 || max == min) {
                 for (int i = 0; i < 41; i++) {
-                    Random random=new Random();
-                    float tem=random.nextInt(128);
+                    float tem = random.nextInt(128);
                     vols.set(i, tem);
                 }
                 max = Collections.max(vols);
-                min=Collections.min(vols);
+                min = Collections.min(vols);
             }
             ViewCompat.postInvalidateOnAnimation(this);
         }
-
     }
 
     @Override
@@ -108,7 +108,5 @@ public class VisualizerView extends View {
             float b = (float) (t + ((vol / max) * getHeight() * 0.5));
             canvas.drawRect(l, t, r, b, mForePaint2);
         }
-
     }
-
 }
