@@ -2,15 +2,24 @@ package com.morrigan.m.main;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Keep;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
+
+import com.morrigan.m.R;
 
 /**
  * 主界面布局
@@ -18,14 +27,20 @@ import android.widget.FrameLayout;
  */
 public class MenuLayout extends FrameLayout {
 
-    private static final String TAG = "MainLayout";
+    private static final String TAG = "MenuLayout";
     private ViewDragHelper dragHelper;
-    private boolean open;
+    private boolean stateOpened;
     private boolean touchDownCloseEnable;
     private Callback callback;
+    private Rect rect = new Rect();
+    private Paint paint = new Paint();
+    private int shadeWidth = 10;
 
     public MenuLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        final float density = context.getResources().getDisplayMetrics().density;
+        shadeWidth *= density;
+        paint.setColor(Color.WHITE);
         dragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelper.Callback() {
             @Override
             public boolean tryCaptureView(View child, int pointerId) {
@@ -44,18 +59,29 @@ public class MenuLayout extends FrameLayout {
                 return 0;
             }
 
+
+            @Override
+            public void onEdgeTouched(int edgeFlags, int pointerId) {
+                Log.i(TAG, "onEdgeTouched " + edgeFlags);
+            }
+
             @Override
             public void onEdgeDragStarted(int edgeFlags, int pointerId) {
-                dragHelper.captureChildView(getChildAt(1), pointerId);
+                if (!touchDownCloseEnable) {
+                    dragHelper.captureChildView(getChildAt(1), pointerId);
+                }
             }
 
             @Override
             public void onViewReleased(View releasedChild, float xvel, float yvel) {
-                if (releasedChild == getChildAt(1)) {
-                    if (releasedChild.getLeft() >= getWidth() / 2) {
-                        openMenuInner();
-                    } else {
-                        closeMenuInner();
+                Log.i(TAG, "onViewReleased " + xvel + " " + yvel);
+                if (!touchDownCloseEnable) {
+                    if (releasedChild == getChildAt(1)) {
+                        if (releasedChild.getLeft() >= getWidth() / 2) {
+                            openMenuInner();
+                        } else {
+                            closeMenuInner();
+                        }
                     }
                 }
             }
@@ -65,6 +91,11 @@ public class MenuLayout extends FrameLayout {
                 if (changedView == getChildAt(1)) {
                     setAnimValue(left);
                 }
+            }
+
+            @Override
+            public void onViewDragStateChanged(int state) {
+                Log.i(TAG, "onViewDragStateChanged " + state);
             }
         });
         dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
@@ -86,7 +117,7 @@ public class MenuLayout extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (open) {
+        if (stateOpened) {
             setAnimValue(getChildAt(0).getWidth());
         }
     }
@@ -101,17 +132,21 @@ public class MenuLayout extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         int action = MotionEventCompat.getActionMasked(event);
-        if (action == MotionEvent.ACTION_DOWN) {
-            if (open) {
-                View view = getChildAt(1);
-                if (pointInView(view, event.getX(), event.getY())) {
-                    closeMenu();
-                    touchDownCloseEnable = true;
-                    return true;
+        Log.i(TAG, "onInterceptTouchEvent " + action);
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                touchDownCloseEnable = false;
+                if (stateOpened) {
+                    View view = getChildAt(1);
+                    if (pointInView(view, event.getX(), event.getY())) {
+                        touchDownCloseEnable = true;
+                    }
                 }
-            }
+                break;
+            default:
+                break;
         }
-        return dragHelper.shouldInterceptTouchEvent(event);
+        return dragHelper.shouldInterceptTouchEvent(event) || touchDownCloseEnable;
     }
 
     private boolean pointInView(View view, float x, float y) {
@@ -120,55 +155,67 @@ public class MenuLayout extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        int action = MotionEventCompat.getActionMasked(event);
+        Log.i(TAG, "onTouchEvent " + action + " " + touchDownCloseEnable);
         if (touchDownCloseEnable) {
-            int action = MotionEventCompat.getActionMasked(event);
-            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                touchDownCloseEnable = false;
+            switch (action) {
+                case MotionEvent.ACTION_MOVE:
+                    if (dragHelper.checkTouchSlop(ViewDragHelper.DIRECTION_HORIZONTAL)) {
+                        touchDownCloseEnable = false;
+                        dragHelper.captureChildView(getChildAt(1), dragHelper.getActivePointerId());
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    closeMenu();
+                    break;
+                default:
+                    break;
             }
-            return true;
         }
         dragHelper.processTouchEvent(event);
         return true;
     }
 
     public boolean isMenuOpen() {
-        return open;
+        return stateOpened;
     }
 
     public void closeMenu() {
-        if (open) {
-            open = false;
+        Log.i(TAG, "closeMenu " + stateOpened);
+        if (stateOpened) {
             closeMenuInner();
         }
     }
 
     private void closeMenuInner() {
-        open = false;
+        stateOpened = false;
         ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), 0);
         animator.setDuration(250);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.start();
         dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
         if (callback != null) {
-            callback.onMenuOpenStatusChange(open);
+            callback.onMenuOpenStatusChange(stateOpened);
         }
     }
 
     public void openMenu() {
-        if (!open) {
+        Log.i(TAG, "openMenu " + stateOpened);
+        if (!stateOpened) {
             openMenuInner();
         }
     }
 
     private void openMenuInner() {
-        open = true;
+        stateOpened = true;
         ObjectAnimator animator = ObjectAnimator.ofInt(this, "animValue", getChildAt(1).getLeft(), getChildAt(0).getWidth());
         animator.setDuration(250);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.start();
         dragHelper.setEdgeTrackingEnabled(0);
         if (callback != null) {
-            callback.onMenuOpenStatusChange(open);
+            callback.onMenuOpenStatusChange(stateOpened);
         }
     }
 
@@ -184,5 +231,29 @@ public class MenuLayout extends FrameLayout {
 
     public void setCallback(Callback callback) {
         this.callback = callback;
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        final View view = getChildAt(1);
+        final int left = view.getLeft();
+        final int top = view.getTop();
+        final int right = view.getRight();
+        final int bottom = view.getBottom();
+        final Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.nemu_bg);
+        rect.left = left - shadeWidth;
+        rect.top = top - shadeWidth;
+        rect.right = right + shadeWidth;
+        rect.bottom = bottom + shadeWidth;
+        drawable.setBounds(rect);
+        drawable.draw(canvas);
+        super.dispatchDraw(canvas);
+        final int alpha = Math.round((right - left) * 1f / right * 255);
+        paint.setAlpha(255 - alpha);
+        rect.left = left;
+        rect.top = top;
+        rect.right = right;
+        rect.bottom = bottom;
+        canvas.drawRect(rect, paint);
     }
 }

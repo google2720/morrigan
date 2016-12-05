@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.annotation.Keep;
@@ -63,6 +64,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         timePaint.setStrokeWidth(1);
         timePaint.setColor(Color.WHITE);
         timePaint.setTextAlign(Paint.Align.CENTER);
+        timePaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltcxh.ttf"));
 
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
@@ -235,20 +237,21 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void drawStaticWave(Canvas canvas, int startX, int endX, int startY, int endY, int w, float radius, int cx, int cy) {
-        waveProgress = w / 2;
+        waveProgress = (endX - startX) / 2;
         int sy, ey;
-        float period = (float) (2 * Math.PI / w);
-        float a = (startY - endY) / 10;
+        float period = (float) (2 * Math.PI / ((endX - startX) / 1.5));
+        float a = (startY - endY) / 12;
         for (int i = startX; i < endX; i++) {
             sy = (int) Math.round(cy + Math.sqrt(radius * radius - Math.pow(i - cx, 2)));
-            ey = (int) Math.round(a * Math.sin(period * (waveProgress + i)) + endY);
+
+            ey = (int) Math.round(a * Math.cos(period * (waveProgress + i - startX)) + endY);
             ey = Math.min(sy, ey);
-            paint.setColor(0x7f9147dd);
+            paint.setColor(0x2fbc54e2);
             canvas.drawLine(i, sy, i, ey, paint);
 
-            ey = (int) Math.round(a * Math.cos(period * (waveProgress + i)) + endY);
+            ey = (int) Math.round(a * Math.sin(period * (waveProgress + i - startX)) + endY);
             ey = Math.min(sy, ey);
-            paint.setColor(0x7f9c47d3);
+            paint.setColor(0x2fa753f7);
             canvas.drawLine(i, sy, i, ey, paint);
         }
     }
