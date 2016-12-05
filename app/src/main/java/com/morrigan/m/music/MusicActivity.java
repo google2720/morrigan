@@ -158,7 +158,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                     return;
                 }
                 loader = MusicLoader.instance(context.getApplicationContext());
-                loader.init();
+                //loader.init();
                 musics = loader.getMusicList();
                 hander.sendEmptyMessage(SEARCH_MUSIC_SUCCESS);
             }
@@ -275,16 +275,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                     if (SystemClock.elapsedRealtime() - updateUiTime > 200) {
                         updateUiTime = SystemClock.elapsedRealtime();
                         visualizerView.updateVisualizer(bytes);
-//                        int temp = 0;
-//                        int temp2 = 0;
-//                        for (byte b : bytes) {
-//                            temp += b;
-//                            temp2 += (b + 128);
-//                        }
-//                        int w = 256;
-//                        float temp3 = temp2 * 1f / bytes.length;
-                        // int temp = bytes[bytes.length / 2] + 128;
-//                        decibel = (int) Math.round(30 * Math.sin(2 * Math.PI / (w * 4) * temp3));
+
                     }
                     byte[] bytes1 = new byte[5];
                     bytes1[0] = bytes[0];
@@ -326,6 +317,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         mediaPlayer.stop();
         mediaPlayer.release();
         visualizer.setEnabled(false);
+        visualizer.release();
         massageStopAsync();
     }
 
@@ -373,7 +365,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     //上一首
     private void previous() {
         if (musics != null && musics.size() > 0) {
-            currIndex = (currIndex - 1 + currIndex) % musics.size();
+            currIndex = (currIndex - 1 + musics.size()) % musics.size();
             currentMusicInfo = loader.getMusicList().get(currIndex);
             if (currState == PAUSE) {
                 start();

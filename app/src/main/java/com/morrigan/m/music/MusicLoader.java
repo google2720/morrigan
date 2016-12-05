@@ -59,48 +59,38 @@ public class MusicLoader {
     private void loaderAssertMusic() {
         try {
             String[] fileNasmes = context.getAssets().list("music");
-            String[] ext = {".wma", ".mp3", ".flac"};
-            ;
             if (fileNasmes != null) {
                 for (int i = 0; i < fileNasmes.length; i++) {
                     String filename = fileNasmes[i];
-                    for (int j = 0; j < ext.length; j++) {
-                        if (filename.endsWith(ext[j])) {
-                            MusicInfo info = new MusicInfo();
-                            info.setAssertsMusic(true);
-                            File objFile=new File(Environment.getExternalStorageDirectory(),"/Android/data/" + context.getPackageName() + "/music/");
-                            if (!objFile.exists()){
-                                objFile.mkdirs();
-                            }
-                           // String absoluteName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + filename;
-                            String absoluteName = objFile.getAbsolutePath()+"/"+filename;
-                            File file = new File(absoluteName);
-                            if (!file.exists()) {
-                                FileUtils.copy(context.getAssets().open("music/" + filename), file);
-                            }
-
-                            // Tell the media scanner about the new file so that it is
-
-                            // immediately available to the user.
-
-                            MediaScannerConnection.scanFile(context,
-
-                                    new String[]{file.toString()}, null,
-
-                                    new MediaScannerConnection.OnScanCompletedListener() {
-
-                                        public void onScanCompleted(String path, Uri uri) {
-
-                                            Log.i("ExternalStorage", "Scanned " + path + ":");
-
-                                            Log.i("ExternalStorage", "-> uri=" + uri);
-
-                                        }
-
-                                    });
-                            break;
-                        }
+                    MusicInfo info = new MusicInfo();
+                    info.setAssertsMusic(true);
+                    String absoluteName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + filename;
+                    File file = new File(absoluteName);
+                    if (!file.exists()) {
+                        FileUtils.copy(context.getAssets().open("music/" + filename), file);
                     }
+
+                    // Tell the media scanner about the new file so that it is
+
+                    // immediately available to the user.
+
+                    MediaScannerConnection.scanFile(context,
+
+                            new String[]{file.toString()}, null,
+
+                            new MediaScannerConnection.OnScanCompletedListener() {
+
+                                public void onScanCompleted(String path, Uri uri) {
+
+                                    Log.i("ExternalStorage", "Scanned " + path + ":");
+
+                                    Log.i("ExternalStorage", "-> uri=" + uri);
+
+                                }
+
+                            });
+
+
                 }
             }
         } catch (IOException e) {
@@ -119,7 +109,6 @@ public class MusicLoader {
     public void init() {
         musicList = new ArrayList<>();
         loaderAssertMusic();
-        //  loadContentMusic(contentUri1);
         loadContentMusic(contentUri);
     }
 

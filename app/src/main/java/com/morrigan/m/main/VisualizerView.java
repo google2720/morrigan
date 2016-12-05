@@ -3,12 +3,12 @@ package com.morrigan.m.main;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.SystemClock;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -18,11 +18,10 @@ import java.util.Random;
  */
 public class VisualizerView extends View {
 
-    private byte[] mBytes;
     private Paint mForePaint1 = new Paint();
     private Paint mForePaint2 = new Paint();
     List<Float> vols;
-    float max = 0;
+    private long updateUiTime;
 
     public VisualizerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -30,7 +29,6 @@ public class VisualizerView extends View {
     }
 
     private void init() {
-        mBytes = null;
         mForePaint1.setStrokeWidth(1f);
         mForePaint1.setAntiAlias(true);
         mForePaint1.setColor(0xffffffff);
@@ -39,51 +37,71 @@ public class VisualizerView extends View {
         mForePaint2.setColor(0xffB269FE);
         vols = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < 41; i++) {
-            int tem1 = i % 3;
-            int tem2 = 128;
-            switch (tem1) {
-                case 0: {
-                    tem2 = 60;
-                }
-                break;
-                case 1: {
-                    tem2 = 80;
-                }
-                break;
-                case 2: {
-                    tem2 = 128;
-                }
-                break;
-            }
+        int max = 256;
+        vols = new ArrayList<>();
+        int tem2 = max;
+        for (int i = 0; i < 13; i++) {
+            tem2 = (int) ((2.0 / 4) * max);
             float tem3 = random.nextInt(tem2);
             vols.add(tem3);
         }
-        max = Collections.max(vols);
+        for (int i = 13; i < 28; i++) {
+            tem2 = max;
+            float tem3 = random.nextInt(tem2);
+            vols.add(tem3);
+        }
+        for (int i = 28; i < 41; i++) {
+            tem2 = (int) ((2.0 / 4) * max);
+            float tem3 = random.nextInt(tem2);
+            vols.add(tem3);
+        }
     }
 
-    private Random random = new Random();
 
     public void updateVisualizer(byte[] bytes) {
-        mBytes = bytes;
-        if (bytes != null && bytes.length == 1024) {
+        if (bytes != null) {
+//            int max = 0;
+//            for (int i = 0; i < bytes.length; i++) {
+//                if (bytes[i] > max) {
+//                    max = bytes[i];
+//                }
+//            }
+//            max = max + 128;
+            int max = 256;
+            Random random = new Random();
             vols = new ArrayList<>();
-            float vol = 0;
-            for (int i = 0; i < 41; i++) {
-                vol = 128 - Math.abs(mBytes[i * 24]);
-                vols.add(vol);
+            int tem2 = max;
+            for (int i = 0; i < 13; i++) {
+                tem2 = (int) ((2.0 / 4) * max);
+                float tem3 = random.nextInt(tem2);
+                vols.add(tem3);
             }
-            max = Collections.max(vols);
-            float min = Collections.min(vols);
-            if (max == 0 || max == min) {
-                for (int i = 0; i < 41; i++) {
-                    float tem = random.nextInt(128);
-                    vols.set(i, tem);
-                }
-                max = Collections.max(vols);
-                min = Collections.min(vols);
+            for (int i = 13; i < 28; i++) {
+                tem2 = max;
+                float tem3 = random.nextInt(tem2);
+                vols.add(tem3);
+            }
+            for (int i = 28; i < 41; i++) {
+                tem2 = (int) ((2.0 / 4) * max);
+                float tem3 = random.nextInt(tem2);
+                vols.add(tem3);
             }
             ViewCompat.postInvalidateOnAnimation(this);
+        }
+    }
+
+    private void update() {
+        if (SystemClock.elapsedRealtime() - updateUiTime > 2) {
+            if (vols.size() == 41) {
+                for (int i = 0; i < 41; i++) {
+                    if (vols.get(i) > 1) {
+                        vols.set(i, vols.get(i) - 1);
+                    }
+                }
+                ViewCompat.postInvalidateOnAnimation(this);
+                updateUiTime = SystemClock.elapsedRealtime();
+            }
+
         }
     }
 
@@ -94,7 +112,7 @@ public class VisualizerView extends View {
             float vol = vols.get(i);
             float w = (float) (1 / 122.0) * getWidth();
             float l = i * w * 3;
-            float t = (float) ((getHeight() - (vol / max) * getHeight()) * 0.5);
+            float t = (float) ((getHeight() - (vol / 256f) * getHeight()) * 0.5);
             float r = l + 2 * w;
             float b = (float) (getHeight() * 0.5) - 5;
             canvas.drawRect(l, t, r, b, mForePaint1);
@@ -105,7 +123,7 @@ public class VisualizerView extends View {
             float l = i * w * 3;
             float t = (float) (getHeight() * 0.5 + 5);
             float r = l + 2 * w;
-            float b = (float) (t + ((vol / max) * getHeight() * 0.5));
+            float b = (float) (t + ((vol / 256f) * getHeight() * 0.5));
             canvas.drawRect(l, t, r, b, mForePaint2);
         }
     }
