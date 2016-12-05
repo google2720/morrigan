@@ -44,6 +44,10 @@
         <item name="colorPrimary">@color/cA957FF</item>
         <item name="colorPrimaryDark">@color/cA957FF</item>
     </style>
+    <style name="AppTheme.Guide">
+        <item name="colorPrimary">#1E052B</item>
+        <item name="colorPrimaryDark">#1E052B</item>
+    </style>
 
     <style name="AppTheme.ReConnect">
         <item name="android:windowFullscreen">true</item>

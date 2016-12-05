@@ -17,6 +17,7 @@ import android.widget.EditText;
 import com.github.yzeaho.common.SleepTime;
 import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.BaseActivity;
+import com.morrigan.m.GuideViewActivity;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
@@ -172,6 +173,9 @@ public class LoginActivity extends BaseActivity {
 
     private void gotoMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        if (UserController.getInstance().isFirstLogin(this)) {
+            intent = new Intent(this, GuideViewActivity.class);
+        }
         startActivity(intent);
         finish();
     }

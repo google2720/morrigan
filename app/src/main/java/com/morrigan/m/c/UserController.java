@@ -69,6 +69,15 @@ public class UserController {
         SharedPreferences preferences = getSharedPreferences(context);
         preferences.edit().putBoolean("auto_login", b).apply();
     }
+    public boolean isFirstLogin(Context context) {
+        return getSharedPreferences(context).getBoolean("first_login", true);
+    }
+
+    public void setFirstLogin(Context context, boolean b) {
+        SharedPreferences preferences = getSharedPreferences(context);
+        preferences.edit().putBoolean("first_login", b).apply();
+    }
+
 
     private void saveUserInfo(Context context, UserInfo userInfo, String mobile, String password) {
         SharedPreferences preferences = getSharedPreferences(context);

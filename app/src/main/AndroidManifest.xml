@@ -122,6 +122,10 @@
         <activity
             android:name=".music.MusicActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".GuideViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Guide"/>
 
         <activity
             android:name=".ReConnectBleActivity"
