@@ -64,7 +64,7 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
         tips = new ImageView[imgIdArray.length];
         for (int i = 0; i < tips.length; i++) {
             ImageView imageView = new ImageView(this);
-            imageView.setLayoutParams(new LayoutParams(15, 5));
+            imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             tips[i] = imageView;
             if (i == 0) {
                 tips[i].setBackgroundResource(R.drawable.page_indicator_focused);

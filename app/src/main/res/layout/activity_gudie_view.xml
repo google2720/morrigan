@@ -14,9 +14,8 @@
         android:id="@+id/viewGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="80dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         >
@@ -27,15 +26,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/viewGroup"
-        android:layout_gravity="center"
-        android:background="@drawable/ic_guide_enter"
-        android:gravity="center"
-        android:text="开始体验"
-        android:visibility="gone"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/guide_button"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="进入摩莉"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#ffffff"
-        android:layout_marginBottom="10dp"
+        android:visibility="gone"
         />
 
 </RelativeLayout>
