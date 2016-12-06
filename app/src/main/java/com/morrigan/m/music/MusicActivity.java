@@ -158,7 +158,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                     return;
                 }
                 loader = MusicLoader.instance(context.getApplicationContext());
-                //loader.init();
+                loader.loadContentMusic();
                 musics = loader.getMusicList();
                 hander.sendEmptyMessage(SEARCH_MUSIC_SUCCESS);
             }
@@ -226,7 +226,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 tv_artist.setText(currentMusicInfo.getArtist());
                 btnPlay.setImageResource(R.drawable.music_pause);
                 currState = PAUSE;
-                popupWindow.setPlayIndex(currIndex);
+                popupWindow.setPlayIndex(currIndex,true);
                 visualizer.setEnabled(true);
                 if (ble.isDeviceReady()) {
                     startTime = System.currentTimeMillis();
@@ -344,6 +344,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 mediaPlayer.pause();
                 btnPlay.setImageResource(R.drawable.music_play);
                 currState = START;
+                popupWindow.setPlayIndex(currIndex,false);
                 massageStopAsync();
                 break;
             case START:

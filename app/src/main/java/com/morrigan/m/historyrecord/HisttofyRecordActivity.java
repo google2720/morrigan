@@ -85,13 +85,13 @@ public class HisttofyRecordActivity extends ToolbarActivity {
     private void showDay() {
         radio1.setActivated(true);
         radio2.setActivated(false);
-        setTitle(R.string.history_title);
+        setTitle(R.string.history_title_today);
     }
 
     private void showWeek() {
         radio1.setActivated(false);
         radio2.setActivated(true);
-        setTitle(R.string.history_title);
+        setTitle(R.string.history_title_week);
     }
 
     public static class TabAdapter extends FragmentPagerAdapter {

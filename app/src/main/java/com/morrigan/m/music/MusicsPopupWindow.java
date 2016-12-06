@@ -82,10 +82,10 @@ public class MusicsPopupWindow extends BottomPushPopupWindow<Activity> {
         listView.setAdapter(adapter);
     }
 
-    public void setPlayIndex(int playIndex) {
+    public void setPlayIndex(int playIndex,boolean play) {
         if (adapter == null) {
             return;
         }
-        adapter.setPlayIndex(playIndex);
+        adapter.setPlayIndex(playIndex,play);
     }
 }

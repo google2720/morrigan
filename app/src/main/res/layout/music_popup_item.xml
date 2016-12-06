@@ -36,17 +36,15 @@
         android:textSize="16dp"
         />
 
-    <TextView
+
+    <com.morrigan.m.music.MusicAmplitudeView
         android:id="@+id/flash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentTop="true"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/tv_time"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/c7E7879"
-        android:textSize="16dp"/>
+        />
 
     <TextView
         android:id="@+id/tv_time"

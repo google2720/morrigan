@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.morrigan.m.R;
 
 import java.util.List;
+
 import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 /**
@@ -19,14 +20,16 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.Holder> {
     private Activity activity;
     private List<MusicLoader.MusicInfo> datas;
     private Callback callback;
-    private int playIndex=-1;
+    private int playIndex = -1;
+    private boolean play;
 
     public int getPlayIndex() {
         return playIndex;
     }
 
-    public void setPlayIndex(int playIndex) {
+    public void setPlayIndex(int playIndex, boolean play) {
         this.playIndex = playIndex;
+        this.play = play;
         this.notifyDataSetChanged();
     }
 
@@ -56,7 +59,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.Holder> {
         holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
         holder.tv_time = (TextView) view.findViewById(R.id.tv_time);
         holder.tv_artist = (TextView) view.findViewById(R.id.tv_artist);
-        holder.flash = view.findViewById(R.id.flash);
+        holder.flash = (MusicAmplitudeView) view.findViewById(R.id.flash);
         holder.rl_root = view.findViewById(R.id.rl_root);
 
         return holder;
@@ -68,13 +71,19 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.Holder> {
         holder.rl_root.setTag(data);
         holder.tv_name.setText(data.getTitle());
         holder.tv_time.setText(MusicLoader.toTime(data.getDuration()));
-        holder.tv_artist.setText("-  "+data.getArtist());
-        if (position==playIndex){
-            holder.tv_name.setTextColor(activity.getResources().getColor( R.color.c8c39e5));
-            holder.tv_artist.setTextColor(activity.getResources().getColor( R.color.cffbe8ef2));
-        }else {
-            holder.tv_name.setTextColor(activity.getResources().getColor( R.color.c000000));
-            holder.tv_artist.setTextColor(activity.getResources().getColor( R.color.c7E7879));
+        holder.tv_artist.setText("-  " + data.getArtist());
+        if (position == playIndex) {
+            holder.tv_name.setTextColor(activity.getResources().getColor(R.color.c8c39e5));
+            holder.tv_artist.setTextColor(activity.getResources().getColor(R.color.cffbe8ef2));
+            holder.tv_time.setTextColor(activity.getResources().getColor(R.color.c8c39e5));
+            holder.flash.setVisibility(View.VISIBLE);
+            holder.flash.setActive(play);
+        } else {
+            holder.tv_name.setTextColor(activity.getResources().getColor(R.color.c000000));
+            holder.tv_artist.setTextColor(activity.getResources().getColor(R.color.c7E7879));
+            holder.tv_time.setTextColor(activity.getResources().getColor(R.color.c7E7879));
+            holder.flash.setVisibility(View.GONE);
+            holder.flash.setActive(false);
         }
         holder.rl_root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +108,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.Holder> {
         TextView tv_time;
         TextView tv_artist;
         View rl_root;
-        View flash;
+        MusicAmplitudeView flash;
 
         Holder(View view) {
             super(view);

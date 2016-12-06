@@ -109,10 +109,9 @@ public class MusicLoader {
     public void init() {
         musicList = new ArrayList<>();
         loaderAssertMusic();
-        loadContentMusic(contentUri);
     }
 
-    private void loadContentMusic(Uri contentUri) {
+    public void loadContentMusic() {
         //利用ContentResolver的query函数来查询数据，然后将得到的结果放到MusicInfo对象中，最后放到数组中
         Cursor cursor = contentResolver.query(contentUri, projection, null, null, sortOrder);
         if (cursor == null) {
@@ -151,7 +150,7 @@ public class MusicLoader {
         List<MusicInfo> musicInfoList3 = new ArrayList<>();
         for (int i = 0; i < musicList.size(); i++) {
             MusicInfo info = musicList.get(i);
-            if ("G.E.M.邓紫棋 - 喜欢你.mp3".equals(info.getTitle())) {
+            if ("喜欢你.mp3".equals(info.getTitle())) {
                 musicInfoList1.add(info);
             } else if ("卡农 - 钢琴小提琴二重奏.mp3".equals(info.getTitle())) {
                 musicInfoList2.add(info);
@@ -277,7 +276,7 @@ public class MusicLoader {
 
         @Override
         public int compare(MusicInfo musicInfo, MusicInfo t1) {
-            if ("G.E.M.邓紫棋 - 喜欢你".equals(musicInfo.getTitle())) {
+            if ("喜欢你".equals(musicInfo.getTitle())) {
                 return -1;
             } else if ("卡农 - 钢琴小提琴二重奏".equals(t1.getTitle())) {
                 return -1;

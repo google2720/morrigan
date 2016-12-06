@@ -26,6 +26,8 @@
                 android:drawableLeft="@drawable/ic_total_min"
                 android:drawablePadding="5dp"
                 android:text="分钟"
+                android:textSize="18dp"
+                android:gravity="bottom"
                 android:textColor="@color/cffbe8ef2" />
 
             <TextView
@@ -33,7 +35,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:textSize="18dp"
+                android:layout_marginRight="12dp"
                 android:text="7月22日-7月28日"
+                android:gravity="bottom"
                 android:textColor="@color/cffbe8ef2" />
 
             <com.morrigan.m.historyrecord.DayView
@@ -75,6 +80,7 @@
                     android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="@string/history_day_goal"
+                    android:textSize="18dp"
                     android:textColor="@color/c5a5a5a" />
 
                 <TextView
@@ -86,7 +92,8 @@
                     android:drawablePadding="3dp"
                     android:gravity="center"
                     android:text="分钟"
-                    android:textColor="@color/c5a5a5a" />
+                    android:textSize="16dp"
+                    android:textColor="@color/c989898" />
 
             </RelativeLayout>
 
@@ -114,6 +121,7 @@
                     android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="@string/history_day_nursing"
+                    android:textSize="18dp"
                     android:textColor="@color/c5a5a5a" />
 
                 <TextView
@@ -125,7 +133,8 @@
                     android:drawablePadding="3dp"
                     android:gravity="center"
                     android:text="分钟"
-                    android:textColor="@color/c5a5a5a" />
+                    android:textSize="16dp"
+                    android:textColor="@color/c989898" />
 
             </RelativeLayout>
 
@@ -153,6 +162,7 @@
                     android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="@string/history_week_surplus"
+                    android:textSize="18dp"
                     android:textColor="@color/c5a5a5a" />
 
                 <TextView
@@ -164,7 +174,8 @@
                     android:drawablePadding="3dp"
                     android:gravity="center"
                     android:text="分钟"
-                    android:textColor="@color/c5a5a5a" />
+                    android:textSize="16dp"
+                    android:textColor="@color/c989898" />
 
             </RelativeLayout>
 
