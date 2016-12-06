@@ -112,6 +112,7 @@ public class MusicLoader {
     }
 
     public void loadContentMusic() {
+        musicList = new ArrayList<>();
         //利用ContentResolver的query函数来查询数据，然后将得到的结果放到MusicInfo对象中，最后放到数组中
         Cursor cursor = contentResolver.query(contentUri, projection, null, null, sortOrder);
         if (cursor == null) {
