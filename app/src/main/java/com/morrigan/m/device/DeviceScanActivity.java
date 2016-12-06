@@ -118,6 +118,7 @@ public class DeviceScanActivity extends BaseActivity {
     private void gotoResult() {
         Intent intent = new Intent(DeviceScanActivity.this, DeviceScanResultActivity.class);
         intent.putExtra("data", devices);
+        intent.putExtra("gotoMain", getIntent().getBooleanExtra("gotoMain", false));
         startActivity(intent);
     }
 }

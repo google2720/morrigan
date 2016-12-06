@@ -1,6 +1,7 @@
 package com.morrigan.m.music;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.AudioManager;
@@ -24,7 +25,9 @@ import android.widget.Toast;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.BuildConfig;
 import com.morrigan.m.R;
+import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
+import com.morrigan.m.ble.SimpleBleCallback;
 import com.morrigan.m.c.MassageController;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.main.VisualizerView;
@@ -33,6 +36,7 @@ import com.morrigan.m.music.MusicLoader.MusicInfo;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 音乐跟随界面
@@ -85,13 +89,49 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                     if (isFinishing() || currState != PAUSE || !ble.isDeviceReady()) {
                         return;
                     }
-                    Log.i("yy", "massage " + Arrays.toString(decibel));
                     ble.musicMassageAsync(decibel);
                     sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
                     break;
                 default:
                     break;
             }
+        }
+    };
+    private boolean massageStart;
+    private BleCallback cb = new SimpleBleCallback() {
+
+        @Override
+        public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (currState == PAUSE) {
+                        massageStart = true;
+                        startTime = System.currentTimeMillis();
+                        handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onGattDisconnected(BluetoothDevice device) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    saveRecord();
+                }
+            });
+        }
+
+        @Override
+        public void onBluetoothOff() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    saveRecord();
+                }
+            });
         }
     };
 
@@ -101,6 +141,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         context = this;
         activity = this;
         sendMassageTimeInterval = UserController.getInstance().getMusicTimeInterval(this);
+        ble.addCallback(cb);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         setContentView(R.layout.activity_music);
         tv_currTime = (TextView) this.findViewById(R.id.tv_currTime);
@@ -226,11 +267,11 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 tv_artist.setText(currentMusicInfo.getArtist());
                 btnPlay.setImageResource(R.drawable.music_pause);
                 currState = PAUSE;
-                popupWindow.setPlayIndex(currIndex,true);
+                popupWindow.setPlayIndex(currIndex, true);
                 visualizer.setEnabled(true);
                 if (ble.isDeviceReady()) {
+                    massageStart = true;
                     startTime = System.currentTimeMillis();
-                    // ble.musicRandomMassageAsync();
                     handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
                 }
             } catch (IOException e) {
@@ -270,26 +311,36 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             visualizer = new Visualizer(mediaPlayer.getAudioSessionId());
             visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
             visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+
+                private Random random = new Random();
+
                 @Override
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
                     if (SystemClock.elapsedRealtime() - updateUiTime > 200) {
                         updateUiTime = SystemClock.elapsedRealtime();
                         visualizerView.updateVisualizer(bytes);
-
                     }
-                    byte[] bytes1 = new byte[5];
-                    bytes1[0] = bytes[0];
-                    bytes1[1] = bytes[1];
-                    bytes1[2] = bytes[2];
-                    bytes1[3] = bytes[3];
-                    bytes1[4] = bytes[4];
-                    // Log.i("yy", "onWaveFormDataCapture1 " + Arrays.toString(bytes1));
-                    decibel[0] = p(bytes1[0]);
-                    decibel[1] = p(bytes1[1]);
-                    decibel[2] = p(bytes1[2]);
-                    decibel[3] = p(bytes1[3]);
-                    decibel[4] = p(bytes1[4]);
-                    Log.i("yyyyy", "onWaveFormDataCapture2 " + Arrays.toString(decibel));
+                    int length = bytes.length;
+                    decibel[0] = p(bytes[length - 5]);
+                    decibel[1] = p(bytes[length - 4]);
+                    decibel[2] = p(bytes[length - 3]);
+                    decibel[3] = p(bytes[length - 2]);
+                    decibel[4] = p(bytes[length - 1]);
+                    if (decibel[0] == 0 && decibel[1] == 0 && decibel[2] == 0 && decibel[3] == 0 && decibel[4] == 0) {
+                        if (mediaPlayer != null) {
+                            long duration = mediaPlayer.getDuration();
+                            int cp = mediaPlayer.getCurrentPosition();
+                            Log.i(TAG, "onWaveFormDataCapture " + duration + " " + cp);
+                            if (cp > 3000 && duration - cp > 3000) {
+                                decibel[0] = (byte) random.nextInt(30);
+                                decibel[1] = (byte) random.nextInt(30);
+                                decibel[2] = (byte) random.nextInt(30);
+                                decibel[3] = (byte) random.nextInt(30);
+                                decibel[4] = (byte) random.nextInt(30);
+                            }
+                        }
+                    }
+                    Log.i(TAG, "onWaveFormDataCapture " + Arrays.toString(decibel));
                 }
 
                 private byte p(byte b) {
@@ -312,12 +363,13 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ble.removeCallback(cb);
         hander.removeMessages(MSG_MASSAGE);
         currState = START;
-        mediaPlayer.stop();
-        mediaPlayer.release();
         visualizer.setEnabled(false);
         visualizer.release();
+        mediaPlayer.stop();
+        mediaPlayer.release();
         massageStopAsync();
     }
 
@@ -344,7 +396,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 mediaPlayer.pause();
                 btnPlay.setImageResource(R.drawable.music_play);
                 currState = START;
-                popupWindow.setPlayIndex(currIndex,false);
+                popupWindow.setPlayIndex(currIndex, false);
                 massageStopAsync();
                 break;
             case START:
@@ -353,9 +405,9 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 btnPlay.setImageResource(R.drawable.music_pause);
                 currState = PAUSE;
                 if (ble.isDeviceReady()) {
+                    massageStart = true;
                     startTime = System.currentTimeMillis();
                     handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
-                    // ble.musicRandomMassageAsync();
                 }
                 break;
             default:
@@ -440,8 +492,15 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
 
     private void massageStopAsync() {
         BleController.getInstance().massageStopAsync();
-        long endTime = System.currentTimeMillis();
-        String address = BleController.getInstance().getBindDeviceAddress();
-        MassageController.getInstance().save(this, address, startTime, endTime);
+        saveRecord();
+    }
+
+    private void saveRecord() {
+        if (massageStart) {
+            massageStart = false;
+            long endTime = System.currentTimeMillis();
+            String address = BleController.getInstance().getBindDeviceAddress();
+            MassageController.getInstance().save(this, address, startTime, endTime);
+        }
     }
 }

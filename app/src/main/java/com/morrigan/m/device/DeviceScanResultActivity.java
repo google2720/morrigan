@@ -39,6 +39,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
                 @Override
                 public void run() {
                     Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
+                    intent.putExtra("gotoMain", getIntent().getBooleanExtra("gotoMain", false));
                     startActivity(intent);
                     finish();
                 }
