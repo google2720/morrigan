@@ -2,6 +2,10 @@ package com.morrigan.m.music;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.TextAppearanceSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -69,18 +73,27 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.Holder> {
     public void onBindViewHolder(Holder holder, final int position) {
         final MusicInfo data = datas.get(position);
         holder.rl_root.setTag(data);
-        holder.tv_name.setText(data.getTitle());
         holder.tv_time.setText(MusicLoader.toTime(data.getDuration()));
-        holder.tv_artist.setText("-  " + data.getArtist());
+        String name_artist = data.getTitle() + "  -  " + data.getArtist();
         if (position == playIndex) {
-            holder.tv_name.setTextColor(activity.getResources().getColor(R.color.c8c39e5));
-            holder.tv_artist.setTextColor(activity.getResources().getColor(R.color.cffbe8ef2));
+            SpannableString styledText = new SpannableString(name_artist);
+            styledText.setSpan(new TextAppearanceSpan(activity, R.style.style0), 0, data.getTitle().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            styledText.setSpan(new TextAppearanceSpan(activity, R.style.style1), data.getTitle().length()+1, name_artist.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.tv_name.setText(styledText, TextView.BufferType.SPANNABLE);
+
+//            holder.tv_name.setText(name_artist);
+//            holder.tv_name.setTextColor(activity.getResources().getColor(R.color.c8c39e5));
             holder.tv_time.setTextColor(activity.getResources().getColor(R.color.c8c39e5));
             holder.flash.setVisibility(View.VISIBLE);
             holder.flash.setActive(play);
         } else {
-            holder.tv_name.setTextColor(activity.getResources().getColor(R.color.c000000));
-            holder.tv_artist.setTextColor(activity.getResources().getColor(R.color.c7E7879));
+
+            SpannableString styledText = new SpannableString(name_artist);
+            styledText.setSpan(new TextAppearanceSpan(activity, R.style.style3), 0, data.getTitle().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            styledText.setSpan(new TextAppearanceSpan(activity, R.style.style4), data.getTitle().length()+1, name_artist.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.tv_name.setText(styledText, TextView.BufferType.SPANNABLE);
+//            holder.tv_name.setText(name_artist);
+//            holder.tv_name.setTextColor(activity.getResources().getColor(R.color.c7E7879));
             holder.tv_time.setTextColor(activity.getResources().getColor(R.color.c7E7879));
             holder.flash.setVisibility(View.GONE);
             holder.flash.setActive(false);

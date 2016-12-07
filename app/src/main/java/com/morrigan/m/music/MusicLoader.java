@@ -134,8 +134,10 @@ public class MusicLoader {
                 int duration = cursor.getInt(durationCol);
                 long size = cursor.getLong(sizeCol);
                 String artist = cursor.getString(artistCol);
+                if (artist != null & artist.equals("Unknow")) {
+                    artist = "";
+                }
                 String url = cursor.getString(urlCol);
-
                 MusicInfo musicInfo = new MusicInfo(id, title);
                 musicInfo.setAlbum(album);
                 musicInfo.setDuration(duration);

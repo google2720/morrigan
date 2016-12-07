@@ -402,6 +402,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 mediaPlayer.start();
                 btnPlay.setImageResource(R.drawable.music_pause);
                 currState = PAUSE;
+                flag = true;
+                updateSeek(0);
                 if (ble.isDeviceReady()) {
                     massageStart = true;
                     startTime = System.currentTimeMillis();
@@ -455,6 +457,21 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             tv_totalTime.setText(MusicLoader.toTime(currentMusicInfo.getDuration()));
             tv_showName.setText(currentMusicInfo.getTitle());
             tv_artist.setText(currentMusicInfo.getArtist());
+            mediaPlayer.reset();
+            try {
+                if (currentMusicInfo.isAssertsMusic()) {
+                    mediaPlayer.setDataSource(currentMusicInfo.fileName);
+                } else {
+                    mediaPlayer.setDataSource(currentMusicInfo.getUrl());
+                }
+
+                mediaPlayer.prepare();
+            }catch (Exception e){
+
+            }
+            initSeekBar();
+            popupWindow.setPlayIndex(currIndex, false);
+
         }
     }
 
@@ -481,7 +498,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         //是否由用户改变
-        if (b) {
+        if (b&&currState==PAUSE) {
             mediaPlayer.seekTo(i);
         }
     }
