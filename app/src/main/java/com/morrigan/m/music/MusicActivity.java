@@ -119,7 +119,9 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    saveRecord();
+                    if (currState == PAUSE && massageStart) {
+                        stopPlay();
+                    }
                 }
             });
         }
@@ -129,7 +131,9 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    saveRecord();
+                    if (currState == PAUSE && massageStart) {
+                        stopPlay();
+                    }
                 }
             });
         }
@@ -391,13 +395,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 start();
                 break;
             case PAUSE:
-                hander.removeMessages(MSG_MASSAGE);
-                visualizer.setEnabled(false);
-                mediaPlayer.pause();
-                btnPlay.setImageResource(R.drawable.music_play);
-                currState = START;
-                popupWindow.setPlayIndex(currIndex, false);
-                massageStopAsync();
+                stopPlay();
                 break;
             case START:
                 visualizer.setEnabled(true);
@@ -413,6 +411,16 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             default:
                 break;
         }
+    }
+
+    private void stopPlay() {
+        hander.removeMessages(MSG_MASSAGE);
+        visualizer.setEnabled(false);
+        mediaPlayer.pause();
+        btnPlay.setImageResource(R.drawable.music_play);
+        currState = START;
+        popupWindow.setPlayIndex(currIndex, false);
+        massageStopAsync();
     }
 
     //上一首
