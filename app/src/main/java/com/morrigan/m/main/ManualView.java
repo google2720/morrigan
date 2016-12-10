@@ -30,6 +30,8 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint paint = new Paint();
     private Paint timePaint = new Paint();
     private Paint textPaint = new Paint();
+    private Paint wave1Paint = new Paint();
+    private Paint wave2Paint = new Paint();
     private int offset = 2;
     private int textPadding = 10;
     private int gear = 1;
@@ -64,6 +66,12 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         timePaint.setColor(Color.WHITE);
         timePaint.setTextAlign(Paint.Align.CENTER);
         timePaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltxhk.ttf"));
+
+        wave1Paint.setAntiAlias(true);
+        wave1Paint.setColor(0x7fbc54e2);
+
+        wave2Paint.setAntiAlias(true);
+        wave2Paint.setColor(0x7fa753f7);
 
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
@@ -106,9 +114,10 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 // 不停绘制界面
                 while (drawCreated) {
-                    long startTime = SystemClock.uptimeMillis();
-                    if (getHolder() != null) {
-                        Canvas canvas = getHolder().lockCanvas();
+                    final long startTime = SystemClock.elapsedRealtime();
+                    final SurfaceHolder holder = getHolder();
+                    if (holder != null) {
+                        final Canvas canvas = holder.lockCanvas();
                         if (canvas != null) {
                             try {
                                 // 清屏
@@ -117,13 +126,11 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
                                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
                                 drawImpl(canvas);
                             } finally {
-                                if (drawCreated && getHolder() != null) {
-                                    getHolder().unlockCanvasAndPost(canvas);
-                                }
+                                holder.unlockCanvasAndPost(canvas);
                             }
                         }
                     }
-                    long endTime = SystemClock.uptimeMillis();
+                    final long endTime = SystemClock.elapsedRealtime();
                     SystemClock.sleep(Math.max(0, 1000 / 60 - (endTime - startTime)));
                 }
             } catch (Exception e) {
@@ -245,13 +252,11 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
 
             ey = (int) Math.round(a * Math.cos(period * (waveProgress + i - startX)) + endY);
             ey = Math.min(sy, ey);
-            paint.setColor(0x2fbc54e2);
-            canvas.drawLine(i, sy, i, ey, paint);
+            canvas.drawLine(i, sy, i, ey, wave1Paint);
 
             ey = (int) Math.round(a * Math.sin(period * (waveProgress + i - startX)) + endY);
             ey = Math.min(sy, ey);
-            paint.setColor(0x2fa753f7);
-            canvas.drawLine(i, sy, i, ey, paint);
+            canvas.drawLine(i, sy, i, ey, wave2Paint);
         }
     }
 

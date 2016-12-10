@@ -34,6 +34,8 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
     private Paint massagePaint = new Paint();
     private Paint massageBgPaint = new Paint();
     private Paint massageConnectPaint = new Paint();
+    private Paint wave1Paint = new Paint();
+    private Paint wave2Paint = new Paint();
     private Rect boundText1 = new Rect();
     private Rect boundText2 = new Rect();
     private RectF rectF = new RectF();
@@ -94,6 +96,12 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         massageConnectPaint.setStyle(Paint.Style.STROKE);
         massageConnectPaint.setStrokeWidth(strokeWidth / 5);
         massageConnectPaint.setColor(0xffed73ac);
+
+        wave1Paint.setAntiAlias(true);
+        wave1Paint.setColor(0x7fbc54e2);
+
+        wave2Paint.setAntiAlias(true);
+        wave2Paint.setColor(0x7fa753f7);
     }
 
     @Override
@@ -262,13 +270,11 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
 
             ey = (int) Math.round(a * Math.cos(period * (waveProgress + i - startX)) + endY);
             ey = Math.min(sy, ey);
-            paint.setColor(0x2fbc54e2);
-            canvas.drawLine(i, sy, i, ey, paint);
+            canvas.drawLine(i, sy, i, ey, wave1Paint);
 
             ey = (int) Math.round(a * Math.sin(period * (waveProgress + i - startX)) + endY);
             ey = Math.min(sy, ey);
-            paint.setColor(0x2fa753f7);
-            canvas.drawLine(i, sy, i, ey, paint);
+            canvas.drawLine(i, sy, i, ey, wave2Paint);
         }
     }
 
