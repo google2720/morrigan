@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.c.UserController;
 import com.morrigan.m.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
@@ -28,6 +30,8 @@ public class DeviceBindSuccessActivity extends BaseActivity {
                 finish();
             }
         });
+        TextView textView = (TextView) findViewById(R.id.text);
+        textView.setText(getString(R.string.device_connect_success_o, UserController.getInstance().getTarget(this)));
     }
 
     public void onClickScan(View view) {

@@ -11,6 +11,7 @@
     <string name="action_resetting">"重新设置"</string>
     <string name="action_logout">"注销"</string>
     <string name="action_connect">"连接"</string>
+    <string name="action_reconnect">"重新连接"</string>
     <!-- 提示框 -->
     <string name="no_open_ble_tip">"打开蓝牙来允许\"MORRIGAN\"连接到配件"</string>
     <string name="change_device_tip">"确定要切换设备"</string>
@@ -90,7 +91,7 @@
     <!-- 关联设备 -->
     <string name="device_title">"关联设备"</string>
     <string name="device_add">"添加新设备"</string>
-    <string name="device_scan_title">"摩莉智能文胸"</string>
+    <string name="device_scan_title">"摩莉智能内衣"</string>
     <string name="device_scan_tip">"正在搜索设备&#8230;"</string>
     <string name="device_scan_stop">"停止搜索"</string>
     <string name="device_please_select">"请选择设备"</string>
@@ -105,6 +106,7 @@
     <string name="device_remove_msg">"是否需要解绑"</string>
     <string name="device_massage_start_tip">"开始养护"</string>
     <string name="device_unbind_error">"该设备处于连接状态，暂不能解绑"</string>
+    <string name="device_connect_success_o">"每天坚持%s分钟哦！"</string>
     <!-- 关于界面 -->
     <string name="about_title">"关于摩莉"</string>
     <string name="about_product_team">"产品团队"</string>

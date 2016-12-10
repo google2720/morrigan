@@ -243,7 +243,7 @@ public abstract class AbstractBleController {
         checkConnectionState();
         synchronized (mLock) {
             mBleConnection.write(mDataCharacteristic, data);
-            return mBleConnection.read(mDataCharacteristic);
+            return mBleConnection.read(mNotifyCharacteristic);
         }
     }
 

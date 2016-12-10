@@ -24,6 +24,7 @@ import java.util.List;
 public class AutoActivity extends BaseActivity {
 
     private static final String TAG = "AutoActivity";
+    private BleController ble = BleController.getInstance();
     private AutoLayout autoLayout;
     private BleCallback cb = new SimpleBleCallback() {
         @Override
@@ -55,7 +56,8 @@ public class AutoActivity extends BaseActivity {
     private Runnable stopMassageRunnable = new Runnable() {
         @Override
         public void run() {
-            BleController.getInstance().massageStopAsync();
+            massageExperience = false;
+            ble.massageStopAsync();
         }
     };
     private int index;
@@ -66,15 +68,16 @@ public class AutoActivity extends BaseActivity {
         public void run() {
             AutoItem autoItem = autoItemList.get(index++ % total);
             autoLayout.setAutoModeDrawable(autoItem.getDrawable(getApplicationContext()));
-            BleController.getInstance().autoMassageSingleModeAsync(AutoItem.getMassageMode(autoItem.type));
+            ble.autoMassageSingleModeAsync(AutoItem.getMassageMode(autoItem.type));
             handler.postDelayed(autoMassageSingleModeRunnable, 6000);
         }
     };
+    private boolean massageExperience;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BleController.getInstance().addCallback(cb);
+        ble.addCallback(cb);
         setContentView(R.layout.activity_auto);
         startView = findViewById(R.id.start);
         autoLayout = (AutoLayout) findViewById(R.id.auto);
@@ -103,7 +106,7 @@ public class AutoActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BleController.getInstance().removeCallback(cb);
+        ble.removeCallback(cb);
     }
 
     public void onClickScan(View view) {
@@ -120,7 +123,7 @@ public class AutoActivity extends BaseActivity {
             ToastUtils.show(this, R.string.massage_start_tip);
             return;
         }
-        if (!BleController.getInstance().isDeviceReady()) {
+        if (!ble.isDeviceReady()) {
             Lg.i(TAG, "onClickStart no device ready");
             showNoDeviceReady();
             return;
@@ -139,6 +142,7 @@ public class AutoActivity extends BaseActivity {
     }
 
     private void start() {
+        Lg.i(TAG, "start");
         startView.setActivated(true);
         autoLayout.start();
         handler.removeCallbacks(stopMassageRunnable);
@@ -149,6 +153,7 @@ public class AutoActivity extends BaseActivity {
     }
 
     private void stop() {
+        Lg.i(TAG, "stop");
         handler.removeCallbacks(autoMassageSingleModeRunnable);
         handler.removeCallbacks(stopMassageRunnable);
         handler.post(stopMassageRunnable);
@@ -166,14 +171,14 @@ public class AutoActivity extends BaseActivity {
     }
 
     private void saveRecord() {
-        String address = BleController.getInstance().getBindDeviceAddress();
+        String address = ble.getBindDeviceAddress();
         long startTime = autoLayout.getStartSystemTime();
         long endTime = autoLayout.getStopSystemTime();
         MassageController.getInstance().save(this, address, startTime, endTime);
     }
 
     public boolean onModeViewTouchDown() {
-        if (autoLayout.isStart()) {
+        if (autoLayout.isStart() || massageExperience) {
             ToastUtils.show(this, R.string.massage_no_drag_tip);
             return true;
         }
@@ -181,10 +186,11 @@ public class AutoActivity extends BaseActivity {
     }
 
     public void onModeViewClick(View v, int type) {
-        if (BleController.getInstance().isDeviceReady() && !autoLayout.isStart()) {
+        if (ble.isDeviceReady() && !autoLayout.isStart() && !massageExperience) {
+            massageExperience = true;
             handler.removeCallbacks(stopMassageRunnable);
             handler.postDelayed(stopMassageRunnable, 3000);
-            BleController.getInstance().autoMassageSingleModeAsync(AutoItem.getMassageMode(type));
+            ble.autoMassageSingleModeAsync(AutoItem.getMassageMode(type));
         }
     }
 }

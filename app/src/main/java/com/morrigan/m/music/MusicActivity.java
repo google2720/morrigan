@@ -99,21 +99,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     };
     private boolean massageStart;
     private BleCallback cb = new SimpleBleCallback() {
-
-        @Override
-        public void onBindDeviceSuccess(BluetoothDevice device, boolean firstBind) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (currState == PAUSE) {
-                        massageStart = true;
-                        startTime = System.currentTimeMillis();
-                        handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
-                    }
-                }
-            });
-        }
-
         @Override
         public void onGattDisconnected(BluetoothDevice device) {
             runOnUiThread(new Runnable() {
@@ -271,7 +256,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 if (ble.isDeviceReady()) {
                     massageStart = true;
                     startTime = System.currentTimeMillis();
-                    handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
+                    // handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
+                    ble.musicRandomMassageAsync();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -402,7 +388,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 if (ble.isDeviceReady()) {
                     massageStart = true;
                     startTime = System.currentTimeMillis();
-                    handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
+                    // handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
+                    ble.musicRandomMassageAsync();
                 }
                 break;
             default:
@@ -505,7 +492,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     private void massageStopAsync() {
-        BleController.getInstance().massageStopAsync();
+        ble.massageStopAsync();
         saveRecord();
     }
 

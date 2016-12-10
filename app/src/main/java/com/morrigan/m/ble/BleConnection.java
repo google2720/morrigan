@@ -63,6 +63,9 @@ public class BleConnection {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Lg.i(TAG, "Disconnected from GATT server.");
                 connectFailed(false);
+                synchronized (mObject) {
+                    mObject.notifyAll();
+                }
                 broadcastUpdate(ACTION_GATT_DISCONNECTED);
             }
         }
@@ -137,7 +140,7 @@ public class BleConnection {
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, BluetoothGattDescriptor descriptor, boolean enabled) {
         synchronized (mObject) {
             if (mBluetoothGatt == null) {
-                Lg.w(TAG, "BluetoothAdapter not initialized");
+                Lg.w(TAG, "BluetoothGatt not initialized");
                 return;
             }
             boolean r = mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
@@ -162,7 +165,7 @@ public class BleConnection {
     public void readRemoteRssi() {
         synchronized (mObject) {
             if (mBluetoothGatt == null) {
-                Lg.w(TAG, "BluetoothAdapter not initialized");
+                Lg.w(TAG, "BluetoothGatt not initialized");
                 return;
             }
             mBluetoothGatt.readRemoteRssi();
@@ -181,7 +184,7 @@ public class BleConnection {
     public byte[] read(BluetoothGattCharacteristic characteristic, long timeout) {
         synchronized (mObject) {
             if (mBluetoothGatt == null) {
-                Lg.w(TAG, "BluetoothAdapter not initialized");
+                Lg.w(TAG, "BluetoothGatt not initialized");
                 return null;
             }
             mBluetoothGatt.readCharacteristic(characteristic);
@@ -203,7 +206,7 @@ public class BleConnection {
     public void write(BluetoothGattCharacteristic characteristic, byte[] data, long timeout) {
         synchronized (mObject) {
             if (mBluetoothGatt == null) {
-                Lg.w(TAG, "BluetoothAdapter not initialized");
+                Lg.w(TAG, "BluetoothGatt not initialized");
                 return;
             }
             characteristic.setValue(data);
@@ -220,7 +223,7 @@ public class BleConnection {
     public static String toHex(byte[] data) {
         if (data == null) {
             return "";
-    }
+        }
         StringBuilder builder = new StringBuilder(data.length);
         for (byte byteChar : data) {
             builder.append(String.format("%02X ", byteChar));

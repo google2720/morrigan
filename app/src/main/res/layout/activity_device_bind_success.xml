@@ -37,42 +37,41 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.github.yzeaho.common.CircleFrameLayout
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_gravity="center"
-            android:background="#974ce8">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawablePadding="10dp"
-                android:drawableTop="@drawable/ic_ok"
-                android:text="@string/device_connect_success"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#fff" />
-        </com.github.yzeaho.common.CircleFrameLayout>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:onClick="onClickScan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:background="@drawable/device_scan"
-        android:minHeight="@dimen/line_min_height">
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_reconnect"
-            android:gravity="center"
-            android:text="@string/device_massage_start_tip"
-            android:textAppearance="?android:attr/textAppearanceButton"
-            android:textColor="#a361ea" />
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/device_connect_success" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#949494" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="90dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/device_start_massage"
+            android:onClick="onClickScan" />
     </FrameLayout>
 </LinearLayout>

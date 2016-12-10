@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 BleController.getInstance().quit();
-                finish();
+                MainActivity.super.onBackPressed();
             }
         });
         builder.setPositiveButton(R.string.exit_no, null);

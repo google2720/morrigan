@@ -123,7 +123,7 @@ public class MassageController {
         }
     }
 
-    private void gotoDeviceScanActivity(Activity activity) {
+    public void gotoDeviceScanActivity(Activity activity) {
         BleController ble = BleController.getInstance();
         ble.setAutoConnect(false);
         ble.setAutoReconnect(false);

@@ -83,7 +83,7 @@ public class BleBindHelper {
             ble.getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
             return;
         }
-        connect(device, 20, false);
+        connect(device, 30, false);
     }
 
     public void cancel() {
