@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/iv_top"
-        android:background="@drawable/ic_music_poup_bootom"
+        android:background="#F1F8F9FF"
         >
 
 
@@ -42,8 +42,7 @@
             android:layout_above="@+id/line_bottom"
             android:layout_below="@+id/line_top"
             android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+
             >
 
             <android.support.v7.widget.RecyclerView

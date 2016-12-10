@@ -35,7 +35,12 @@ public class WelcomeActivity extends BaseActivity {
             if (UserController.getInstance().isAutoLogin(getApplicationContext())) {
                 gotoMain();
             } else {
-                gotoLogin();
+                if (UserController.getInstance().isFirstLogin(getApplicationContext())) {
+                    gotoGuide();
+                }else {
+                    gotoLogin();
+                }
+
             }
         }
     };
@@ -163,4 +168,10 @@ public class WelcomeActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
+    private void gotoGuide(){
+        Intent intent = new Intent(this, GuideViewActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 }

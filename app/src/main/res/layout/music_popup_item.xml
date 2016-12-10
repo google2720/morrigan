@@ -6,6 +6,8 @@
                 android:background="@drawable/item_background"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
     >
 
     <RelativeLayout

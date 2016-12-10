@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.morrigan.m.c.UserController;
+import com.morrigan.m.login.LoginActivity;
 import com.morrigan.m.main.MainActivity;
 
 
@@ -170,7 +171,7 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
     }
 
     private void enter() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

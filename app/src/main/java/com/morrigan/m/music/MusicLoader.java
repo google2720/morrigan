@@ -109,6 +109,7 @@ public class MusicLoader {
     public void init() {
         musicList = new ArrayList<>();
         loaderAssertMusic();
+
     }
 
     public void loadContentMusic() {
@@ -165,6 +166,9 @@ public class MusicLoader {
         musicList.addAll(musicInfoList1);
         musicList.addAll(musicInfoList2);
         musicList.addAll(musicInfoList3);
+        if (cursor!=null){
+            cursor.close();
+        }
     }
 
 

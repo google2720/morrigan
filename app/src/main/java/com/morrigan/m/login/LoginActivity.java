@@ -173,9 +173,6 @@ public class LoginActivity extends BaseActivity {
 
     private void gotoMain() {
         Intent intent = new Intent(this, MainActivity.class);
-        if (UserController.getInstance().isFirstLogin(this)) {
-            intent = new Intent(this, GuideViewActivity.class);
-        }
         startActivity(intent);
         finish();
     }
