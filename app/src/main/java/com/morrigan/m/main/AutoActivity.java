@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.github.yzeaho.common.ToastUtils;
+import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleCallback;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 public class AutoActivity extends BaseActivity {
 
+    private static final String TAG = "AutoActivity";
     private AutoLayout autoLayout;
     private BleCallback cb = new SimpleBleCallback() {
         @Override
@@ -114,14 +116,17 @@ public class AutoActivity extends BaseActivity {
 
     public void onClickStart(View view) {
         if (autoLayout.isEmpty()) {
+            Lg.i(TAG, "onClickStart no choose auto mode");
             ToastUtils.show(this, R.string.massage_start_tip);
             return;
         }
         if (!BleController.getInstance().isDeviceReady()) {
+            Lg.i(TAG, "onClickStart no device ready");
             showNoDeviceReady();
             return;
         }
         boolean a = view.isActivated();
+        Lg.i(TAG, "onClickStart " + a);
         if (a) {
             stop();
         } else {

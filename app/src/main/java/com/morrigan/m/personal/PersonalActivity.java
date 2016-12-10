@@ -337,7 +337,7 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
 
     public void onClickQuit(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("您确定退出当前账号");
+        builder.setMessage(R.string.quit_tip);
         builder.setNegativeButton(R.string.action_cancel, null);
         builder.setPositiveButton(R.string.action_confirm, new DialogInterface.OnClickListener() {
             @Override

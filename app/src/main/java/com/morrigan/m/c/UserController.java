@@ -46,10 +46,7 @@ public class UserController {
     }
 
     public void quit(Context context) {
-        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putBoolean("modify_user_info", false);
-        editor.putBoolean("auto_login", false);
-        editor.apply();
+        getSharedPreferences(context).edit().clear().apply();
     }
 
     public void setUserId(Context context, String userId) {
@@ -69,15 +66,22 @@ public class UserController {
         SharedPreferences preferences = getSharedPreferences(context);
         preferences.edit().putBoolean("auto_login", b).apply();
     }
+
     public boolean isFirstLogin(Context context) {
-        return getSharedPreferences(context).getBoolean("first_login", true);
+        SharedPreferences p = context.getSharedPreferences("guide", Context.MODE_PRIVATE);
+        return p.getBoolean("first_login", true);
     }
 
     public void setFirstLogin(Context context, boolean b) {
-        SharedPreferences preferences = getSharedPreferences(context);
-        preferences.edit().putBoolean("first_login", b).apply();
+        SharedPreferences p = context.getSharedPreferences("guide", Context.MODE_PRIVATE);
+        p.edit().putBoolean("first_login", b).apply();
     }
 
+    public void setPassword(Context context, String pw) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString("password", pw);
+        editor.apply();
+    }
 
     private void saveUserInfo(Context context, UserInfo userInfo, String mobile, String password) {
         SharedPreferences preferences = getSharedPreferences(context);

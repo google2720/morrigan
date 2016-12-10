@@ -23,6 +23,7 @@ import com.morrigan.m.HttpProxy;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
+import com.morrigan.m.c.UserController;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -237,6 +238,9 @@ public class ForgetPasswordActivity extends BaseActivity {
                 HttpResult r = new HttpProxy().execute(activity, builder.build(), HttpResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
+                if (uiResult.success) {
+                    UserController.getInstance().setPassword(activity, pw);
+                }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to register", e);
                 uiResult.message = HttpProxy.parserError(activity, e);

@@ -17,7 +17,6 @@ import android.widget.EditText;
 import com.github.yzeaho.common.SleepTime;
 import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.BaseActivity;
-import com.morrigan.m.GuideViewActivity;
 import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
@@ -26,19 +25,19 @@ import com.morrigan.m.main.MainActivity;
 
 public class LoginActivity extends BaseActivity {
 
-    private static final String TAG = "LoginActivity";
     private static final int REQUEST_CODE_FORGET_PW = 1;
     private static final int REQUEST_CODE_REGISTER = 2;
     private EditText phoneView;
     private EditText pwView;
-    private boolean tryLoginEnable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         phoneView = (EditText) findViewById(R.id.phone);
+        phoneView.setText(UserController.getInstance().getMobile(this));
         pwView = (EditText) findViewById(R.id.pw);
+        pwView.setText(UserController.getInstance().getPassword(this));
         findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +78,9 @@ public class LoginActivity extends BaseActivity {
                 login();
             }
         });
+        if (UserController.getInstance().isAutoLogin(this)) {
+            login();
+        }
     }
 
     @Override

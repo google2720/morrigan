@@ -125,7 +125,7 @@
         <activity
             android:name=".GuideViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Guide"/>
+            android:theme="@style/AppTheme.Guide" />
 
         <activity
             android:name=".ReConnectBleActivity"
@@ -151,6 +151,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+
+        <provider
+            android:name=".MusicProvider"
+            android:authorities="${applicationId}"
+            android:exported="false" />
     </application>
 
 </manifest>

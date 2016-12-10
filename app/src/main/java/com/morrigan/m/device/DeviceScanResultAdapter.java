@@ -50,7 +50,7 @@ public class DeviceScanResultAdapter extends RecyclerView.Adapter<DeviceScanResu
     public void onBindViewHolder(DeviceScanResultViewHolder holder, int position) {
         UiData device = objects.get(position);
         holder.itemView.setTag(device);
-        holder.numView.setText(activity.getString(R.string.device_result_num, String.valueOf(position)));
+        holder.numView.setText(activity.getString(R.string.device_result_num, String.valueOf(position + 1)));
         holder.nameView.setText(device.name);
         holder.iconView.setVisibility(device.showIcon ? View.VISIBLE : View.GONE);
     }

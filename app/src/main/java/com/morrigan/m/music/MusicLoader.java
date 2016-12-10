@@ -1,34 +1,24 @@
 package com.morrigan.m.music;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
-import android.util.Log;
 
-import com.morrigan.m.utils.FileUtils;
+import com.morrigan.m.utils.Closeables;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MusicLoader {
-    static Context context;
     private static final String TAG = MusicInfo.class.toString();
-
-    private static List<MusicInfo> musicList = new ArrayList<MusicInfo>();
-
     private static MusicLoader musicLoader;
+    private static Context context;
+    private List<MusicInfo> musicList = new ArrayList<>();
 
-    private static ContentResolver contentResolver;
     //Uri，指向external的database
     private Uri contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
     private Uri contentUri1 = MediaStore.Audio.Media.INTERNAL_CONTENT_URI;
@@ -45,140 +35,67 @@ public class MusicLoader {
 //	private String where =  "mime_type in ('audio/mpeg','audio/x-ms-wma') and bucket_display_name <> 'audio' and is_music > 0 " ;
 //private String where =  "mime_type in ('audio/mpeg','audio/x-ms-wma')  and is_music > 0 " ;
 
-    private String sortOrder = Media.DATA;
+    private static final String sortOrder = Media.ARTIST;
 
-    public static MusicLoader instance(Context pContext) {
-        context = pContext;
-        if (musicLoader == null) {
-            contentResolver = context.getContentResolver();
-            musicLoader = new MusicLoader();
-        }
-        return musicLoader;
-    }
-
-    private void loaderAssertMusic() {
-        try {
-            String[] fileNasmes = context.getAssets().list("music");
-            if (fileNasmes != null) {
-                for (int i = 0; i < fileNasmes.length; i++) {
-                    String filename = fileNasmes[i];
-                    MusicInfo info = new MusicInfo();
-                    info.setAssertsMusic(true);
-                    String absoluteName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + filename;
-                    File file = new File(absoluteName);
-                    if (!file.exists()) {
-                        FileUtils.copy(context.getAssets().open("music/" + filename), file);
-                    }
-
-                    // Tell the media scanner about the new file so that it is
-
-                    // immediately available to the user.
-
-                    MediaScannerConnection.scanFile(context,
-
-                            new String[]{file.toString()}, null,
-
-                            new MediaScannerConnection.OnScanCompletedListener() {
-
-                                public void onScanCompleted(String path, Uri uri) {
-
-                                    Log.i("ExternalStorage", "Scanned " + path + ":");
-
-                                    Log.i("ExternalStorage", "-> uri=" + uri);
-
-                                }
-
-                            });
-
-
-                }
+    public static MusicLoader instance(Context _context) {
+        synchronized (MusicLoader.class) {
+            if (musicLoader == null) {
+                musicLoader = new MusicLoader(_context);
             }
-        } catch (IOException e) {
-
-            Log.e("musicLoader", e.getMessage());
+            return musicLoader;
         }
-
-
     }
 
-
-    private MusicLoader() {
-
-    }
-
-    public void init() {
-        musicList = new ArrayList<>();
-        loaderAssertMusic();
-
+    private MusicLoader(Context _context) {
+        context = _context.getApplicationContext();
     }
 
     public void loadContentMusic() {
         musicList = new ArrayList<>();
-        //利用ContentResolver的query函数来查询数据，然后将得到的结果放到MusicInfo对象中，最后放到数组中
-        Cursor cursor = contentResolver.query(contentUri, projection, null, null, sortOrder);
-        if (cursor == null) {
-            Log.v(TAG, "Line(37	)	Music Loader cursor == null.");
-        } else if (!cursor.moveToFirst()) {
-            Log.v(TAG, "Line(39	)	Music Loader cursor.moveToFirst() returns false.");
-        } else {
-            int displayNameCol = cursor.getColumnIndex(Media.DISPLAY_NAME);
-            int albumCol = cursor.getColumnIndex(Media.ALBUM);
-            int idCol = cursor.getColumnIndex(Media._ID);
-            int durationCol = cursor.getColumnIndex(Media.DURATION);
-            int sizeCol = cursor.getColumnIndex(Media.SIZE);
-            int artistCol = cursor.getColumnIndex(Media.ARTIST);
-            int urlCol = cursor.getColumnIndex(Media.DATA);
-            do {
-                String title = cursor.getString(displayNameCol);
-                String album = cursor.getString(albumCol);
-                long id = cursor.getLong(idCol);
-                int duration = cursor.getInt(durationCol);
-                long size = cursor.getLong(sizeCol);
-                String artist = cursor.getString(artistCol);
-                if (artist != null & artist.equals("Unknow")) {
-                    artist = "";
-                }
-                String url = cursor.getString(urlCol);
-                MusicInfo musicInfo = new MusicInfo(id, title);
-                musicInfo.setAlbum(album);
-                musicInfo.setDuration(duration);
-                musicInfo.setSize(size);
-                musicInfo.setArtist(artist);
-                musicInfo.setUrl(url);
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = null;
+        // 查询自定义的音乐数据
+        try {
+            Uri uri = Uri.parse("content://" + context.getPackageName());
+            cursor = resolver.query(uri, null, null, null, null);
+            while (cursor != null && cursor.moveToNext()) {
+                MusicInfo musicInfo = new MusicInfo(cursor.getLong(cursor.getColumnIndex(Media._ID)));
+                musicInfo.setTitle(cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME)));
+                musicInfo.setAlbum(cursor.getString(cursor.getColumnIndex(Media.ALBUM)));
+                musicInfo.setDuration(cursor.getInt(cursor.getColumnIndex(Media.DURATION)));
+                musicInfo.setSize(cursor.getLong(cursor.getColumnIndex(Media.SIZE)));
+                musicInfo.setArtist(cursor.getString(cursor.getColumnIndex(Media.ARTIST)));
+                musicInfo.setUrl(Uri.parse(cursor.getString(cursor.getColumnIndex(Media.DATA))));
                 musicList.add(musicInfo);
-
-            } while (cursor.moveToNext());
-        }
-        List<MusicInfo> musicInfoList1 = new ArrayList<>();
-        List<MusicInfo> musicInfoList2 = new ArrayList<>();
-        List<MusicInfo> musicInfoList3 = new ArrayList<>();
-        for (int i = 0; i < musicList.size(); i++) {
-            MusicInfo info = musicList.get(i);
-            if ("喜欢你.mp3".equals(info.getTitle())) {
-                musicInfoList1.add(info);
-            } else if ("卡农 - 钢琴小提琴二重奏.mp3".equals(info.getTitle())) {
-                musicInfoList2.add(info);
-            } else {
-                musicInfoList3.add(info);
             }
+        } finally {
+            Closeables.close(cursor);
         }
-        musicList = new ArrayList<>();
-        musicList.addAll(musicInfoList1);
-        musicList.addAll(musicInfoList2);
-        musicList.addAll(musicInfoList3);
-        if (cursor!=null){
-            cursor.close();
+
+        // query system db
+        try {
+            cursor = resolver.query(contentUri, projection, null, null, sortOrder);
+            while (cursor != null && cursor.moveToNext()) {
+                MusicInfo musicInfo = new MusicInfo(cursor.getLong(cursor.getColumnIndex(Media._ID)));
+                musicInfo.setTitle(cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME)));
+                musicInfo.setAlbum(cursor.getString(cursor.getColumnIndex(Media.ALBUM)));
+                musicInfo.setDuration(cursor.getInt(cursor.getColumnIndex(Media.DURATION)));
+                musicInfo.setSize(cursor.getLong(cursor.getColumnIndex(Media.SIZE)));
+                musicInfo.setArtist(cursor.getString(cursor.getColumnIndex(Media.ARTIST)));
+                musicInfo.setUrl(getMusicUriById(musicInfo.getId()));
+                musicList.add(musicInfo);
+            }
+        } finally {
+            Closeables.close(cursor);
         }
     }
-
 
     public List<MusicInfo> getMusicList() {
         return musicList;
     }
 
-    public Uri getMusicUriById(long id) {
-        Uri uri = ContentUris.withAppendedId(contentUri, id);
-        return uri;
+    private Uri getMusicUriById(long id) {
+        return ContentUris.withAppendedId(contentUri, id);
     }
 
     public static String toTime(int time) {
@@ -188,24 +105,21 @@ public class MusicLoader {
         String ss = null;
         if (minute < 10) mm = "0" + minute;
         else mm = minute + "";
-
         if (s < 10) ss = "0" + s;
         else ss = "" + s;
 
         return mm + ":" + ss;
     }
 
-    public static class MusicInfo implements Comparator<MusicInfo> {
+    public static class MusicInfo {
         private long id;
         private String title;
         private String album;
         private int duration;
         private long size;
         private String artist;
-        private String url;
-        public String fileName;
+        private Uri url;
         private boolean isAssertsMusic;
-        int sort = 1;
 
         public boolean isAssertsMusic() {
             return isAssertsMusic;
@@ -215,13 +129,8 @@ public class MusicLoader {
             isAssertsMusic = assertsMusic;
         }
 
-        public MusicInfo() {
-
-        }
-
-        public MusicInfo(long pId, String pTitle) {
+        public MusicInfo(long pId) {
             id = pId;
-            title = pTitle;
         }
 
         public String getArtist() {
@@ -272,24 +181,12 @@ public class MusicLoader {
             this.duration = duration;
         }
 
-        public String getUrl() {
+        public Uri getUrl() {
             return url;
         }
 
-        public void setUrl(String url) {
+        public void setUrl(Uri url) {
             this.url = url;
-        }
-
-
-        @Override
-        public int compare(MusicInfo musicInfo, MusicInfo t1) {
-            if ("喜欢你".equals(musicInfo.getTitle())) {
-                return -1;
-            } else if ("卡农 - 钢琴小提琴二重奏".equals(t1.getTitle())) {
-                return -1;
-            } else {
-                return 1;
-            }
         }
     }
 }

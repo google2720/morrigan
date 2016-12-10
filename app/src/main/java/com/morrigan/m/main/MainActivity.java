@@ -7,13 +7,11 @@ import android.support.v7.app.AlertDialog;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleController;
-import com.morrigan.m.music.MusicLoader;
 
 public class MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener, MenuLayout.Callback {
 
     private MenuLayout mainLayout;
     private MainFragment mainFragment;
-    MusicLoader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +20,6 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         mainLayout = (MenuLayout) findViewById(R.id.mainLayout);
         mainLayout.setCallback(this);
         mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content);
-        loader = MusicLoader.instance(this.getApplicationContext());
-        loader.init();
         // MassageController.getInstance().test(this);
     }
 

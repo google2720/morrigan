@@ -80,6 +80,7 @@
     <string name="age_message">"%d岁"</string>
     <string name="height_info">"%scm"</string>
     <string name="weight_info">"%skg"</string>
+    <string name="quit_tip">"您确定退出当前账号"</string>
     <!-- 设定目标 -->
     <string name="goal_title">"设定目标"</string>
     <string name="minute">"分"</string>

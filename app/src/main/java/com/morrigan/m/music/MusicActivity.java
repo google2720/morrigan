@@ -256,12 +256,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         if (currentMusicInfo != null) {
             mediaPlayer.reset();
             try {
-                if (currentMusicInfo.isAssertsMusic()) {
-                    mediaPlayer.setDataSource(currentMusicInfo.fileName);
-                } else {
-                    mediaPlayer.setDataSource(currentMusicInfo.getUrl());
-                }
-
+                mediaPlayer.setDataSource(getApplicationContext(), currentMusicInfo.getUrl());
                 mediaPlayer.prepare();
                 mediaPlayer.start();
                 initSeekBar();
@@ -459,19 +454,13 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             tv_artist.setText(currentMusicInfo.getArtist());
             mediaPlayer.reset();
             try {
-                if (currentMusicInfo.isAssertsMusic()) {
-                    mediaPlayer.setDataSource(currentMusicInfo.fileName);
-                } else {
-                    mediaPlayer.setDataSource(currentMusicInfo.getUrl());
-                }
-
+                mediaPlayer.setDataSource(getApplicationContext(), currentMusicInfo.getUrl());
                 mediaPlayer.prepare();
-            }catch (Exception e){
-
+            } catch (Exception e) {
+                // ignore
             }
             initSeekBar();
             popupWindow.setPlayIndex(currIndex, false);
-
         }
     }
 
@@ -498,7 +487,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         //是否由用户改变
-        if (b&&currState==PAUSE) {
+        if (b && currState == PAUSE) {
             mediaPlayer.seekTo(i);
         }
     }

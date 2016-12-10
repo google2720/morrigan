@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.annotation.Keep;
@@ -64,7 +63,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         timePaint.setStrokeWidth(1);
         timePaint.setColor(Color.WHITE);
         timePaint.setTextAlign(Paint.Align.CENTER);
-        timePaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltcxh.ttf"));
+        timePaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltxhk.ttf"));
 
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
@@ -193,10 +192,10 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(Color.WHITE);
         canvas.drawCircle(cx, cy, radius, paint);
 
-        timePaint.setTextSize(w / 14);
+        timePaint.setTextSize(w / 15);
         final String text;
         if (start) {
-            text = duration.toValue((SystemClock.uptimeMillis() - startTime) / 1000);
+            text = duration.toValue((SystemClock.elapsedRealtime() - startTime) / 1000);
         } else {
             text = "00:00";
         }
@@ -279,7 +278,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void start() {
-        startTime = SystemClock.uptimeMillis();
+        startTime = SystemClock.elapsedRealtime();
         startSystemTime = System.currentTimeMillis();
         start = true;
         ObjectAnimator animator = ObjectAnimator.ofFloat(this, "animValue", av, 1);

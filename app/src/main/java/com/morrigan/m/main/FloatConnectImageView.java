@@ -88,7 +88,7 @@ public class FloatConnectImageView extends ImageButton {
     }
 
     private void showNoConnect() {
-        animator = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 0f);
+        animator = ObjectAnimator.ofFloat(this, "alpha", 1f, 0f);
         animator.setDuration(750);
         animator.setInterpolator(new LinearInterpolator());
         animator.setAutoCancel(true);
@@ -98,7 +98,7 @@ public class FloatConnectImageView extends ImageButton {
     }
 
     private void showConnect() {
-        animator = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 1);
+        animator = ObjectAnimator.ofFloat(this, "alpha", getAlpha(), 1f);
         animator.setDuration(150);
         animator.setInterpolator(new LinearInterpolator());
         animator.setAutoCancel(true);

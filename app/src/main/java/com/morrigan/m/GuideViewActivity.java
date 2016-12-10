@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.login.LoginActivity;
-import com.morrigan.m.main.MainActivity;
 
 
 public class GuideViewActivity extends BaseActivity implements OnPageChangeListener {
@@ -59,7 +58,7 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
         });
 
         // 载入图片资源ID
-        imgIdArray = new int[]{R.drawable.gride_view1, R.drawable.gride_view2, R.drawable.gride_view3,R.drawable.gride_view4};
+        imgIdArray = new int[]{R.drawable.gride_view1, R.drawable.gride_view2, R.drawable.gride_view3, R.drawable.gride_view4};
 
         // 将点点加入到ViewGroup中
         tips = new ImageView[imgIdArray.length];
@@ -119,7 +118,6 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
             ((ViewGroup) container).addView(mImageViews[position]);
             return mImageViews[position];
         }
-
     }
 
     @Override

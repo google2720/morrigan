@@ -15,6 +15,7 @@ import com.morrigan.m.R;
 import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
 import com.morrigan.m.ble.SimpleBleCallback;
+import com.morrigan.m.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -63,7 +64,11 @@ public class DeviceScanActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 scanLeDevice(false);
-                gotoResult();
+                // gotoResult();
+                Intent intent = new Intent(DeviceScanActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 finish();
             }
         });

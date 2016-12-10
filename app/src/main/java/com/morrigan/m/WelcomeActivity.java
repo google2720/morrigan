@@ -1,22 +1,18 @@
 package com.morrigan.m;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.login.LoginActivity;
-import com.morrigan.m.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,18 +28,10 @@ public class WelcomeActivity extends BaseActivity {
             if (isFinishing()) {
                 return;
             }
-            if (UserController.getInstance().isAutoLogin(getApplicationContext())) {
-                gotoMain();
-            } else {
-                if (UserController.getInstance().isFirstLogin(getApplicationContext())) {
-                    gotoGuide();
-                }else {
-                    gotoLogin();
-                }
-
-            }
+            gotoResult();
         }
     };
+
     private ImageView iconView;
 
     @Override
@@ -136,18 +124,18 @@ public class WelcomeActivity extends BaseActivity {
 
     private void doIt() {
         handle.postDelayed(r, 3000);
-        final Context context = getApplicationContext();
-        AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                if (UserController.getInstance().isAutoLogin(context)) {
-                    String mobile = UserController.getInstance().getMobile(context);
-                    String pw = UserController.getInstance().getPassword(context);
-                    UserController.getInstance().login(context, mobile, pw);
-                }
-                return null;
-            }
-        });
+//        final Context context = getApplicationContext();
+//        AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                if (UserController.getInstance().isAutoLogin(context)) {
+//                    String mobile = UserController.getInstance().getMobile(context);
+//                    String pw = UserController.getInstance().getPassword(context);
+//                    UserController.getInstance().login(context, mobile, pw);
+//                }
+//                return null;
+//            }
+//        });
     }
 
     @Override
@@ -157,10 +145,12 @@ public class WelcomeActivity extends BaseActivity {
         iconView.setImageDrawable(null);
     }
 
-    private void gotoMain() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+    private void gotoResult() {
+        if (UserController.getInstance().isFirstLogin(getApplicationContext())) {
+            gotoGuide();
+        } else {
+            gotoLogin();
+        }
     }
 
     private void gotoLogin() {
@@ -168,10 +158,10 @@ public class WelcomeActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
-    private void gotoGuide(){
+
+    private void gotoGuide() {
         Intent intent = new Intent(this, GuideViewActivity.class);
         startActivity(intent);
         finish();
     }
-
 }
