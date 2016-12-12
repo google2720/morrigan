@@ -253,7 +253,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 currState = PAUSE;
                 popupWindow.setPlayIndex(currIndex, true);
                 visualizer.setEnabled(true);
-                if (ble.isDeviceReady()) {
+                if (ble.isDeviceReady() && !massageStart) {
                     massageStart = true;
                     startTime = System.currentTimeMillis();
                     // handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
@@ -385,7 +385,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 currState = PAUSE;
                 flag = true;
                 updateSeek(0);
-                if (ble.isDeviceReady()) {
+                if (ble.isDeviceReady() && !massageStart) {
                     massageStart = true;
                     startTime = System.currentTimeMillis();
                     // handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
