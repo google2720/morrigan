@@ -3,8 +3,8 @@ package com.morrigan.m;
 import android.app.Activity;
 import android.app.Application.ActivityLifecycleCallbacks;
 import android.os.Bundle;
-import android.util.Log;
 
+import com.github.yzeaho.log.Lg;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -20,38 +20,38 @@ public class ActivityLifecycleCallback implements ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        Log.i(TAG, activity + " onCreate has savedInstanceState " + (savedInstanceState != null));
+        Lg.d(TAG, activity + " onCreate has savedInstanceState " + (savedInstanceState != null));
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-        Log.i(TAG, activity + " onStart");
+        Lg.d(TAG, activity + " onStart");
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        Log.i(TAG, activity + " onResume");
+        Lg.d(TAG, activity + " onResume");
         MobclickAgent.onResume(activity);
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        Log.i(TAG, activity + " onPause");
+        Lg.d(TAG, activity + " onPause");
         MobclickAgent.onPause(activity);
     }
 
     @Override
     public void onActivityStopped(Activity activity) {
-        Log.i(TAG, activity + " onStop");
+        Lg.d(TAG, activity + " onStop");
     }
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-        Log.i(TAG, activity + " onSaveInstanceState");
+        Lg.d(TAG, activity + " onSaveInstanceState");
     }
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        Log.i(TAG, activity + " onDestroy");
+        Lg.d(TAG, activity + " onDestroy");
     }
 }

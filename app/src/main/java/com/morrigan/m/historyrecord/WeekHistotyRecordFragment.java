@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.yzeaho.http.HttpInterface;
 import com.github.yzeaho.log.Lg;
+import com.morrigan.m.HttpProxy;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.ble.db.Massage;
@@ -33,21 +33,18 @@ import okhttp3.Request;
  * Created by fei on 2016/10/12.
  */
 public class WeekHistotyRecordFragment extends Fragment {
-    WeekView weekView;
-    GetHistTask getHistTask;
+
     private static final String TAG = "WeekHistotyRecordFragment";
-    HistoryResult data;
+
+    private WeekView weekView;
+    private GetHistTask task;
+    private HistoryResult data;
     private TextView txt_total_min;
     private TextView txt_date;
     private TextView txt_goal_min;
     private TextView txt_nursing_min;
     private TextView txt_sulplus_min;
     private TextView txt_average_nursing_min;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
@@ -72,12 +69,20 @@ public class WeekHistotyRecordFragment extends Fragment {
         initData();
     }
 
-    private void initData() {
-        if (getHistTask != null) {
-            getHistTask.cancel(true);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (task != null) {
+            task.cancel();
         }
-        getHistTask = new GetHistTask(this.getActivity());
-        AsyncTaskCompat.executeParallel(getHistTask);
+    }
+
+    private void initData() {
+        if (task != null) {
+            task.cancel();
+        }
+        task = new GetHistTask(this.getActivity());
+        AsyncTaskCompat.executeParallel(task);
     }
 
     public void refreshData() {
@@ -151,19 +156,10 @@ public class WeekHistotyRecordFragment extends Fragment {
     class GetHistTask extends AsyncTask<Void, Void, UiResult<HistoryResult>> {
 
         private Activity activity;
-        private HttpInterface.Result result;
-        //private ProgressDialog dialog;
+        private HttpProxy proxy = new HttpProxy();
 
         GetHistTask(Activity activity) {
             this.activity = activity;
-        }
-
-        @Override
-        protected void onPreExecute() {
-//            dialog = new ProgressDialog(activity);
-//            dialog.setMessage(activity.getString(R.string.history_record_ing_message));
-//            dialog.setCancelable(false);
-//            dialog.show();
         }
 
         @Override
@@ -177,8 +173,7 @@ public class WeekHistotyRecordFragment extends Fragment {
                 Request.Builder builder = new Request.Builder();
                 builder.url(url);
                 builder.post(b.build());
-                result = HttpInterface.Factory.create().execute(builder.build());
-                HistoryResult r = result.parse(HistoryResult.class);
+                HistoryResult r = proxy.execute(activity, builder.build(), HistoryResult.class);
                 uiResult.success = r.isSuccessful();
                 uiResult.message = r.retMsg;
                 if (uiResult.success) {
@@ -192,17 +187,26 @@ public class WeekHistotyRecordFragment extends Fragment {
                 }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to get history", e);
-                uiResult.message = e.getMessage();
+                uiResult.message = HttpProxy.parserError(activity, e);
             }
             return uiResult;
         }
 
+        void cancel() {
+            if (proxy != null) {
+                proxy.cancel();
+            }
+            cancel(true);
+        }
+
+        @Override
+        protected void onCancelled() {
+            task = null;
+        }
+
         @Override
         protected void onPostExecute(UiResult<HistoryResult> result) {
-//            if (dialog != null && dialog.isShowing()) {
-//                dialog.dismiss();
-//            }
-            // ToastUtils.show(activity, result.message);
+            task = null;
             data = result.t;
             refreshData();
         }
