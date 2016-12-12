@@ -84,36 +84,30 @@ public class StarView extends View {
         drawable.draw(canvas);
     }
 
-    public void setStar(int rank) {
+    public void setStar(int rank, int e) {
+        rankStr = String.valueOf(e);
         switch (rank) {
             case 0:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star1);
-                rankStr = "0.5";
                 break;
             case 1:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star2);
-                rankStr = "1";
                 break;
             case 2:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star3);
-                rankStr = "1.5";
                 break;
             case 3:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star4);
-                rankStr = "2";
                 break;
             case 4:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star5);
-                rankStr = "2.5";
                 break;
             case 5:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star6);
-                rankStr = "3";
                 break;
             case -1:
             default:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_star0);
-                rankStr = "0";
                 break;
         }
         ViewCompat.postInvalidateOnAnimation(this);

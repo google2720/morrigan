@@ -64,11 +64,12 @@ public class DeviceScanActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 scanLeDevice(false);
-                // gotoResult();
-                Intent intent = new Intent(DeviceScanActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+                if (getIntent().getBooleanExtra("stopGotoMain", true)) {
+                    Intent intent = new Intent(DeviceScanActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                }
                 finish();
             }
         });
@@ -123,7 +124,7 @@ public class DeviceScanActivity extends BaseActivity {
     private void gotoResult() {
         Intent intent = new Intent(DeviceScanActivity.this, DeviceScanResultActivity.class);
         intent.putExtra("data", devices);
-        intent.putExtra("gotoMain", getIntent().getBooleanExtra("gotoMain", false));
+        intent.putExtra("backGotoMain", getIntent().getBooleanExtra("backGotoMain", true));
         startActivity(intent);
     }
 }

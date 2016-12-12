@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
+import com.morrigan.m.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -24,6 +25,12 @@ public class DeviceBindFailedActivity extends BaseActivity {
         findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (getIntent().getBooleanExtra("backGotoMain", true)) {
+                    Intent intent = new Intent(DeviceBindFailedActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                }
                 finish();
             }
         });

@@ -21,6 +21,7 @@ import com.morrigan.m.ble.BleError;
 import com.morrigan.m.ble.SimpleBleCallback;
 import com.morrigan.m.ble.db.Device;
 import com.morrigan.m.c.UserController;
+import com.morrigan.m.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
                 @Override
                 public void run() {
                     Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindSuccessActivity.class);
-                    intent.putExtra("gotoMain", getIntent().getBooleanExtra("gotoMain", false));
                     startActivity(intent);
                     finish();
                 }
@@ -55,6 +55,7 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
                         ToastUtils.show(getApplicationContext(), "设备已被绑定");
                     }
                     Intent intent = new Intent(DeviceScanResultActivity.this, DeviceBindFailedActivity.class);
+                    intent.putExtra("backGotoMain", getIntent().getBooleanExtra("backGotoMain", true));
                     startActivity(intent);
                     finish();
                 }
@@ -79,6 +80,12 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
         findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (getIntent().getBooleanExtra("backGotoMain", true)) {
+                    Intent intent = new Intent(DeviceScanResultActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                }
                 finish();
             }
         });

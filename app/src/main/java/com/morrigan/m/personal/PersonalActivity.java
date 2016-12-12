@@ -26,12 +26,14 @@ import com.github.yzeaho.file.Closeables;
 import com.github.yzeaho.file.FileApi;
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.HttpProxy;
+import com.morrigan.m.NoNetException;
 import com.morrigan.m.R;
 import com.morrigan.m.ToolbarActivity;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.ble.BleController;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.login.LoginActivity;
+import com.morrigan.m.utils.NetUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -216,6 +218,10 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
+                if (!NetUtils.isConnected(getApplicationContext())) {
+                    ToastUtils.show(getApplicationContext(), R.string.error_modify);
+                    return;
+                }
                 String emotion = emotionValues[options1];
                 String emotionText = emotionNames[options1];
                 UserController.getInstance().setEmotion(PersonalActivity.this, emotion);
@@ -246,6 +252,10 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
+                if (!NetUtils.isConnected(getApplicationContext())) {
+                    ToastUtils.show(getApplicationContext(), R.string.error_modify);
+                    return;
+                }
                 String h = items.get(options1).getName();
                 UserController.getInstance().setHeight(getApplicationContext(), h);
                 heightView.setText(getString(R.string.height_info, h));
@@ -275,6 +285,10 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         optionsPickerView.setOnOptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3) {
+                if (!NetUtils.isConnected(getApplicationContext())) {
+                    ToastUtils.show(getApplicationContext(), R.string.error_modify);
+                    return;
+                }
                 String w = items.get(options1).getName();
                 UserController.getInstance().setWeight(getApplicationContext(), w);
                 weightView.setText(getString(R.string.weight_info, w));
@@ -294,6 +308,10 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
         pickerView.setOnTimeSelectListener(new YearMonthDayPickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(final int year, final int month, final int dayOfMonth) {
+                if (!NetUtils.isConnected(getApplicationContext())) {
+                    ToastUtils.show(getApplicationContext(), R.string.error_modify);
+                    return;
+                }
                 int m = month + 1;
                 String age = year + "-" + (m < 10 ? "0" + m : m) + "-" + (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth);
                 UserController.getInstance().setAge(getApplicationContext(), age);
@@ -328,8 +346,12 @@ public class PersonalActivity extends ToolbarActivity implements SelectAvatarPop
                 Bundle bundle = data.getExtras();
                 if (bundle != null) {
                     Bitmap bitmap = bundle.getParcelable("data");
-                    UploadTask task = new UploadTask(this, bitmap);
-                    AsyncTaskCompat.executeParallel(task);
+                    if (NetUtils.isConnected(this)) {
+                        UploadTask task = new UploadTask(this, bitmap);
+                        AsyncTaskCompat.executeParallel(task);
+                    } else {
+                        ToastUtils.show(this, R.string.error_modify);
+                    }
                 }
             }
         }

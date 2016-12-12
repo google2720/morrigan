@@ -239,7 +239,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
         @Override
         protected void onPostExecute(UiResult<RankResult> result) {
             if (result.success && result.t != null) {
-                starView.setStar(result.t.rank);
+                starView.setStar(result.t.rank, result.t.eValue);
             }
         }
     }

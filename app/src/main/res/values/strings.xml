@@ -18,6 +18,7 @@
     <string name="reconnect_tip">"蓝牙已断开，正在重连..."</string>
     <!-- 网络错误 -->
     <string name="error_no_net">"当前网络不可用，请检查你的网络设置"</string>
+    <string name="error_modify">"修改失败"</string>
     <!-- 欢迎界面 -->
     <string name="permission_explain">"权限说明"</string>
     <string name="permission_explain_location">"扫描摩莉设备需要使用手机的位置信息\n"</string>
@@ -91,7 +92,7 @@
     <!-- 关联设备 -->
     <string name="device_title">"关联设备"</string>
     <string name="device_add">"添加新设备"</string>
-    <string name="device_scan_title">"摩莉智能内衣"</string>
+    <string name="device_scan_title">"摩莉智能文胸"</string>
     <string name="device_scan_tip">"正在搜索设备&#8230;"</string>
     <string name="device_scan_stop">"停止搜索"</string>
     <string name="device_please_select">"请选择设备"</string>

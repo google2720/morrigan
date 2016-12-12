@@ -66,7 +66,8 @@ public class DeviceActivity extends ToolbarActivity implements LoaderManager.Loa
     public void onListItemClick(View v, UiData data) {
         if (data.type == UiData.TYPE_ADD) {
             Intent intent = new Intent(this, DeviceScanActivity.class);
-            intent.putExtra("gotoMain", true);
+            intent.putExtra("backGotoMain", false);
+            intent.putExtra("stopGotoMain", false);
             startActivity(intent);
         }
     }
