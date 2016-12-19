@@ -1,6 +1,7 @@
 package com.morrigan.m.main;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
@@ -21,6 +22,14 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
         mainLayout.setCallback(this);
         mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content);
         // MassageController.getInstance().test(this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (mainLayout.isMenuOpen()) {
+            mainLayout.closeMenu();
+        }
     }
 
     @Override

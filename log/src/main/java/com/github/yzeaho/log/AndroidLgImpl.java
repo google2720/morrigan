@@ -78,7 +78,7 @@ public class AndroidLgImpl implements LgInterface {
      * 格式化日志格式
      */
     private String formatLog(String level, String tag, String text) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.CHINA);
         return String.format("%s %s/%s(%s) [%s] %s", sdf.format(new Date()), level, tag, Process.myPid(), Thread.currentThread().getName(), text);
     }
 }

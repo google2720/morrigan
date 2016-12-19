@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.github.yzeaho.common.ToastUtils;
+import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleCallback;
@@ -18,6 +19,7 @@ import com.morrigan.m.c.MassageController;
  */
 public class ManualActivity extends BaseActivity {
 
+    private static final String TAG = "ManualActivity";
     private ManualView manualView;
     private View braLeftView;
     private View braRightView;
@@ -123,8 +125,10 @@ public class ManualActivity extends BaseActivity {
         boolean a = view.isActivated();
         view.setActivated(!a);
         if (a) {
+            Lg.i(TAG, "onClickStart stop");
             stop();
         } else {
+            Lg.i(TAG, "onClickStart start");
             manualView.start();
             BleController.getInstance().manualMassageAsync(manualView.getGear(), getBarMode());
         }

@@ -19,6 +19,8 @@ import com.morrigan.m.ble.data.MassageDataResult;
 import com.morrigan.m.ble.data.NotifyDataHelper;
 import com.morrigan.m.device.DeviceController;
 
+import java.util.concurrent.Future;
+
 public class BleController extends AbstractBleController {
 
     private static final BleController sInstance = new BleController();
@@ -72,6 +74,15 @@ public class BleController extends AbstractBleController {
         setAutoConnect(false);
         setAutoReconnect(false);
         disconnect();
+    }
+
+    @Override
+    public void disconnect() {
+        super.disconnect();
+        if (batteryResponseFuture != null) {
+            batteryResponseFuture.cancel(true);
+            batteryResponseFuture = null;
+        }
     }
 
     @Override
@@ -151,8 +162,13 @@ public class BleController extends AbstractBleController {
         });
     }
 
+    private Future<?> batteryResponseFuture;
+
     private void batteryResponseAsync() {
-        EXECUTOR_SERVICE_SINGLE.execute(new Runnable() {
+        if (batteryResponseFuture != null) {
+            batteryResponseFuture.cancel(true);
+        }
+        batteryResponseFuture = EXECUTOR_SERVICE_SINGLE.submit(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -178,18 +194,8 @@ public class BleController extends AbstractBleController {
         protected Void doInBackground(Void... voids) {
             try {
                 Lg.i(TAG, "massage start");
-                MassageDataResult r;
-                for (int i = 0; i < 5; i++) {
-                    r = MassageDataResult.parse(write(data.toValue(), 5000));
-                    if (r == null) {
-                        r = MassageDataResult.parse(read(5000));
-                    }
-                    if (r != null) {
-                        mCallbacks.onMassageSuccess();
-                        return null;
-                    }
-                }
-                mCallbacks.onMassageFailed(BleError.TIME_OUT);
+                writeWithNoRead(data.toValue());
+                mCallbacks.onMassageSuccess();
             } catch (Exception e) {
                 Lg.w(TAG, "failed to massage", e);
                 mCallbacks.onMassageFailed(BleError.SYSTEM);

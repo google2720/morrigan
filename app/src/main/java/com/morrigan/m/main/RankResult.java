@@ -5,7 +5,7 @@ import android.support.annotation.Keep;
 import com.morrigan.m.HttpResult;
 
 /**
- * ÐÇ¼¶ÆÀ¶¨
+ * æ˜Ÿçº§è¯„å®š
  * Created by y on 2016/10/30.
  */
 public class RankResult extends HttpResult {
@@ -14,5 +14,5 @@ public class RankResult extends HttpResult {
     public int rank;
 
     @Keep
-    public int eValue;
+    public double eValue;
 }

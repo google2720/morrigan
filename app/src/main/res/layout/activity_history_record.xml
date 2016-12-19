@@ -50,7 +50,7 @@
                 android:textColor="@color/history_text_selector" />
         </LinearLayout>
     </RelativeLayout>
-    
+
     <com.morrigan.m.view.MyViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"

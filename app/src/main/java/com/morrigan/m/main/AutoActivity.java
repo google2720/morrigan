@@ -129,10 +129,11 @@ public class AutoActivity extends BaseActivity {
             return;
         }
         boolean a = view.isActivated();
-        Lg.i(TAG, "onClickStart " + a);
         if (a) {
+            Lg.i(TAG, "onClickStart stop");
             stop();
         } else {
+            Lg.i(TAG, "onClickStart start");
             start();
         }
     }
