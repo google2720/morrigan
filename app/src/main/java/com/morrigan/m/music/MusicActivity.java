@@ -480,6 +480,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         //是否由用户改变
         if (b) {
             mediaPlayer.seekTo(i);
+            updateSeek(500);
         }
     }
 
