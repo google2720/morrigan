@@ -348,6 +348,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        massageStopAsync();
         ble.removeCallback(cb);
         hander.removeMessages(MSG_MASSAGE);
         currState = START;
@@ -355,7 +356,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         visualizer.release();
         mediaPlayer.stop();
         mediaPlayer.release();
-        massageStopAsync();
     }
 
     public void onClickPrev(View view) {
@@ -474,7 +474,11 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         //是否由用户改变
-        if (b && currState == PAUSE) {
+//        if (b && currState == PAUSE) {
+//            mediaPlayer.seekTo(i);
+//        }
+        //是否由用户改变
+        if (b) {
             mediaPlayer.seekTo(i);
         }
     }
