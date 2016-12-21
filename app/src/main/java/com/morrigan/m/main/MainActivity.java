@@ -28,7 +28,7 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (mainLayout.isMenuOpen()) {
-            mainLayout.closeMenu();
+            mainLayout.closeMenuWithNoAnim();
         }
     }
 

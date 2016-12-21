@@ -181,6 +181,16 @@ public class MenuLayout extends FrameLayout {
         return stateOpened;
     }
 
+    public void closeMenuWithNoAnim() {
+        Log.i(TAG, "closeMenuWithNoAnim " + stateOpened);
+        stateOpened = false;
+        setAnimValue(0);
+        dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
+        if (callback != null) {
+            callback.onMenuOpenStatusChange(false);
+        }
+    }
+
     public void closeMenu() {
         Log.i(TAG, "closeMenu " + stateOpened);
         if (stateOpened) {
