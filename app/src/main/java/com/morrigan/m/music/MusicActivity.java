@@ -218,8 +218,8 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 case SEARCH_MUSIC_SUCCESS:
                     //搜索音乐文件结束时
                     popupWindow.setData(musics);
-                    if (loader.getMusicList() != null && loader.getMusicList().size() > 0) {
-                        currentMusicInfo = loader.getMusicList().get(0);
+                    if (musics != null && musics.size() > 0) {
+                        currentMusicInfo = musics.get(0);
                         refreshTitle();
                     }
                     break;
@@ -238,7 +238,10 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
 
     //开始播放
     private void start() {
-        currentMusicInfo = loader.getMusicList().get(currIndex);
+        if (musics == null || musics.size() == 0) {
+            return;
+        }
+        currentMusicInfo = musics.get(currIndex);
         if (currentMusicInfo != null) {
             mediaPlayer.reset();
             try {
@@ -416,7 +419,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private void previous() {
         if (musics != null && musics.size() > 0) {
             currIndex = (currIndex - 1 + musics.size()) % musics.size();
-            currentMusicInfo = loader.getMusicList().get(currIndex);
+            currentMusicInfo = musics.get(currIndex);
             if (currState == PAUSE) {
                 start();
             } else {
@@ -429,7 +432,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private void next() {
         if (musics != null && musics.size() > 0) {
             currIndex = (currIndex + 1) % musics.size();
-            currentMusicInfo = loader.getMusicList().get(currIndex);
+            currentMusicInfo = musics.get(currIndex);
             if (currState == PAUSE) {
                 start();
             } else {
