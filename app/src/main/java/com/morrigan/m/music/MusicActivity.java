@@ -399,6 +399,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                     // handler.sendEmptyMessageDelayed(MSG_MASSAGE, sendMassageTimeInterval);
                     ble.musicRandomMassageAsync();
                 }
+                popupWindow.setPlayIndex(currIndex, true);
                 break;
             default:
                 break;
@@ -455,7 +456,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 // ignore
             }
             initSeekBar();
-            popupWindow.setPlayIndex(currIndex, false);
+            popupWindow.setPlayIndex(currIndex, true);
         }
     }
 
