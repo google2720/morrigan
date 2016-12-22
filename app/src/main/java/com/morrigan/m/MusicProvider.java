@@ -14,6 +14,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.yzeaho.log.Lg;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -32,6 +34,7 @@ public class MusicProvider extends ContentProvider {
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.DATA
     };
+    private static final String TAG = "MusicProvider";
 
     @Override
     public boolean onCreate() {
@@ -41,15 +44,18 @@ public class MusicProvider extends ContentProvider {
     @Nullable
     @Override
     public AssetFileDescriptor openAssetFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
-        String path = uri.getLastPathSegment();
+        Lg.d(TAG, "openAssetFile " + uri);
         Context context = getContext();
-        if (context != null) {
-            AssetManager am = context.getAssets();
-            try {
-                return am.openFd("music/" + path + ".mp3");
-            } catch (IOException e) {
-                // ignore
-            }
+        if (context == null) {
+            Lg.d(TAG, "open file but context is null.");
+            return null;
+        }
+        String path = uri.getLastPathSegment();
+        AssetManager am = context.getAssets();
+        try {
+            return am.openFd("music/" + path + ".mp3");
+        } catch (IOException e) {
+            Lg.w(TAG, "failed to open asset file " + path, e);
         }
         return null;
     }
@@ -59,6 +65,7 @@ public class MusicProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Context context = getContext();
         if (context == null) {
+            Lg.d(TAG, "query something but context is null.");
             return null;
         }
 
