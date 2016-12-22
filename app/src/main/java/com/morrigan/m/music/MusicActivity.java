@@ -320,7 +320,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                         if (mediaPlayer != null) {
                             long duration = mediaPlayer.getDuration();
                             int cp = mediaPlayer.getCurrentPosition();
-                            Log.i(TAG, "onWaveFormDataCapture " + duration + " " + cp);
+                            // Log.i(TAG, "onWaveFormDataCapture " + duration + " " + cp);
                             if (cp > 3000 && duration - cp > 3000) {
                                 decibel[0] = (byte) random.nextInt(30);
                                 decibel[1] = (byte) random.nextInt(30);
@@ -330,7 +330,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                             }
                         }
                     }
-                    Log.i(TAG, "onWaveFormDataCapture " + Arrays.toString(decibel));
+                    // Log.i(TAG, "onWaveFormDataCapture " + Arrays.toString(decibel));
                 }
 
                 private byte p(byte b) {
