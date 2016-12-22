@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.BuildConfig;
 import com.morrigan.m.R;
@@ -261,6 +262,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                Lg.e(TAG, "music_start", e);
             }
         } else {
             visualizer.setEnabled(false);
@@ -373,12 +375,15 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     private void play() {
         switch (currState) {
             case IDLE:
+                Lg.d(TAG, "first_click_start");
                 start();
                 break;
             case PAUSE:
+                Lg.d(TAG, "click_pause");
                 stopPlay();
                 break;
             case START:
+                Lg.d(TAG, "click_start");
                 visualizer.setEnabled(true);
                 mediaPlayer.start();
                 btnPlay.setImageResource(R.drawable.music_pause);
@@ -479,6 +484,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
 //        }
         //是否由用户改变
         if (b) {
+            Lg.d(TAG, "由用户改变进度条");
             mediaPlayer.seekTo(i);
             updateSeek(500);
         }
