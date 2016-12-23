@@ -136,7 +136,8 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:onClick="onClickStart"
-                android:src="@drawable/music_play" />
+                android:src="@drawable/music_play"
+                />
 
             <android.support.v4.widget.Space
                 android:layout_width="0dp"
