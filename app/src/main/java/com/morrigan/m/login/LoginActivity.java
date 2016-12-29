@@ -62,6 +62,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+                intent.putExtra("phone", phoneView.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_FORGET_PW);
             }
         });

@@ -216,11 +216,13 @@ public class AutoLayout extends FrameLayout {
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
-    public void stop() {
+    public void stop(boolean refreshUi) {
         start = false;
         bgColor = 0xff7128bd;
         stopSystemTime = System.currentTimeMillis();
-        ViewCompat.postInvalidateOnAnimation(this);
+        if (refreshUi) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
     }
 
     public long getStartSystemTime() {

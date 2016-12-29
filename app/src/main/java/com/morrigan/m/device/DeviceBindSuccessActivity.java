@@ -31,7 +31,7 @@ public class DeviceBindSuccessActivity extends BaseActivity {
             }
         });
         TextView textView = (TextView) findViewById(R.id.text);
-        textView.setText(getString(R.string.device_connect_success_o, UserController.getInstance().getTarget(this)));
+        textView.setText(getString(R.string.device_connect_success_o, "60"));
     }
 
     public void onClickScan(View view) {

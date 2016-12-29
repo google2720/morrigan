@@ -15,7 +15,7 @@
     <!-- 提示框 -->
     <string name="no_open_ble_tip">"打开蓝牙来允许\"MORRIGAN\"连接到配件"</string>
     <string name="change_device_tip">"确定要切换设备"</string>
-    <string name="reconnect_tip">"蓝牙已断开，正在重连..."</string>
+    <string name="reconnect_tip">"设备已断开连接"</string>
     <!-- 网络错误 -->
     <string name="error_no_net">"当前网络不可用，请检查你的网络设置"</string>
     <string name="error_modify">"修改失败"</string>
@@ -86,7 +86,7 @@
     <!-- 设定目标 -->
     <string name="goal_title">"设定目标"</string>
     <string name="minute">"分"</string>
-    <string name="goal_title_tip">"设定您的每日分钟数"</string>
+    <string name="goal_title_tip">"设置您的每日分钟数"</string>
     <string name="goal_title_message">"设置合理的目标进行挑战"</string>
     <string name="goal_title_message2">"趣味从达到目标开始"</string>
     <!-- 关联设备 -->

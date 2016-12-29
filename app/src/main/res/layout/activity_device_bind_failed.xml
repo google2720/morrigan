@@ -22,7 +22,8 @@
             android:layout_gravity="center"
             android:text="@string/device_scan_title"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:textSize="@dimen/device_title" />
 
         <ImageButton
             android:id="@+id/close"
@@ -57,12 +58,12 @@
     </FrameLayout>
 
     <FrameLayout
-        android:onClick="onClickScan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:background="@drawable/device_scan"
-        android:minHeight="@dimen/line_min_height">
+        android:minHeight="@dimen/line_min_height"
+        android:onClick="onClickScan">
 
         <TextView
             android:layout_width="wrap_content"

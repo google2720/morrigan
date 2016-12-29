@@ -88,6 +88,7 @@ public class ForgetPasswordActivity extends BaseActivity {
             }
         });
         phoneView = (EditText) findViewById(R.id.phone);
+        phoneView.setText(getIntent().getStringExtra("phone"));
         smsCodeView = (EditText) findViewById(R.id.smsCode);
         pwView = (EditText) findViewById(R.id.pw);
         findViewById(R.id.showPassword).setOnClickListener(new View.OnClickListener() {

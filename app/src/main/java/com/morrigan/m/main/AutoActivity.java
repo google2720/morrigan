@@ -153,20 +153,26 @@ public class AutoActivity extends BaseActivity {
         handler.post(autoMassageSingleModeRunnable);
     }
 
-    private void stop() {
+    private void stop(boolean refreshUi) {
         Lg.i(TAG, "stop");
         handler.removeCallbacks(autoMassageSingleModeRunnable);
         handler.removeCallbacks(stopMassageRunnable);
         handler.post(stopMassageRunnable);
-        startView.setActivated(false);
-        autoLayout.stop();
+        if (refreshUi) {
+            startView.setActivated(false);
+        }
+        autoLayout.stop(refreshUi);
         saveRecord();
+    }
+
+    private void stop() {
+        stop(true);
     }
 
     @Override
     public void onBackPressed() {
         if (autoLayout.isStart()) {
-            stop();
+            stop(false);
         }
         super.onBackPressed();
     }

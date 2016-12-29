@@ -246,7 +246,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         waveProgress = (endX - startX) / 2;
         int sy, ey;
         float period = (float) (2 * Math.PI / ((endX - startX) / 1.5));
-        float a = (startY - endY) / 12;
+        float a = (startY - endY) / 10;
         for (int i = startX; i < endX; i++) {
             sy = (int) Math.round(cy + Math.sqrt(radius * radius - Math.pow(i - cx, 2)));
 

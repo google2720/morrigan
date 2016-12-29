@@ -126,9 +126,9 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         drawStaticWave(canvas, left, right, bottom, top, w, radius, cx, cy);
 
         final int saveCount = canvas.save();
-        textPaint1.setTextSize(w / 4);
+        textPaint1.setTextSize(w / 4f * 1.3f);
         textPaint1.getTextBounds(goal, 0, goal.length(), boundText1);
-        textPaint2.setTextSize(w / 10);
+        textPaint2.setTextSize(w / 10f * 1.3f);
         textPaint2.getTextBounds("min", 0, "min".length(), boundText2);
         int tw1 = boundText1.left + boundText1.width();
         int tw2 = boundText2.left + boundText2.width();
