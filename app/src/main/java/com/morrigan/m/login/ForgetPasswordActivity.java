@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.os.AsyncTaskCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
+import com.morrigan.m.utils.AppTextUtils;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -56,6 +59,7 @@ public class ForgetPasswordActivity extends BaseActivity {
             }
         }
     };
+    private View clearPhoneView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +77,8 @@ public class ForgetPasswordActivity extends BaseActivity {
                 complete();
             }
         });
-
-        findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
+        clearPhoneView = findViewById(R.id.clear);
+        clearPhoneView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 phoneView.setText(null);
@@ -88,6 +92,20 @@ public class ForgetPasswordActivity extends BaseActivity {
             }
         });
         phoneView = (EditText) findViewById(R.id.phone);
+        phoneView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                clearPhoneView.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+            }
+        });
         phoneView.setText(getIntent().getStringExtra("phone"));
         smsCodeView = (EditText) findViewById(R.id.smsCode);
         pwView = (EditText) findViewById(R.id.pw);
@@ -119,6 +137,10 @@ public class ForgetPasswordActivity extends BaseActivity {
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             ToastUtils.show(this, R.string.input_phone_hint);
+            return;
+        }
+        if (!AppTextUtils.isCellPhone(mobile)) {
+            ToastUtils.show(this, R.string.login_error_phone_format);
             return;
         }
         if (task != null) {
@@ -185,6 +207,10 @@ public class ForgetPasswordActivity extends BaseActivity {
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             ToastUtils.show(this, R.string.input_phone_hint);
+            return;
+        }
+        if (!AppTextUtils.isCellPhone(mobile)) {
+            ToastUtils.show(this, R.string.login_error_phone_format);
             return;
         }
         String smsCode = smsCodeView.getText().toString().trim();

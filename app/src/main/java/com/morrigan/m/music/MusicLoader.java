@@ -8,7 +8,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
 
-import com.morrigan.m.utils.Closeables;
+
+import com.github.yzeaho.file.Closeables;
 
 import java.util.ArrayList;
 import java.util.List;

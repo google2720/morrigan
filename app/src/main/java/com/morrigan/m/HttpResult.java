@@ -10,6 +10,7 @@ public class HttpResult {
 
     public static final int CODE_SUCCESS = 0;
     public static final int CODE_NO_REGISTER = 2;
+    public static final int CODE_SMS_CODE_EXPIRE = 3;
 
     @Keep
     public int retCode;

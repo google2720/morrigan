@@ -8,7 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.main.MainActivity;
+import com.morrigan.m.utils.AppTextUtils;
 
 public class LoginActivity extends BaseActivity {
 
@@ -29,22 +32,38 @@ public class LoginActivity extends BaseActivity {
     private static final int REQUEST_CODE_REGISTER = 2;
     private EditText phoneView;
     private EditText pwView;
+    private View clearPhoneView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        phoneView = (EditText) findViewById(R.id.phone);
-        phoneView.setText(UserController.getInstance().getMobile(this));
-        pwView = (EditText) findViewById(R.id.pw);
-        pwView.setText(UserController.getInstance().getPassword(this));
-        findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
+        clearPhoneView = findViewById(R.id.clear);
+        clearPhoneView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 phoneView.setText(null);
                 pwView.setText(null);
             }
         });
+        phoneView = (EditText) findViewById(R.id.phone);
+        phoneView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                clearPhoneView.setVisibility(s.length() > 0 ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
+        phoneView.setText(UserController.getInstance().getMobile(this));
+        pwView = (EditText) findViewById(R.id.pw);
+        pwView.setText(UserController.getInstance().getPassword(this));
         findViewById(R.id.showPassword).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +119,10 @@ public class LoginActivity extends BaseActivity {
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             ToastUtils.show(this, R.string.input_phone_hint);
+            return;
+        }
+        if (!AppTextUtils.isCellPhone(mobile)) {
+            ToastUtils.show(this, R.string.login_error_phone);
             return;
         }
         String pw = pwView.getText().toString().trim();

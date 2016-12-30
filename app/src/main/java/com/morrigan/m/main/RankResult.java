@@ -14,5 +14,5 @@ public class RankResult extends HttpResult {
     public int rank;
 
     @Keep
-    public double eValue;
+    public int eValue;
 }

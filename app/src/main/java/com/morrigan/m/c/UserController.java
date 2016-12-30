@@ -1,5 +1,6 @@
 package com.morrigan.m.c;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -11,6 +12,7 @@ import com.morrigan.m.UiResult;
 import com.morrigan.m.ble.db.DBHelper;
 import com.morrigan.m.device.DeviceController;
 import com.morrigan.m.login.LoginResult;
+import com.morrigan.m.login.RegisterResult;
 import com.morrigan.m.login.UserInfo;
 import com.morrigan.m.main.UploadHistoryDataService;
 
@@ -307,6 +309,19 @@ public class UserController {
         builder.post(b.build());
         HttpResult r = new HttpProxy().execute(context, builder.build(), HttpResult.class);
         return r.isSuccessful();
+    }
+
+    public RegisterResult register(Activity activity, String mobile, String smsCode, String pw, boolean male) throws IOException {
+        String url = activity.getString(R.string.host) + "/rest/moli/regist";
+        FormBody.Builder b = new FormBody.Builder();
+        b.add("mobile", mobile);
+        b.add("msgCode", smsCode);
+        b.add("password", pw);
+        b.add("sex", male ? "M" : "F");
+        Request.Builder builder = new Request.Builder();
+        builder.url(url);
+        builder.post(b.build());
+        return new HttpProxy().execute(activity, builder.build(), RegisterResult.class);
     }
 
     public UiResult<Void> upload(Context context) {

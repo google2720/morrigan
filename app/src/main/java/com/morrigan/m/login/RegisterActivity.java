@@ -3,6 +3,7 @@ package com.morrigan.m.login;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +11,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -25,9 +28,7 @@ import com.morrigan.m.HttpResult;
 import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
-
-import okhttp3.FormBody;
-import okhttp3.Request;
+import com.morrigan.m.utils.AppTextUtils;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -60,6 +61,7 @@ public class RegisterActivity extends BaseActivity {
     private EditText pwView;
     private EditText smsCodeView;
     private SendSmsCodeTask task;
+    private View clearPhoneView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,8 @@ public class RegisterActivity extends BaseActivity {
                 register();
             }
         });
-        findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
+        clearPhoneView = findViewById(R.id.clear);
+        clearPhoneView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 phoneView.setText(null);
@@ -108,9 +111,24 @@ public class RegisterActivity extends BaseActivity {
             }
         });
         phoneView = (EditText) findViewById(R.id.phone);
+        phoneView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                clearPhoneView.setVisibility(s.length() > 0 ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
         smsCodeView = (EditText) findViewById(R.id.smsCode);
         pwView = (EditText) findViewById(R.id.pw);
-        findViewById(R.id.showPassword).setOnClickListener(new View.OnClickListener() {
+        View showPasswordView = findViewById(R.id.showPassword);
+        showPasswordView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setActivated(!v.isActivated());
@@ -123,6 +141,8 @@ public class RegisterActivity extends BaseActivity {
                 }
             }
         });
+        showPasswordView.setActivated(true);
+        pwView.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
     }
 
     @Override
@@ -138,6 +158,10 @@ public class RegisterActivity extends BaseActivity {
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             ToastUtils.show(this, R.string.input_phone_hint);
+            return;
+        }
+        if (!AppTextUtils.isCellPhone(mobile)) {
+            ToastUtils.show(this, R.string.login_error_phone_format);
             return;
         }
         if (task != null) {
@@ -202,9 +226,7 @@ public class RegisterActivity extends BaseActivity {
             if (isFinishing()) {
                 return;
             }
-            if (result.success) {
-                // handler.sendEmptyMessage(MSG_TIME);
-            } else {
+            if (!result.success) {
                 handler.removeMessages(MSG_TIME);
                 sendSmsCodeView.setText(R.string.fetch_sms_code);
                 sendSmsCodeView.setClickable(true);
@@ -221,7 +243,25 @@ public class RegisterActivity extends BaseActivity {
     private void showRegisteredDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.login_error_register);
-        builder.setPositiveButton(R.string.action_confirm, null);
+        builder.setPositiveButton(R.string.action_confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
+    }
+
+    private void showSmsCodeExpireDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.login_error_sms_code_expire);
+        builder.setNegativeButton(R.string.action_cancel, null);
+        builder.setPositiveButton(R.string.action_fetch, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fetchSmsCode();
+            }
+        });
         builder.show();
     }
 
@@ -233,6 +273,10 @@ public class RegisterActivity extends BaseActivity {
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             ToastUtils.show(this, R.string.input_phone_hint);
+            return;
+        }
+        if (!AppTextUtils.isCellPhone(mobile)) {
+            ToastUtils.show(this, R.string.login_error_phone_format);
             return;
         }
         String smsCode = smsCodeView.getText().toString().trim();
@@ -249,7 +293,7 @@ public class RegisterActivity extends BaseActivity {
         AsyncTaskCompat.executeParallel(task);
     }
 
-    class RegisterTask extends AsyncTask<Void, Void, UiResult<String>> {
+    class RegisterTask extends AsyncTask<Void, Boolean, UiResult<String>> {
 
         private Activity activity;
         private String mobile;
@@ -278,24 +322,35 @@ public class RegisterActivity extends BaseActivity {
         protected UiResult<String> doInBackground(Void... params) {
             UiResult<String> uiResult = new UiResult<>();
             try {
-                String url = activity.getString(R.string.host) + "/rest/moli/regist";
-                FormBody.Builder b = new FormBody.Builder();
-                b.add("mobile", mobile);
-                b.add("msgCode", smsCode);
-                b.add("password", pw);
-                b.add("sex", male ? "M" : "F");
-                Request.Builder builder = new Request.Builder();
-                builder.url(url);
-                builder.post(b.build());
-                RegisterResult r = new HttpProxy().execute(activity, builder.build(), RegisterResult.class);
-                uiResult.success = r.isSuccessful();
-                uiResult.message = r.retMsg;
-                uiResult.t = r.userId;
+                UserController c = UserController.getInstance();
+                if (c.checkRegister(activity, mobile)) {
+                    uiResult.success = false;
+                    publishProgress(true);
+                } else {
+                    RegisterResult r = c.register(activity, mobile, smsCode, pw, male);
+                    if (r.retCode == HttpResult.CODE_SMS_CODE_EXPIRE) {
+                        uiResult.success = false;
+                        publishProgress(false);
+                    } else {
+                        uiResult.success = r.isSuccessful();
+                        uiResult.message = r.retMsg;
+                        uiResult.t = r.userId;
+                    }
+                }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to register", e);
                 uiResult.message = HttpProxy.parserError(activity, e);
             }
             return uiResult;
+        }
+
+        @Override
+        protected void onProgressUpdate(Boolean... values) {
+            if (values[0]) {
+                showRegisteredDialog();
+            } else {
+                showSmsCodeExpireDialog();
+            }
         }
 
         @Override
