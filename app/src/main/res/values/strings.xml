@@ -149,7 +149,7 @@
     <string name="massage_start_tip">"请先选择组合模式"</string>
     <!-- 历史记录 -->
     <string name="history_title">"历史记录"</string>
-    <string name="history_title_today">"今天一览"</string>
+    <string name="history_title_today">"今日一览"</string>
     <string name="history_title_week">"本周一阅"</string>
     <string name="history_today">"日"</string>
     <string name="history_week">"周"</string>

@@ -125,6 +125,7 @@ public class DeviceScanActivity extends BaseActivity {
         Intent intent = new Intent(DeviceScanActivity.this, DeviceScanResultActivity.class);
         intent.putExtra("data", devices);
         intent.putExtra("backGotoMain", getIntent().getBooleanExtra("backGotoMain", true));
+        intent.putExtra("stopGotoMain", getIntent().getBooleanExtra("stopGotoMain", true));
         startActivity(intent);
     }
 }

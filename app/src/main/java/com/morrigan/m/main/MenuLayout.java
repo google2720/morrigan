@@ -233,6 +233,7 @@ public class MenuLayout extends FrameLayout {
     public void setAnimValue(int v) {
         View view = getChildAt(1);
         view.layout(v, v / 10, v + view.getWidth(), getHeight() - v / 10);
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 
     public interface Callback {

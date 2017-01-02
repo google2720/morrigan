@@ -38,6 +38,8 @@ public class DeviceBindFailedActivity extends BaseActivity {
 
     public void onClickScan(View view) {
         Intent intent = new Intent(this, DeviceScanActivity.class);
+        intent.putExtra("backGotoMain", getIntent().getBooleanExtra("backGotoMain", true));
+        intent.putExtra("stopGotoMain", getIntent().getBooleanExtra("stopGotoMain", true));
         startActivity(intent);
         finish();
     }

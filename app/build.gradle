@@ -9,9 +9,11 @@ android {
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resConfigs "zh"
-        versionCode project.hasProperty('version_code') ? Integer.parseInt(version_code) : 2
+        versionCode project.hasProperty('version_code') ? Integer.parseInt(version_code) : 999999
         versionName project.hasProperty('version_name') ? version_name : "9.9.9"
         buildConfigField "int", "LOG_LEVEL", project.hasProperty('log_level') ? log_level : "2"
+        buildConfigField "boolean", "WAVE_ON", "false"
+        buildConfigField "boolean", "TEST_MUSIC", project.hasProperty('test_music') ? test_music : "false"
     }
     signingConfigs {
         config {
@@ -24,15 +26,11 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.config
-            buildConfigField "boolean", "WAVE_ON", "false"
-            buildConfigField "boolean", "TEST_MUSIC", "true"
         }
         release {
             signingConfig signingConfigs.config
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "boolean", "WAVE_ON", "false"
-            buildConfigField "boolean", "TEST_MUSIC", project.hasProperty('test_music') ? test_music : "false"
         }
     }
     applicationVariants.all { variant ->
