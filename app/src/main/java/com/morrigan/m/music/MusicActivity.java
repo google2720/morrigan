@@ -35,7 +35,6 @@ import com.morrigan.m.main.VisualizerView;
 import com.morrigan.m.music.MusicLoader.MusicInfo;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -316,20 +315,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                     decibel[2] = p(bytes[length - 3]);
                     decibel[3] = p(bytes[length - 2]);
                     decibel[4] = p(bytes[length - 1]);
-                    if (decibel[0] == 0 && decibel[1] == 0 && decibel[2] == 0 && decibel[3] == 0 && decibel[4] == 0) {
-                        if (mediaPlayer != null) {
-                            long duration = mediaPlayer.getDuration();
-                            int cp = mediaPlayer.getCurrentPosition();
-                            // Log.i(TAG, "onWaveFormDataCapture " + duration + " " + cp);
-                            if (cp > 3000 && duration - cp > 3000) {
-                                decibel[0] = (byte) random.nextInt(30);
-                                decibel[1] = (byte) random.nextInt(30);
-                                decibel[2] = (byte) random.nextInt(30);
-                                decibel[3] = (byte) random.nextInt(30);
-                                decibel[4] = (byte) random.nextInt(30);
-                            }
-                        }
-                    }
                     // Log.i(TAG, "onWaveFormDataCapture " + Arrays.toString(decibel));
                 }
 
