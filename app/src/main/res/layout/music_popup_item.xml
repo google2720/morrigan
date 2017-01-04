@@ -46,11 +46,12 @@
 
     <com.morrigan.m.music.MusicAmplitudeView
         android:id="@+id/flash"
-        android:layout_width="18dp"
+        android:layout_width="20dp"
         android:layout_height="18dp"
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/tv_time"
+        android:visibility="invisible"
         />
 
     <TextView

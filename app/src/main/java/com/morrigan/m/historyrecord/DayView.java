@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.morrigan.m.R;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -22,21 +24,33 @@ public class DayView extends View {
     int showNum;
     int showIndex;
     Paint mPaint;
+    Paint mPaintNum;
+    Context context;
+
+    @Override
+    public boolean callOnClick() {
+        return super.callOnClick();
+    }
 
     public DayView(Context context) {
         super(context);
-        initView();
+        initView(context);
     }
 
     public DayView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView();
+        initView(context);
     }
 
-    void initView() {
+    void initView(Context context) {
+        this.context=context;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(0xffbe8ef2);
-        mPaint.setTextSize(40);
+        mPaint.setTextSize(context.getResources().getDimension(R.dimen.record_txt_size));
+        mPaintNum= new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintNum.setColor(0xffbe8ef2);
+        mPaintNum.setTextSize(context.getResources().getDimension(R.dimen.record_txt_size));
+        mPaintNum.setTextAlign(Paint.Align.CENTER);
     }
 
     @Override
@@ -67,9 +81,8 @@ public class DayView extends View {
                     String str = showNum + "";
                     Rect bounds = new Rect();
                     mPaint.getTextBounds(str, 0, str.length(), bounds);
-                    //int baseline = (int) (0.2 * getMeasuredHeight() / 2) + bounds.height() / 2;
                     int baseline = t - bounds.height();
-                    canvas.drawText(str, l + w / 2 - bounds.width() / 2, baseline, mPaint);
+                    canvas.drawText(str, l + w / 2 , baseline, mPaintNum);
                 }
                 int hour = i + 1;
                 if (hour == 1 || hour % 6 == 0) {//画出1，6，12，18，24下标
@@ -82,7 +95,7 @@ public class DayView extends View {
 
                     Rect bounds = new Rect();
                     mPaint.getTextBounds(str, 0, str.length(), bounds);
-                    mPaint.setTextSize(35);
+                    mPaint.setTextSize(context.getResources().getDimension(R.dimen.record_txt_size2));
                     float x = 0;
                     if (hour == 24) {
                         x = l + w - bounds.width() / 2;

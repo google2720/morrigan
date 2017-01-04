@@ -28,6 +28,7 @@ public class MusicAmplitudeView extends View {
     Random random = new Random();
     MyHandler myHandler = new MyHandler();
     int messageWhat = 1001;
+
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -47,7 +48,9 @@ public class MusicAmplitudeView extends View {
 
     private void update() {
         if (SystemClock.elapsedRealtime() - updateUiTime > 200) {
-            ViewCompat.postInvalidateOnAnimation(this);
+            if(active){
+                ViewCompat.postInvalidateOnAnimation(this);
+            }
             updateUiTime = SystemClock.elapsedRealtime();
             update();
         }
@@ -70,8 +73,8 @@ public class MusicAmplitudeView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         for (int i = 0; i < 4; i++) {
-            float w = (float) (1 / 7.0) * getWidth();
-            float l = i * w * 2;
+            float w = (float) (1 / 10.0) * getWidth();
+            float l = i * w * 3;
             float t = 0;
             if (i == 0) {
                 t = (float) (random.nextInt((int)(getHeight()/2.0)) );

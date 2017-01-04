@@ -441,7 +441,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
                 // ignore
             }
             initSeekBar();
-            popupWindow.setPlayIndex(currIndex, true);
+            popupWindow.setPlayIndex(currIndex, false);
         }
     }
 

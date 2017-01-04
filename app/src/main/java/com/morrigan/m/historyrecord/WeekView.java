@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.morrigan.m.R;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,24 +23,29 @@ public class WeekView extends View {
 
     List<Integer> datas;
     int max;
+    Paint mPaintNum;
     Paint mPaint;
     int showNum;
     int showIndex;
 
     public WeekView(Context context) {
         super(context);
-        initView();
+        initView(context);
     }
 
     public WeekView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView();
+        initView(context);
     }
 
-    void initView() {
+    void initView(Context context) {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(0xffbe8ef2);
-        mPaint.setTextSize(40);
+        mPaint.setTextSize(context.getResources().getDimension(R.dimen.record_txt_size));
+        mPaintNum= new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintNum.setColor(0xffbe8ef2);
+        mPaintNum.setTextSize(context.getResources().getDimension(R.dimen.record_txt_size));
+        mPaintNum.setTextAlign(Paint.Align.CENTER);
     }
 
     @Override
@@ -68,9 +75,8 @@ public class WeekView extends View {
                     String str = showNum + "";
                     Rect bounds = new Rect();
                     mPaint.getTextBounds(str, 0, str.length(), bounds);
-                    //int  baseline=(int)(0.2*getMeasuredHeight()/2)+bounds.height()/2;
                     int baseline = t - bounds.height();
-                    canvas.drawText(str, l + w / 2 - bounds.width() / 2, baseline, mPaint);
+                    canvas.drawText(str, l + w / 2 , baseline, mPaintNum);
                 }
                 String strWeek = "周一";
                 Rect bounds = new Rect();
@@ -131,6 +137,7 @@ public class WeekView extends View {
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_DOWN:
                 //获取屏幕上点击的坐标
+
                 float x = event.getX();
                 float y = event.getY();
                 int w = (int) ((1 / 13.0) * getWidth());
