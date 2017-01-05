@@ -263,14 +263,10 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
     private void drawStaticWave(Canvas canvas, int startX, int endX, int startY, int endY, int w, float radius, int cx, int cy) {
         int waveProgress = (endX - startX) / 2;
         int sy, ey;
-        float period = (float) (2 * Math.PI / ((endX - startX) / 1.6));
-        float a = (startY - endY) / 15;
+        float period = (float) (2 * Math.PI / ((endX - startX) / 1.2));
+        float a = (startY - endY) / 10;
         for (int i = startX; i < endX; i++) {
             sy = (int) Math.round(cy + Math.sqrt(radius * radius - Math.pow(i - cx, 2)));
-
-            ey = (int) Math.round(a * Math.cos(period * (waveProgress + i - startX)) + endY);
-            ey = Math.min(sy, ey);
-            canvas.drawLine(i, sy, i, ey, wave1Paint);
 
             ey = (int) Math.round(a * Math.sin(period * (waveProgress + i - startX)) + endY);
             ey = Math.min(sy, ey);

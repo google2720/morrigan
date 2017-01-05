@@ -135,13 +135,6 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
                     }
                 }
             }
-            if (devices == null) {
-                devices = new ArrayList<>();
-            }
-            UiData d = new UiData();
-            d.name = "12321";
-            d.address = "xxx";
-            devices.add(d);
             return devices;
         }
 
