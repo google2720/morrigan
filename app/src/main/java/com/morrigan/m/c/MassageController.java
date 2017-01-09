@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 
 import com.github.yzeaho.log.Lg;
@@ -60,6 +61,7 @@ public class MassageController {
             @Override
             public void run() {
                 saveImpl(context, userId, address, startTime, endTime);
+                context.getContentResolver().notifyChange(getNotifyUri(context), null);
             }
         });
     }
@@ -130,5 +132,9 @@ public class MassageController {
         ble.disconnect();
         Intent intent = new Intent(activity, DeviceScanActivity.class);
         activity.startActivity(intent);
+    }
+
+    public Uri getNotifyUri(Context context) {
+        return Uri.parse("content://" + context.getPackageName() + "/massage");
     }
 }

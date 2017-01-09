@@ -4,8 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.os.AsyncTaskCompat;
@@ -34,6 +37,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
     private BatteryView batteryView;
     private CenterView centerView;
     private StarView starView;
+    private Handler handler = new Handler();
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -41,10 +45,12 @@ public class MainFragment extends Fragment implements CenterView.Callback {
         }
     };
     private LoadDataTask loadDataTask;
-
-    public static MainFragment newInstance() {
-        return new MainFragment();
-    }
+    private ContentObserver observer = new ContentObserver(handler) {
+        @Override
+        public void onChange(boolean selfChange) {
+            loadMassageData(centerView.getAm());
+        }
+    };
 
     public void refresh() {
         loadMassageData();
@@ -127,6 +133,8 @@ public class MainFragment extends Fragment implements CenterView.Callback {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_TIME_TICK);
         getContext().registerReceiver(receiver, filter);
+        Uri uri = MassageController.getInstance().getNotifyUri(getActivity());
+        getContext().getContentResolver().registerContentObserver(uri, true, observer);
     }
 
     private void loadMassageData(boolean am) {
@@ -196,6 +204,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
     public void onDestroy() {
         super.onDestroy();
         getContext().unregisterReceiver(receiver);
+        getContext().getContentResolver().unregisterContentObserver(observer);
         if (rankTask != null) {
             rankTask.cancel(true);
             rankTask = null;
