@@ -103,7 +103,7 @@ public class ForgetPasswordActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                clearPhoneView.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+                clearPhoneView.setVisibility(s.length() > 0 ? View.VISIBLE : View.INVISIBLE);
             }
         });
         phoneView.setText(getIntent().getStringExtra("phone"));

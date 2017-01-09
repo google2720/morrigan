@@ -25,6 +25,7 @@ import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.main.MainActivity;
 import com.morrigan.m.utils.AppTextUtils;
+import com.morrigan.m.utils.NetUtils;
 
 public class LoginActivity extends BaseActivity {
 
@@ -116,6 +117,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
+        if (!NetUtils.isConnected(this)) {
+            ToastUtils.show(this, R.string.error_no_net);
+            return;
+        }
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             ToastUtils.show(this, R.string.input_phone_hint);
