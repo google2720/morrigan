@@ -300,9 +300,6 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
             visualizer = new Visualizer(mediaPlayer.getAudioSessionId());
             visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
             visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
-
-                private Random random = new Random();
-
                 @Override
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
                     if (SystemClock.elapsedRealtime() - updateUiTime > 200) {

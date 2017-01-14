@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
+import com.morrigan.m.ble.BleController;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.login.LoginActivity;
 import com.squareup.picasso.Picasso;
@@ -37,6 +38,8 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Some phones have this bug，we need to close ble device on boot activity.
+        BleController.getInstance().disconnect();
         setContentView(R.layout.activity_welcome);
         iconView = (ImageView) findViewById(android.R.id.icon);
         Picasso.with(this).load(R.drawable.welcome_bg).into(iconView);
@@ -45,7 +48,7 @@ public class WelcomeActivity extends BaseActivity {
 
     private void showPermission() {
         List<String> permissions = new ArrayList<>();
-        // Check if we have write permission
+        // Check if we have this permission
         int p = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (p != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);

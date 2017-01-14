@@ -27,6 +27,7 @@ import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.utils.AppTextUtils;
+import com.morrigan.m.utils.NetUtils;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -34,12 +35,13 @@ import okhttp3.Request;
 public class ForgetPasswordActivity extends BaseActivity {
 
     private static final String TAG = "ForgetPasswordActivity";
+    private static final int DEFAULT_TIME = 60;
     private TextView sendSmsCodeView;
     private EditText phoneView;
     private EditText smsCodeView;
     private EditText pwView;
     private SendSmsCodeTask task;
-    private int time = 60;
+    private int time = DEFAULT_TIME;
     private static final int MSG_TIME = 1;
     private Handler handler = new Handler() {
         @Override
@@ -134,6 +136,10 @@ public class ForgetPasswordActivity extends BaseActivity {
     }
 
     private void fetchSmsCode() {
+        if (!NetUtils.isConnected(this)) {
+            ToastUtils.show(this, R.string.error_no_net);
+            return;
+        }
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             ToastUtils.show(this, R.string.input_phone_hint);
@@ -164,8 +170,10 @@ public class ForgetPasswordActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            sendSmsCodeView.setText(R.string.fetching_sms_code);
+//            sendSmsCodeView.setText(R.string.fetching_sms_code);
             sendSmsCodeView.setClickable(false);
+            time = DEFAULT_TIME;
+            handler.sendEmptyMessage(MSG_TIME);
         }
 
         @Override
@@ -191,8 +199,13 @@ public class ForgetPasswordActivity extends BaseActivity {
         @Override
         protected void onPostExecute(UiResult result) {
             task = null;
-            if (result.success) {
-                handler.sendEmptyMessage(MSG_TIME);
+            if (isFinishing()) {
+                return;
+            }
+            if (!result.success) {
+                handler.removeMessages(MSG_TIME);
+                sendSmsCodeView.setText(R.string.fetch_sms_code);
+                sendSmsCodeView.setClickable(true);
             }
             ToastUtils.show(context, result.message);
         }
@@ -204,6 +217,10 @@ public class ForgetPasswordActivity extends BaseActivity {
     }
 
     private void complete() {
+        if (!NetUtils.isConnected(this)) {
+            ToastUtils.show(this, R.string.error_no_net);
+            return;
+        }
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             ToastUtils.show(this, R.string.input_phone_hint);

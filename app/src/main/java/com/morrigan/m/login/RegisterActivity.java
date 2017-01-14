@@ -29,6 +29,7 @@ import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.c.UserController;
 import com.morrigan.m.utils.AppTextUtils;
+import com.morrigan.m.utils.NetUtils;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -196,7 +197,6 @@ public class RegisterActivity extends BaseActivity {
             try {
                 UserController c = UserController.getInstance();
                 if (c.checkRegister(context, mobile)) {
-                    uiResult.success = false;
                     publishProgress();
                 } else {
                     HttpResult r = c.sendSmsCode(context, mobile);
@@ -266,6 +266,10 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void register() {
+        if (!NetUtils.isConnected(this)) {
+            ToastUtils.show(this, R.string.error_no_net);
+            return;
+        }
         if (!manView.isActivated() && !womenView.isActivated()) {
             ToastUtils.show(this, R.string.please_select_sex);
             return;

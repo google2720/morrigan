@@ -123,7 +123,7 @@ public class LoginActivity extends BaseActivity {
         }
         String mobile = phoneView.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
-            ToastUtils.show(this, R.string.input_phone_hint);
+            ToastUtils.show(this, R.string.login_error_phone);
             return;
         }
         if (!AppTextUtils.isCellPhone(mobile)) {
@@ -132,7 +132,7 @@ public class LoginActivity extends BaseActivity {
         }
         String pw = pwView.getText().toString().trim();
         if (TextUtils.isEmpty(pw)) {
-            ToastUtils.show(this, R.string.input_pw_hint);
+            ToastUtils.show(this, R.string.login_error_phone);
             return;
         }
         loginImpl(mobile, pw);
