@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.github.yzeaho.common.ToastUtils;
 import com.morrigan.m.BaseActivity;
+import com.morrigan.m.BuildConfig;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleCallback;
 import com.morrigan.m.ble.BleController;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
  */
 public class DeviceScanResultActivity extends BaseActivity implements DeviceScanResultAdapter.Listener {
 
+    private static final boolean DEBUG = false;
     private BleController ble = BleController.getInstance();
     private BleCallback cb = new SimpleBleCallback() {
         @Override
@@ -133,6 +135,17 @@ public class DeviceScanResultActivity extends BaseActivity implements DeviceScan
                         d.name = device.name;
                         d.showIcon = true;
                     }
+                }
+            }
+            if (DEBUG) {
+                if (devices == null) {
+                    devices = new ArrayList<>();
+                }
+                for (int i = 0; i < 15; i++) {
+                    UiData data = new UiData();
+                    data.address = "dsfdsfds";
+                    data.name = "sfsdf";
+                    devices.add(data);
                 }
             }
             return devices;
