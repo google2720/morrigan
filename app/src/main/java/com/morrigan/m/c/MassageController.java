@@ -14,6 +14,7 @@ import com.morrigan.m.ble.BleController;
 import com.morrigan.m.ble.db.Massage;
 import com.morrigan.m.device.DeviceScanActivity;
 import com.morrigan.m.main.UploadHistoryDataService;
+import com.morrigan.m.music.MusicActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -126,6 +127,9 @@ public class MassageController {
     }
 
     public void gotoDeviceScanActivity(Activity activity) {
+        if (activity instanceof MusicActivity){
+            ((MusicActivity)activity).stopPlay();
+        }
         BleController ble = BleController.getInstance();
         ble.setAutoConnect(false);
         ble.setAutoReconnect(false);

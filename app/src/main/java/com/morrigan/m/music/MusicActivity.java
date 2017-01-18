@@ -332,17 +332,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         finish();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        hander.removeMessages(MSG_MASSAGE);
-        visualizer.setEnabled(false);
-        mediaPlayer.pause();
-        btnPlay.setImageResource(R.drawable.music_play);
-        currState = START;
-        popupWindow.setPlayIndex(currIndex, false);
-        massageStopAsync();
-    }
+
 
     @Override
     protected void onDestroy() {
@@ -400,15 +390,18 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         }
     }
 
-    private void stopPlay() {
-        hander.removeMessages(MSG_MASSAGE);
-        visualizer.setEnabled(false);
-        mediaPlayer.pause();
-        btnPlay.setImageResource(R.drawable.music_play);
-        currState = START;
-        popupWindow.setPlayIndex(currIndex, false);
-        massageStopAsync();
+    public void stopPlay() {
+        if ( currState == PAUSE) {
+            hander.removeMessages(MSG_MASSAGE);
+            visualizer.setEnabled(false);
+            mediaPlayer.pause();
+            btnPlay.setImageResource(R.drawable.music_play);
+            currState = START;
+            popupWindow.setPlayIndex(currIndex, false);
+            massageStopAsync();
+        }
     }
+
 
     //上一首
     private void previous() {
