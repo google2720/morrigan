@@ -3,11 +3,14 @@ package com.morrigan.m.login;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.os.AsyncTaskCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -36,6 +39,7 @@ public class ForgetPasswordActivity extends BaseActivity {
 
     private static final String TAG = "ForgetPasswordActivity";
     private static final int DEFAULT_TIME = 60;
+    private static final int REQUEST_CODE_REGISTER = 1;
     private TextView sendSmsCodeView;
     private EditText phoneView;
     private EditText smsCodeView;
@@ -271,19 +275,25 @@ public class ForgetPasswordActivity extends BaseActivity {
         protected UiResult<String> doInBackground(Void... params) {
             UiResult<String> uiResult = new UiResult<>();
             try {
-                String url = activity.getString(R.string.host) + "/rest/moli/forget-psw";
-                FormBody.Builder b = new FormBody.Builder();
-                b.add("mobile", mobile);
-                b.add("msgCode", smsCode);
-                b.add("newPsw", pw);
-                Request.Builder builder = new Request.Builder();
-                builder.url(url);
-                builder.post(b.build());
-                HttpResult r = new HttpProxy().execute(activity, builder.build(), HttpResult.class);
-                uiResult.success = r.isSuccessful();
-                uiResult.message = r.retMsg;
-                if (uiResult.success) {
-                    UserController.getInstance().setPassword(activity, pw);
+                UserController c = UserController.getInstance();
+                if (!c.checkRegister(activity, mobile)) {
+                    uiResult.success = false;
+                    publishProgress();
+                } else {
+                    String url = activity.getString(R.string.host) + "/rest/moli/forget-psw";
+                    FormBody.Builder b = new FormBody.Builder();
+                    b.add("mobile", mobile);
+                    b.add("msgCode", smsCode);
+                    b.add("newPsw", pw);
+                    Request.Builder builder = new Request.Builder();
+                    builder.url(url);
+                    builder.post(b.build());
+                    HttpResult r = new HttpProxy().execute(activity, builder.build(), HttpResult.class);
+                    uiResult.success = r.isSuccessful();
+                    uiResult.message = r.retMsg;
+                    if (uiResult.success) {
+                        UserController.getInstance().setPassword(activity, pw);
+                    }
                 }
             } catch (Exception e) {
                 Lg.w(TAG, "failed to register", e);
@@ -293,12 +303,41 @@ public class ForgetPasswordActivity extends BaseActivity {
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            showNoRegisteredDialog();
+        }
+
+        @Override
         protected void onPostExecute(UiResult<String> result) {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
             ToastUtils.show(activity, result.message);
             if (result.success) {
+                finish();
+            }
+        }
+    }
+
+    private void showNoRegisteredDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.login_error_no_register);
+        builder.setNegativeButton(R.string.action_cancel, null);
+        builder.setPositiveButton(R.string.action_register, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(ForgetPasswordActivity.this, RegisterActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_REGISTER);
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_REGISTER) {
+            if (resultCode == RESULT_OK) {
                 finish();
             }
         }

@@ -154,7 +154,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         private void draw(Canvas canvas, int cx, int cy, float initRadius, float maxRadius) {
-            final float totalTime = (time - gear * 6);
+            final float totalTime = (time - (gear - 1) * 30);
             paint.setAlpha(Math.min(alpha, 0xff));
             canvas.drawCircle(cx, cy, initRadius + v, paint);
             v += (maxRadius / totalTime);

@@ -34,12 +34,15 @@ public class WelcomeActivity extends BaseActivity {
     };
 
     private ImageView iconView;
+    private BleController ble = BleController.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Some phones have this bug，we need to close ble device on boot activity.
-        BleController.getInstance().disconnect();
+        ble.setAutoReconnect(false);
+        ble.setAutoConnect(false);
+        ble.disconnect();
         setContentView(R.layout.activity_welcome);
         iconView = (ImageView) findViewById(android.R.id.icon);
         Picasso.with(this).load(R.drawable.welcome_bg).into(iconView);

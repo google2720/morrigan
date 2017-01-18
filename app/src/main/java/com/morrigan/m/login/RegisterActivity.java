@@ -196,13 +196,9 @@ public class RegisterActivity extends BaseActivity {
             UiResult uiResult = new UiResult();
             try {
                 UserController c = UserController.getInstance();
-                if (c.checkRegister(context, mobile)) {
-                    publishProgress();
-                } else {
-                    HttpResult r = c.sendSmsCode(context, mobile);
-                    uiResult.success = r.isSuccessful();
-                    uiResult.message = r.retMsg;
-                }
+                HttpResult r = c.sendSmsCode(context, mobile);
+                uiResult.success = r.isSuccessful();
+                uiResult.message = r.retMsg;
             } catch (Exception e) {
                 Lg.w(TAG, "failed to send sms code", e);
                 uiResult.message = HttpProxy.parserError(context, e);
