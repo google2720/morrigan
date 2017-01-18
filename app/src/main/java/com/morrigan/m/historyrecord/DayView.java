@@ -58,12 +58,16 @@ public class DayView extends View {
         super.onDraw(canvas);
         if (datas != null) {
 
-            canvas.drawLine(0, (float) 0.85 * getHeight(), getWidth() - 3 - (int) ((1 / 49.0) * getWidth() * 2), (float) 0.85 * getHeight() + 2, mPaint);
+            canvas.drawLine(0, (float) 0.85 * getHeight(), getWidth() - (int) ((1 / 49.0) * getWidth() * 2), (float) 0.85 * getHeight() + 2, mPaint);
+
             for (int i = 0; i < datas.size(); i++) {
                 int w = (int) ((1 / 49.0) * getWidth());
                 int l = (int) ((i * 2 / 49.0) * getWidth());
                 int t = (int) (getHeight() * (0.2 + 0.6 * (1 - (datas.get(i) * 1.0 / max))));
                 int r = l + w;
+                if (i==23){
+                    r=getWidth() - (int) ((1 / 49.0) * getWidth() * 2);///确保线和24小时右对齐
+                }
                 int b = (int) (getHeight() * 0.85 + 1);
                 if (max == 0) {
                     t = b - 5;//数据全为0时。//默认画出高度为5px柱形

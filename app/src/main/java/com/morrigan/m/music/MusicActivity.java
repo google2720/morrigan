@@ -333,6 +333,18 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        hander.removeMessages(MSG_MASSAGE);
+        visualizer.setEnabled(false);
+        mediaPlayer.pause();
+        btnPlay.setImageResource(R.drawable.music_play);
+        currState = START;
+        popupWindow.setPlayIndex(currIndex, false);
+        massageStopAsync();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         massageStopAsync();
