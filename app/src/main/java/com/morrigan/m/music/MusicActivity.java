@@ -37,6 +37,7 @@ import com.morrigan.m.music.MusicLoader.MusicInfo;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * 音乐跟随界面
@@ -329,14 +330,25 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     public void onClickBack(View view) {
+        Log.i(TAG, System.currentTimeMillis()  + "");
+        mediaPlayer.stop();
         finish();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.i(TAG, System.currentTimeMillis()  + "");
+        mediaPlayer.stop();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        releaseResources();
+    }
+
+    private void releaseResources() {
         massageStopAsync();
         ble.removeCallback(cb);
         hander.removeMessages(MSG_MASSAGE);
@@ -345,6 +357,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
         visualizer.release();
         mediaPlayer.stop();
         mediaPlayer.release();
+        Log.i(TAG, System.currentTimeMillis()  + "");
     }
 
     public void onClickPrev(View view) {
@@ -391,7 +404,7 @@ public class MusicActivity extends BaseActivity implements MediaPlayer.OnComplet
     }
 
     public void stopPlay() {
-        if ( currState == PAUSE) {
+        if (currState == PAUSE) {
             hander.removeMessages(MSG_MASSAGE);
             visualizer.setEnabled(false);
             mediaPlayer.pause();

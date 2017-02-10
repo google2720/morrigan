@@ -26,7 +26,7 @@ import java.util.Locale;
  * Created by fei on 2016/10/12.
  */
 public class DayHistotyRecordFragment extends Fragment {
-
+    private TextView txt_total_min_num;
     private TextView txt_total_min;
     private TextView txt_date;
     private TextView txt_goal_min;
@@ -50,6 +50,7 @@ public class DayHistotyRecordFragment extends Fragment {
         txt_goal_min = (TextView) view.findViewById(R.id.txt_goal_min);
         txt_nursing_min = (TextView) view.findViewById(R.id.txt_nursing_min);
         txt_sulplus_min = (TextView) view.findViewById(R.id.txt_sulplus_min);
+        txt_total_min_num=(TextView) view.findViewById(R.id.txt_total_min_num);
     }
 
     @Override
@@ -106,10 +107,13 @@ public class DayHistotyRecordFragment extends Fragment {
 
             // 护养时间
             if (nursing > 0) {
-                txt_total_min.setText(getString(R.string.history_time, nursing));
+                txt_total_min.setText(R.string.history_time1);
                 txt_total_min.setCompoundDrawables(null, null, null, null);
+                txt_total_min_num.setText(nursing+"");
                 txt_nursing_min.setText(getString(R.string.history_time, nursing));
                 txt_nursing_min.setCompoundDrawables(null, null, null, null);
+            }else {
+                txt_total_min_num.setVisibility(View.GONE);
             }
 
             // 剩余目标值

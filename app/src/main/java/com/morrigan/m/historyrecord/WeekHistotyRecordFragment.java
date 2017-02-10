@@ -39,6 +39,7 @@ public class WeekHistotyRecordFragment extends Fragment {
     private WeekView weekView;
     private GetHistTask task;
     private HistoryResult data;
+    private TextView txt_total_min_num;
     private TextView txt_total_min;
     private TextView txt_date;
     private TextView txt_goal_min;
@@ -55,6 +56,7 @@ public class WeekHistotyRecordFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         weekView = (WeekView) view.findViewById(R.id.weekView);
+        txt_total_min_num = (TextView) view.findViewById(R.id.txt_total_min_num);
         txt_total_min = (TextView) view.findViewById(R.id.txt_total_min);
         txt_date = (TextView) view.findViewById(R.id.txt_date);
         txt_goal_min = (TextView) view.findViewById(R.id.txt_goal_min);
@@ -114,8 +116,11 @@ public class WeekHistotyRecordFragment extends Fragment {
             if (nursing > 0) {
                 txt_nursing_min.setText(getString(R.string.history_time, nursing));
                 txt_nursing_min.setCompoundDrawables(null, null, null, null);
-                txt_total_min.setText(getString(R.string.history_time, nursing));
+                txt_total_min_num.setText(nursing+"");
+                txt_total_min.setText(R.string.history_time1);
                 txt_total_min.setCompoundDrawables(null, null, null, null);
+            }else {
+                txt_total_min_num.setVisibility(View.GONE);
             }
 
             // 平均护养

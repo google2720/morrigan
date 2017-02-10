@@ -17,8 +17,19 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:paddingTop="20dp">
-
             <TextView
+                android:id="@+id/txt_total_min_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginRight="2dp"
+                android:textSize="24dp"
+                android:gravity="bottom"
+                android:layout_alignBaseline="@+id/txt_date"
+                android:textColor="@color/cffbe8ef2" />
+            <TextView
+                android:layout_toRightOf="@+id/txt_total_min_num"
+                android:layout_alignBaseline="@+id/txt_date"
                 android:id="@+id/txt_total_min"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -26,6 +37,8 @@
                 android:drawablePadding="5dp"
                 android:text="分钟"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="bottom"
+                android:padding="0dp"
                 android:textColor="@color/cffbe8ef2" />
 
             <TextView
@@ -35,6 +48,7 @@
                 android:layout_alignParentRight="true"
                 android:text="7月22日-7月28日"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="bottom"
                 android:textColor="@color/cffbe8ef2" />
 
             <com.morrigan.m.historyrecord.WeekView
@@ -84,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@drawable/ic_min"
-                    android:drawablePadding="3dp"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="分钟"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -125,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@drawable/ic_min"
-                    android:drawablePadding="3dp"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="分钟"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -166,7 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@drawable/ic_min"
-                    android:drawablePadding="3dp"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="分钟"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -207,7 +221,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:drawableLeft="@drawable/ic_min"
-                    android:drawablePadding="3dp"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="分钟/日"
                     android:textAppearance="?android:attr/textAppearanceSmall"
