@@ -40,11 +40,15 @@ public class DeviceScanActivity extends BaseActivity {
         public void onLeScan(BluetoothDevice device) {
             if (!TextUtils.isEmpty(device.getName())) {
                 if (!addresses.contains(device.getAddress())) {
-                    UiData d = new UiData();
-                    d.name = device.getName();
-                    d.address = device.getAddress();
-                    devices.add(d);
-                    addresses.add(device.getAddress());
+                    String name = device.getName();
+                    if (name != null && (name.contains("Morrigan")||name.contains("H001"))) {
+                        UiData d = new UiData();
+                        d.name = device.getName();
+                        d.address = device.getAddress();
+                        devices.add(d);
+                        addresses.add(device.getAddress());
+                    }
+
                 }
             }
         }
