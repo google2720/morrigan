@@ -8,16 +8,21 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.annotation.Keep;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.animation.LinearInterpolator;
 
 import com.github.yzeaho.log.Lg;
 import com.morrigan.m.BuildConfig;
+import com.morrigan.m.R;
 
 /**
  * 手动按摩控件
@@ -30,6 +35,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint paint = new Paint();
     private Paint timePaint = new Paint();
     private Paint textPaint = new Paint();
+    private Paint text2Paint = new Paint();
     private Paint wave1Paint = new Paint();
     private Paint wave2Paint = new Paint();
     private int offset = 2;
@@ -44,9 +50,16 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     private long stopSystemTime;
     private RenderThread renderThread;
     private volatile boolean drawCreated;
+    private Rect drawableRect = new Rect();
+    private Halo halo;
+    private final Drawable drawable;
 
     public ManualView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        drawable = ContextCompat.getDrawable(getContext(), R.drawable.manual_bg);
+        halo = new DrawableHalo(context, 90f);
+        halo.setGear(gear);
+
         float density = getResources().getDisplayMetrics().density;
         textPadding *= density;
         offset *= density;
@@ -58,8 +71,15 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         textPaint.setStrokeWidth(1);
         textPaint.setColor(Color.WHITE);
         textPaint.setFakeBoldText(true);
-        // textPaint.setTextSkewX(-0.2f);
+        textPaint.setTextAlign(Paint.Align.RIGHT);
         textPaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltcxh.ttf"));
+
+        text2Paint.setAntiAlias(true);
+        text2Paint.setStrokeWidth(1);
+        text2Paint.setColor(Color.WHITE);
+        text2Paint.setFakeBoldText(true);
+        text2Paint.setTextAlign(Paint.Align.LEFT);
+        text2Paint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltcxh.ttf"));
 
         timePaint.setAntiAlias(true);
         timePaint.setStrokeWidth(1);
@@ -131,42 +151,23 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
                         }
                     }
                     final long endTime = SystemClock.elapsedRealtime();
+                    Log.i("DrawableHalo", "s " + (endTime - startTime));
                     SystemClock.sleep(Math.max(0, 1000 / 60 - (endTime - startTime)));
                 }
             } catch (Exception e) {
-                Lg.w("ManualView", "", e);
+                Lg.w("ManualView", "failed to draw manual view", e);
             }
         }
     }
 
-    private class Halo {
+    public interface Halo {
 
-        private Paint paint;
-        private float time = 60f;
-        private int alpha = 0xff;
-        private float v;
+        void draw(Canvas canvas, int cx, int cy, float initRadius, float maxRadius);
 
-        private Halo(float time) {
-            this.time = time;
-            paint = new Paint();
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(Color.WHITE);
-        }
+        void setGear(int gear);
 
-        private void draw(Canvas canvas, int cx, int cy, float initRadius, float maxRadius) {
-            final float totalTime = (time - (gear - 1) * 30);
-            paint.setAlpha(Math.min(alpha, 0xff));
-            canvas.drawCircle(cx, cy, initRadius + v, paint);
-            v += (maxRadius / totalTime);
-            alpha -= (0xff / totalTime);
-            if (alpha <= 0 || v >= maxRadius) {
-                v = 0;
-                alpha = 0xff;
-            }
-        }
+        void stop();
     }
-
-    private Halo halo = new Halo(90f);
 
     private void drawImpl(Canvas canvas) {
         final int w = getWidth();
@@ -174,30 +175,34 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         final int cx = w / 2;
         final int cy = h / 2;
         final float radius = w * 25f / 100;
-        final float maxRadius = Math.min(cx / 2, cy / 2);
 
         if (start) {
-            halo.draw(canvas, cx, cy, radius, maxRadius);
+            halo.draw(canvas, cx, cy, radius, Math.min(cx, cy));
         }
 
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(0xff7b3ac3);
-        canvas.drawCircle(cx, cy, radius, paint);
-
-        int left = Math.round(cx - radius);
-        int top = Math.round(cy + radius / 4);
-        int right = Math.round(cx + radius);
-        int bottom = Math.round(cy + radius);
         if (BuildConfig.WAVE_ON) {
-            drawDynamicWave(canvas, left, right, bottom, top, w, radius, cx, cy);
-        } else {
-            drawStaticWave(canvas, left, right, bottom, top, w, radius, cx, cy);
-        }
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(0xff7b3ac3);
+            canvas.drawCircle(cx, cy, radius, paint);
 
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(offset);
-        paint.setColor(Color.WHITE);
-        canvas.drawCircle(cx, cy, radius, paint);
+            final int left = Math.round(cx - radius);
+            final int top = Math.round(cy + radius / 4);
+            final int right = Math.round(cx + radius);
+            final int bottom = Math.round(cy + radius);
+            drawDynamicWave(canvas, left, right, bottom, top, w, radius, cx, cy);
+
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(offset);
+            paint.setColor(Color.WHITE);
+            canvas.drawCircle(cx, cy, radius, paint);
+        } else {
+            drawableRect.left = Math.round(cx - radius);
+            drawableRect.top = Math.round(cy - radius);
+            drawableRect.right = Math.round(cx + radius);
+            drawableRect.bottom = Math.round(cy + radius);
+            drawable.setBounds(drawableRect);
+            drawable.draw(canvas);
+        }
 
         timePaint.setTextSize(w / 15);
         final String text;
@@ -208,14 +213,12 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
         }
         canvas.drawText(text, cx, cy + radius * 70 / 100, timePaint);
 
-        int saveCount = canvas.save();
+        final int saveCount = canvas.save();
         canvas.translate(cx, cy);
         textPaint.setTextSize(w / 5);
-        textPaint.setTextAlign(Paint.Align.RIGHT);
         canvas.drawText(String.valueOf(gear), 0, 0, textPaint);
-        textPaint.setTextSize(w / 18);
-        textPaint.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText("gear", textPadding, 0, textPaint);
+        text2Paint.setTextSize(w / 18);
+        canvas.drawText("gear", textPadding, 0, text2Paint);
         canvas.restoreToCount(saveCount);
     }
 
@@ -265,6 +268,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
             return false;
         }
         gear = Math.min(MAX_GEAR, ++gear);
+        halo.setGear(gear);
         return true;
     }
 
@@ -273,13 +277,13 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
             return false;
         }
         gear = Math.max(MIN_GEAR, --gear);
+        halo.setGear(gear);
         return true;
     }
 
     @Keep
     public void setAnimValue(float v) {
         av = v;
-        // ViewCompat.postInvalidateOnAnimation(this);
     }
 
     public void start() {
@@ -296,6 +300,7 @@ public class ManualView extends SurfaceView implements SurfaceHolder.Callback {
     public void stop() {
         stopSystemTime = System.currentTimeMillis();
         start = false;
+        halo.stop();
         ObjectAnimator animator = ObjectAnimator.ofFloat(this, "animValue", av, 0);
         animator.setDuration(1000);
         animator.setInterpolator(new LinearInterpolator());

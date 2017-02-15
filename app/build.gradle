@@ -14,6 +14,7 @@ android {
         buildConfigField "int", "LOG_LEVEL", project.hasProperty('log_level') ? log_level : "2"
         buildConfigField "boolean", "WAVE_ON", "false"
         buildConfigField "boolean", "TEST_MUSIC", project.hasProperty('test_music') ? test_music : "false"
+        buildConfigField "boolean", "MANUAL_DRAWABLE", project.hasProperty('manual_drawable') ? manual_drawable : "false"
     }
     signingConfigs {
         config {
