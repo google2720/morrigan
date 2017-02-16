@@ -23,8 +23,6 @@ public class DrawableHalo implements ManualView.Halo {
     private int gear;
     private DrawableItemHalo h1;
     private DrawableItemHalo h2;
-    private DrawableItemHalo h3;
-    private DrawableItemHalo h4;
 
     private class DrawableItemHalo {
 
@@ -86,19 +84,16 @@ public class DrawableHalo implements ManualView.Halo {
     public DrawableHalo(Context context, float time) {
         this.context = context;
         this.time = time;
-        h1 = new DrawableItemHalo(R.drawable.manual_halo, 0, 0xff9147dd, false);
-        h2 = new DrawableItemHalo(R.drawable.manual_halo, Math.round(time / 4), 0xff9147dd, true);
-        h3 = new DrawableItemHalo(R.drawable.manual_halo, Math.round(time / 4) * 2, 0xff9147dd, false);
-        h4 = new DrawableItemHalo(R.drawable.manual_halo, Math.round(time / 4) * 3, 0xff9147dd, false);
+        h1 = new DrawableItemHalo(R.drawable.manual_halo, 0, 0xffffffff, false);
+        h2 = new DrawableItemHalo(R.drawable.manual_halo, Math.round(time / 2), 0xffffffff, true);
     }
 
     @Override
     public void draw(Canvas canvas, int cx, int cy, float initRadius, float maxRadius) {
-        final float totalTime = (time / 3 * (3 + 1 - gear));
+        final float totalTime = time - (gear - 1) * 20;
+//        final float totalTime = time / 3 * (3 + 1 - gear);
         h1.draw(canvas, totalTime, cx, cy, initRadius, maxRadius);
         h2.draw(canvas, totalTime, cx, cy, initRadius, maxRadius);
-        h3.draw(canvas, totalTime, cx, cy, initRadius, maxRadius);
-        h4.draw(canvas, totalTime, cx, cy, initRadius, maxRadius);
     }
 
     @Override
@@ -110,7 +105,5 @@ public class DrawableHalo implements ManualView.Halo {
     public void stop() {
         h1.stop();
         h2.stop();
-        h3.stop();
-        h4.stop();
     }
 }
