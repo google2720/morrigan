@@ -151,9 +151,9 @@ public class ManualActivity extends BaseActivity {
         if (l && r) {
             return 0x00;
         } else if (l) {
-            return 0x01;
-        } else if (r) {
             return 0x02;
+        } else if (r) {
+            return 0x01;
         } else {
             return 0x00;
         }
