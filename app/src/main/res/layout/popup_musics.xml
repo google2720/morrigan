@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rl_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:id="@+id/ll_close"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <com.morrigan.m.music.FlingDownImageView
+        android:id="@+id/iv_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_close"
+        android:background="@drawable/ic_music_poup_top"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/iv_top"
+        android:background="#F1F8F9FF"
+        >
+
+
+        <View
+            android:id="@+id/line_top"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/divider_line"></View>
+
+        <LinearLayout
+            android:id="@+id/ll_rw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/line_bottom"
+            android:layout_below="@+id/line_top"
+            android:orientation="vertical"
+
+            >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rw_music"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/line_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_above="@+id/rl_close"
+            android:background="@color/divider_line"
+            ></View>
+
+        <RelativeLayout
+            android:id="@+id/rl_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/tv_close"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/music_popup_close"
+                android:textSize="20dp"
+                />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

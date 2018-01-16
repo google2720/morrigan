@@ -1,0 +1,69 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.morrigan.m"
+        minSdkVersion 18
+        targetSdkVersion 25
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        resConfigs "zh"
+        versionCode project.hasProperty('version_code') ? Integer.parseInt(version_code) : 999999
+        versionName project.hasProperty('version_name') ? version_name : "9.9.9"
+        buildConfigField "int", "LOG_LEVEL", project.hasProperty('log_level') ? log_level : "2"
+        buildConfigField "boolean", "WAVE_ON", "false"
+        buildConfigField "boolean", "TEST_MUSIC", project.hasProperty('test_music') ? test_music : "false"
+        buildConfigField "boolean", "MANUAL_DRAWABLE", project.hasProperty('manual_drawable') ? manual_drawable : "false"
+    }
+    signingConfigs {
+        config {
+            keyAlias 'androidreleasekey'
+            keyPassword 'android'
+            storeFile file('../y.keystore')
+            storePassword 'android'
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.config
+        }
+        release {
+            signingConfig signingConfigs.config
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            if ("release".equals(variant.buildType.name)) {
+                def oldFile = output.outputFile
+                def apkName = 'morragan-' + variant.buildType.name + "-" + variant.versionName + '-' + getCurrentDate() + '.apk'
+                output.outputFile = new File(oldFile.parent, apkName)
+            }
+        }
+    }
+}
+
+def getCurrentDate() {
+    return new Date().format('yyyyMMddHHmmss')
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:support-v4:25.1.0'
+    compile 'com.android.support:design:25.1.0'
+    compile project(path: ':http')
+    compile project(path: ':log')
+    compile project(path: ':common')
+    compile project(path: ':pickerview')
+    compile project(path: ':BottomPushPopWindow')
+    compile project(path: ':file')
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.umeng.analytics:analytics:latest.integration'
+}

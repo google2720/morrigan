@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.morrigan.m.main.MenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/navigate"
+        android:name="com.morrigan.m.main.NavigateFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <fragment
+        android:id="@+id/content"
+        android:name="com.morrigan.m.main.MainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</com.morrigan.m.main.MenuLayout>

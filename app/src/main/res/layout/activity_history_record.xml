@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.morrigan.m.historyrecord.HisttofyRecordActivity">
+
+    <!-- 顶部切换按钮 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/c8c39e5">
+
+        <LinearLayout
+            android:id="@+id/contact_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:visibility="visible"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/contact_radio1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/history_group_tab_l_selector"
+                android:gravity="center"
+                android:minHeight="32dp"
+                android:minWidth="90dp"
+                android:text="@string/history_today"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/history_text_selector" />
+
+            <TextView
+                android:id="@+id/contact_radio2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/history_group_tab_r_selector"
+                android:gravity="center"
+                android:minHeight="32dp"
+                android:minWidth="90dp"
+                android:text="@string/history_week"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/history_text_selector" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.morrigan.m.view.MyViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

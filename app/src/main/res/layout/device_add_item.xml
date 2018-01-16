@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/device_add"
+    android:minHeight="168dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/ic_device_add"
+        android:gravity="center"
+        android:text="@string/device_add"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#a15fe9" />
+</FrameLayout>

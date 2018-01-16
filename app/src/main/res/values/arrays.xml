@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="emotion_names">
+        <item>@string/emotion_be_in_love</item>
+        <item>@string/emotion_married</item>
+        <item>@string/emotion_single</item>
+    </string-array>
+    <string-array name="emotion_values">
+        <item>"B"</item>
+        <item>"M"</item>
+        <item>"S"</item>
+    </string-array>
+</resources>

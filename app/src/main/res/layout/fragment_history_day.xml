@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cf7f7f7"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/c8126e4"
+            android:paddingLeft="15dp"
+            android:paddingRight="3dp"
+            android:paddingTop="20dp">
+            <TextView
+                android:id="@+id/txt_total_min_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginRight="2dp"
+                android:textSize="24dp"
+                android:gravity="bottom"
+                android:layout_alignBaseline="@+id/txt_date"
+                android:textColor="@color/cffbe8ef2" />
+            <TextView
+                android:id="@+id/txt_total_min"
+                android:layout_toRightOf="@+id/txt_total_min_num"
+                android:layout_alignBaseline="@+id/txt_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_total_min"
+                android:drawablePadding="5dp"
+                android:gravity="bottom"
+                android:text="分钟"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/cffbe8ef2" />
+
+            <TextView
+                android:id="@+id/txt_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="12dp"
+                android:gravity="bottom"
+                android:text="7月22日-7月28日"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/cffbe8ef2" />
+
+            <com.morrigan.m.historyrecord.DayView
+                android:id="@+id/dayView"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_marginTop="15dp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/cffffff"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/cf3f3f3" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cffffff"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/txt_goal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_history_goal"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="@string/history_day_goal"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/c5a5a5a" />
+
+                <TextView
+                    android:id="@+id/txt_goal_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@drawable/ic_min"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="分钟"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/c989898" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="15dp"
+                android:background="@color/cf3f3f3" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cffffff"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/txt_nursing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_history_nursing"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="@string/history_day_nursing"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/c5a5a5a" />
+
+                <TextView
+                    android:id="@+id/txt_nursing_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@drawable/ic_min"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="分钟"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/c989898" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="15dp"
+                android:background="@color/cf3f3f3" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cffffff"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/txt_sulplus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_history_sulplus"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="@string/history_week_surplus"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/c5a5a5a" />
+
+                <TextView
+                    android:id="@+id/txt_sulplus_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@drawable/ic_min"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="分钟"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/c989898" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/cf3f3f3" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

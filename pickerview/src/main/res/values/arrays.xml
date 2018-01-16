@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="event_create_sms_notify_time">
+        <item>"小时"</item>
+        <item>"分钟"</item>
+    </string-array>
+</resources>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.morrigan.m">
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <application
+        android:name=".MainApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="58176bca04e2058c7e000106" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="default" />
+
+        <activity
+            android:name=".WelcomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Welcome">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Login"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".login.RegisterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Login"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".login.ForgetPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Login"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".main.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Main" />
+        <activity
+            android:name=".main.ManualActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.AutoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.PersonalActivity"
+            android:label="@string/personal_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.ModifyNickNameActivity"
+            android:label="@string/modify_nickname_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".goal.GoalActivity"
+            android:label="@string/goal_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.DeviceActivity"
+            android:label="@string/device_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.DeviceNameUpdateActivity"
+            android:label="@string/device_name_update_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".device.DeviceScanActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.DeviceScanResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.DeviceBindFailedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.DeviceBindSuccessActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".about.AboutActivity"
+            android:label="@string/about_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FeedbackActivity"
+            android:label="@string/feedback_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WebViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".historyrecord.HisttofyRecordActivity"
+            android:label="@string/history_title_today"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.History" />
+        <activity
+            android:name=".music.MusicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GuideViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Guide" />
+
+        <activity
+            android:name=".ReConnectBleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ReConnect" />
+
+        <service
+            android:name=".main.UploadHistoryDataService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".c.UploadUserInfoService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+        <provider
+            android:name=".MusicProvider"
+            android:authorities="${applicationId}"
+            android:exported="true" />
+    </application>
+
+</manifest>

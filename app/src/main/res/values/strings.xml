@@ -1,0 +1,170 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">"摩莉smart"</string>
+    <string name="action_cancel">"取消"</string>
+    <string name="action_confirm">"确定"</string>
+    <string name="action_complete">"完成"</string>
+    <string name="action_register">"注册"</string>
+    <string name="action_login">"登录"</string>
+    <string name="action_setting">"设置"</string>
+    <string name="action_no">"否"</string>
+    <string name="action_yes">"是"</string>
+    <string name="action_resetting">"重新设置"</string>
+    <string name="action_logout">"注销"</string>
+    <string name="action_connect">"连接"</string>
+    <string name="action_reconnect">"重新连接"</string>
+    <string name="action_fetch">"获取"</string>
+    <!-- 提示框 -->
+    <string name="no_open_ble_tip">"打开蓝牙来允许\"MORRIGAN\"连接到配件"</string>
+    <string name="change_device_tip">"确定要切换设备"</string>
+    <string name="reconnect_tip">"设备已断开连接"</string>
+    <!-- 网络错误 -->
+    <string name="error_no_net">"请检查当前网络"</string>
+    <string name="error_modify">"修改失败"</string>
+    <!-- 欢迎界面 -->
+    <string name="permission_explain">"权限说明"</string>
+    <string name="permission_explain_location">"扫描摩莉设备需要使用手机的位置信息\n"</string>
+    <string name="permission_explain_record">"显示音乐波形图需要使用麦克风权限\n"</string>
+    <string name="permission_explain_retad_external_storage">"播放音乐需要使用读取外部存储权限\n"</string>
+    <!-- 登录界面 -->
+    <string name="input_phone_hint">"请输入手机号码"</string>
+    <string name="input_pw_hint">"请输入密码"</string>
+    <string name="forget_password">"忘记密码?"</string>
+    <string name="login_ing_message">"正在登录"</string>
+    <string name="login_error_no_register">"该手机号未注册"</string>
+    <string name="login_error_register">"该手机号已注册"</string>
+    <string name="login_error_phone">"手机号或密码错误"</string>
+    <string name="login_error_phone_format">"请输入正确的手机号"</string>
+    <string name="login_error_sms_code_expire">"验证码已过有效期"</string>
+    <!-- 注册 -->
+    <string name="select_sex">"选择性别"</string>
+    <string name="select_sex_tip">"一旦选择 性别 注册后不可更改"</string>
+    <string name="male">"男士"</string>
+    <string name="female">"女士"</string>
+    <string name="input_sms_code">"请输入验证码"</string>
+    <string name="fetch_sms_code">"获取验证码"</string>
+    <string name="refetch_sms_code">"重新获取(<xliff>%d</xliff>)"</string>
+    <string name="fetching_sms_code">"正在获取&#8230;"</string>
+    <string name="please_select_sex">"请选择性别"</string>
+    <string name="registering">"正在注册"</string>
+    <!--忘记密码-->
+    <string name="forget_password_title">"忘记密码"</string>
+    <string name="forget_password_tip">"输入您的手机号，获取验证码方可修改密码\n密码修改成功后，要注意牢记"</string>
+    <string name="resetting_pw">"正在重设"</string>
+    <!-- 导航菜单 -->
+    <string name="navigate_setting_kneading">"按摩时"</string>
+    <string name="navigate_setting_my_information">"我的资料"</string>
+    <string name="navigate_setting_goal">"设定目标"</string>
+    <string name="navigate_setting_history">"历史记录"</string>
+    <string name="navigate_setting_relate_account">"关联账号"</string>
+    <string name="navigate_setting_relate_device">"关联设备"</string>
+    <string name="navigate_setting_about_app">"关于应用"</string>
+    <string name="navigate_setting_about">"关于摩莉"</string>
+    <string name="navigate_setting_firmware_upgrade">"固件升级"</string>
+    <string name="navigate_setting_feedback">"意见反馈"</string>
+    <string name="navigate_setting_quit">"注销用户信息"</string>
+    <!-- 我的资料 -->
+    <string name="personal_title">"我的资料"</string>
+    <string name="modify_nickname_title">"修改昵称"</string>
+    <string name="change_head">"更换头像"</string>
+    <string name="please_input">"请输入"</string>
+    <string name="age">"年龄"</string>
+    <string name="emotion">"情感"</string>
+    <string name="height">"身高"</string>
+    <string name="weight">"体重"</string>
+    <string name="quit_current_account">"退出当前账户"</string>
+    <string name="please_input_nickname">"请输入昵称"</string>
+    <string name="changing">"正在修改"</string>
+    <string name="deleting">"正在删除"</string>
+    <string name="emotion_be_in_love">"恋爱"</string>
+    <string name="emotion_married">"已婚"</string>
+    <string name="emotion_single">"未婚"</string>
+    <string name="select_avatar">"选择头像"</string>
+    <string name="from_photo">"从相册中选择"</string>
+    <string name="capture">"拍照"</string>
+    <string name="capture_permission">"拍照功能需要读写SD的权限。"</string>
+    <string name="uploading">"正在上传"</string>
+    <string name="age_message">"%d岁"</string>
+    <string name="height_info">"%scm"</string>
+    <string name="weight_info">"%skg"</string>
+    <string name="quit_tip">"您确定退出当前账号"</string>
+    <!-- 设定目标 -->
+    <string name="goal_title">"设定目标"</string>
+    <string name="minute">"分"</string>
+    <string name="goal_title_tip">"设置您的每日分钟数"</string>
+    <string name="goal_title_message">"设置合理的目标进行挑战"</string>
+    <string name="goal_title_message2">"趣味从达到目标开始"</string>
+    <!-- 关联设备 -->
+    <string name="device_title">"关联设备"</string>
+    <string name="device_add">"添加新设备"</string>
+    <string name="device_scan_title">"摩莉智能文胸"</string>
+    <string name="device_scan_tip">"正在搜索设备&#8230;"</string>
+    <string name="device_scan_stop">"停止搜索"</string>
+    <string name="device_please_select">"请选择设备"</string>
+    <string name="device_result_num">"设备<xliff:g>%s</xliff:g>"</string>
+    <string name="device_connect">"正在连接&#8230;"</string>
+    <string name="device_name_update_title">"修改设备名称"</string>
+    <string name="device_name_input_hint">"请输入设备名称"</string>
+    <string name="device_connect_failed">"连接失败"</string>
+    <string name="device_connect_success">"连接成功"</string>
+    <string name="device_reseach">"重新搜索"</string>
+    <string name="device_remove">"解除绑定"</string>
+    <string name="device_remove_msg">"是否需要解绑"</string>
+    <string name="device_massage_start_tip">"开始养护"</string>
+    <string name="device_unbind_error">"该设备处于连接状态，暂不能解绑"</string>
+    <string name="device_connect_success_o">"每天坚持%s分钟哦！"</string>
+    <!-- 关于界面 -->
+    <string name="about_title">"关于摩莉"</string>
+    <string name="about_product_team">"产品团队"</string>
+    <string name="about_private">"隐私政策"</string>
+    <string name="about_service">"服务条例"</string>
+    <string name="about_copy_right">"摩莉公司版权所有 ©2015-©2016"</string>
+    <!-- 意见反馈 -->
+    <string name="feedback_title">"意见反馈"</string>
+    <string name="feedback_hint">"请输入您的改善意见和问题反馈"</string>
+    <!-- 主界面 -->
+    <string name="knead_manual">"手动按摩"</string>
+    <string name="knead_auto">"自动按摩"</string>
+    <string name="knead_music">"音乐随动"</string>
+    <string name="exit_tip">"不爱美的都休息去了！让我再美一下"</string>
+    <string name="exit_yes">"不要"</string>
+    <string name="exit_no">"美一下"</string>
+    <!-- 手动按摩界面-->
+    <string name="bra_left">"左胸"</string>
+    <string name="bra_right">"右胸"</string>
+    <string name="bra_empty_tip">"同步操作开关至少一个被选中"</string>
+    <string name="bra_max_gear">""当前已经是最高档位""</string>
+    <string name="bra_min_gear">""当前已经是最低档位""</string>
+    <string name="device_no_connect">"设备未连接"</string>
+    <string name="device_no_connect_tip">"请先连接设备再来开始按摩吧"</string>
+    <!-- 自动按摩界面 -->
+    <string name="massage_intense">"强震"</string>
+    <string name="massage_gently">"微按"</string>
+    <string name="massage_dynamic">"动感"</string>
+    <string name="massage_wave">"水波"</string>
+    <string name="massage_soft">"轻柔"</string>
+    <string name="massage_tip1">"向上拖动 任意模式按钮"</string>
+    <string name="massage_tip2">"进行自由组合按摩 点START开始按摩"</string>
+    <string name="massage_ready">"准备按摩吧!"</string>
+    <string name="massage_no_drag_tip">"正在按摩，不能拖动"</string>
+    <string name="massage_start_tip">"请先选择组合模式"</string>
+    <!-- 历史记录 -->
+    <string name="history_title">"历史记录"</string>
+    <string name="history_title_today">"今日一览"</string>
+    <string name="history_title_week">"本周一阅"</string>
+    <string name="history_today">"日"</string>
+    <string name="history_week">"周"</string>
+    <string name="history_record_ing_message">"正在加载&#8230;"</string>
+    <string name="history_week_goal">本周目标</string>
+    <string name="history_week_nursing">本周护养</string>
+    <string name="history_week_surplus">剩余目标值</string>
+    <string name="history_week_average_nursing">平均护养</string>
+    <string name="history_day_goal"> 今日目标</string>
+    <string name="history_day_nursing">今日护养</string>
+    <string name="history_day_surplus">剩余目标值</string>
+    <string name="history_time">%d 分钟</string>
+    <string name="history_time1">分钟</string>
+    <string name="history_time_average">%d分钟/日</string>
+    <!-- 音乐随动 -->
+    <string name="music_play_title">"音乐随动"</string>
+    <string name="music_popup_close">"关闭 "</string>
+</resources>
