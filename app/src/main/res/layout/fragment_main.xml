@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:visibility="gone"
                 android:src="@drawable/logo_text" />
 
             <com.morrigan.m.main.FloatConnectImageView
@@ -57,6 +58,7 @@
             <com.morrigan.m.main.StarView
                 android:id="@+id/star"
                 android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="wrap_content" />
 
         </com.morrigan.m.main.MainLayout>
@@ -87,7 +89,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="@string/knead_manual"
-            android:textColor="#8f54ca" />
+            android:textColor="#5DAEF3" />
 
         <TextView
             android:id="@+id/knead_auto"
@@ -102,7 +104,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="@string/knead_auto"
-            android:textColor="#8f54ca" />
+            android:textColor="#5DAEF3" />
 
         <TextView
             android:id="@+id/knead_music"
@@ -117,6 +119,6 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="@string/knead_music"
-            android:textColor="#8f54ca" />
+            android:textColor="#5DAEF3" />
     </LinearLayout>
 </LinearLayout>

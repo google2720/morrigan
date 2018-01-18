@@ -103,12 +103,12 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         rulePaint.setTextAlign(Paint.Align.CENTER);
 
         trianglePaint = new Paint();
-        trianglePaint.setColor(0xff7d1db6);
+        trianglePaint.setColor(0xff5B73EE);
         trianglePaint.setAntiAlias(true);
 
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltqh.ttf");
         valuePaint = new Paint();
-        valuePaint.setColor(0xff7d1db6);
+        valuePaint.setColor(0xff5B73EE);
         valuePaint.setStrokeWidth(1);
         valuePaint.setAntiAlias(true);
         valuePaint.setTypeface(font);

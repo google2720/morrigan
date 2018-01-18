@@ -28,7 +28,7 @@
     </style>
 
     <style name="AppTheme.Login">
-        <item name="colorPrimaryDark">#440067</item>
+        <item name="colorPrimaryDark">#5DAEF3</item>
     </style>
 
     <style name="AppTheme.Main">
@@ -66,7 +66,7 @@
 
     <style name="style0">
         <item name="android:textSize">18dip</item>
-        <item name="android:textColor">#8c39e5</item>
+        <item name="android:textColor">#5B73EE</item>
     </style>
 
     <style name="style1">

@@ -57,11 +57,11 @@ public class UserController {
     }
 
     public String getUserId(Context context) {
-        return getSharedPreferences(context).getString("userId", null);
+        return getSharedPreferences(context).getString("userId", "default");
     }
 
     public boolean isAutoLogin(Context context) {
-        return getSharedPreferences(context).getBoolean("auto_login", false);
+        return getSharedPreferences(context).getBoolean("auto_login", true);
     }
 
     public void setAutoLogin(Context context, boolean b) {
@@ -114,15 +114,15 @@ public class UserController {
     }
 
     public String getMobile(Context context) {
-        return getSharedPreferences(context).getString("mobile", null);
+        return getSharedPreferences(context).getString("mobile", "13000000000");
     }
 
     public String getPassword(Context context) {
-        return getSharedPreferences(context).getString("password", null);
+        return getSharedPreferences(context).getString("password", "12345678");
     }
 
     public String getNickname(Context context) {
-        return getSharedPreferences(context).getString("nickname", null);
+        return getSharedPreferences(context).getString("nickname", "haha");
     }
 
     public void setNickname(Context context, String nickname) {
@@ -134,7 +134,7 @@ public class UserController {
     }
 
     public String getAge(Context context) {
-        return getSharedPreferences(context).getString("age", "");
+        return getSharedPreferences(context).getString("age", "18");
     }
 
     public void setAge(Context context, String age) {
@@ -158,7 +158,7 @@ public class UserController {
     }
 
     public String getHeight(Context context) {
-        return getSharedPreferences(context).getString("height", "");
+        return getSharedPreferences(context).getString("height", "170");
     }
 
     public void setHeight(Context context, String h) {
@@ -170,7 +170,7 @@ public class UserController {
     }
 
     public String getWeight(Context context) {
-        return getSharedPreferences(context).getString("weight", "");
+        return getSharedPreferences(context).getString("weight", "110");
     }
 
     public void setWeight(Context context, String w) {

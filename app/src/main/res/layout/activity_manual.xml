@@ -120,7 +120,7 @@
                 android:drawableTop="@drawable/bar_left"
                 android:onClick="onClickLeftBra"
                 android:text="@string/bra_left"
-                android:textColor="#7128bd" />
+                android:textColor="#5B73EE" />
 
             <android.support.v4.widget.Space
                 android:layout_width="0dp"
@@ -136,7 +136,7 @@
                 android:drawableTop="@drawable/bar_right"
                 android:onClick="onClickRightBra"
                 android:text="@string/bra_right"
-                android:textColor="#7128bd" />
+                android:textColor="#5B73EE" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

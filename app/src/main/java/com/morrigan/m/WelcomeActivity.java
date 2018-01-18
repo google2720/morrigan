@@ -12,9 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
 import com.morrigan.m.ble.BleController;
-import com.morrigan.m.c.UserController;
 import com.morrigan.m.login.LoginActivity;
-import com.squareup.picasso.Picasso;
+import com.morrigan.m.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class WelcomeActivity extends BaseActivity {
         ble.disconnect();
         setContentView(R.layout.activity_welcome);
         iconView = (ImageView) findViewById(android.R.id.icon);
-        Picasso.with(this).load(R.drawable.welcome_bg).into(iconView);
+        // Picasso.with(this).load(R.drawable.welcome_bg).into(iconView);
         showPermission();
     }
 
@@ -129,7 +128,7 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void doIt() {
-        handle.postDelayed(r, 3000);
+        handle.postDelayed(r, 2000);
 //        final Context context = getApplicationContext();
 //        AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, Void>() {
 //            @Override
@@ -152,11 +151,20 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void gotoResult() {
-        if (UserController.getInstance().isFirstLogin(getApplicationContext())) {
-            gotoGuide();
-        } else {
-            gotoLogin();
-        }
+//        if (UserController.getInstance().isFirstLogin(getApplicationContext())) {
+//            gotoGuide();
+//        } else {
+//            gotoLogin();
+//        }
+
+        gotoMain();
+    }
+
+
+    private void gotoMain() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void gotoLogin() {

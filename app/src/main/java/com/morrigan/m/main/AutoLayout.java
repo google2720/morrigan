@@ -33,7 +33,7 @@ public class AutoLayout extends FrameLayout {
     private AutoItemView massage4View;
     private AutoItemView massage5View;
     private boolean start;
-    private int bgColor = 0xff7128bd;
+    private int bgColor = 0xff5B73EE;
     private String startTip;
     private Rect boundText = new Rect();
     private Drawable drawableY;
@@ -211,14 +211,14 @@ public class AutoLayout extends FrameLayout {
 
     public void start() {
         start = true;
-        bgColor = 0xff9438ca;
+        bgColor = 0xff5DAEF3;
         startSystemTime = System.currentTimeMillis();
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
     public void stop(boolean refreshUi) {
         start = false;
-        bgColor = 0xff7128bd;
+        bgColor = 0xff5DAEF3;
         stopSystemTime = System.currentTimeMillis();
         if (refreshUi) {
             ViewCompat.postInvalidateOnAnimation(this);

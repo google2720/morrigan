@@ -34,7 +34,7 @@ public class VisualizerView extends View {
         mForePaint1.setColor(0xffffffff);
         mForePaint2.setStrokeWidth(1f);
         mForePaint2.setAntiAlias(true);
-        mForePaint2.setColor(0xffB269FE);
+        mForePaint2.setColor(0xff5B73EE);
         vols = new ArrayList<>();
         Random random = new Random();
         int max = 256;

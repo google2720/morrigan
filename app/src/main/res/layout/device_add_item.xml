@@ -14,5 +14,5 @@
         android:gravity="center"
         android:text="@string/device_add"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#a15fe9" />
+        android:textColor="#5DAEF3" />
 </FrameLayout>

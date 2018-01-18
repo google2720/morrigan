@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.morrigan.m"
+        applicationId "com.huili.m"
         minSdkVersion 18
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -40,13 +40,17 @@ android {
                 def oldFile = output.outputFile
                 def apkName = 'morragan-' + variant.buildType.name + "-" + variant.versionName + '-' + getCurrentDate() + '.apk'
                 output.outputFile = new File(oldFile.parent, apkName)
+            }else{
+                def oldFile = output.outputFile
+                def apkName = 'morragan-' + variant.buildType.name + "-" + variant.versionName + '-.apk'
+                output.outputFile = new File(oldFile.parent, apkName)
             }
         }
     }
 }
 
 def getCurrentDate() {
-    return new Date().format('yyyyMMddHHmmss')
+    return new Date().format('yyyyMMddHH')
 }
 
 dependencies {
