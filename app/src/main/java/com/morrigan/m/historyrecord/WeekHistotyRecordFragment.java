@@ -17,6 +17,7 @@ import com.morrigan.m.R;
 import com.morrigan.m.UiResult;
 import com.morrigan.m.ble.db.Massage;
 import com.morrigan.m.c.UserController;
+import com.morrigan.m.main.UploadHistoryDataService;
 import com.morrigan.m.utils.DateUtils;
 
 import java.text.SimpleDateFormat;
@@ -24,9 +25,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
-import okhttp3.FormBody;
-import okhttp3.Request;
 
 /**
  * 本周护养
@@ -171,25 +169,62 @@ public class WeekHistotyRecordFragment extends Fragment {
         protected UiResult<HistoryResult> doInBackground(Void... params) {
             UiResult<HistoryResult> uiResult = new UiResult<>();
             try {
+//                String userId = UserController.getInstance().getUserId(activity);
+//                String url = activity.getString(R.string.host) + "/rest/moli/get-record-list";
+//                FormBody.Builder b = new FormBody.Builder();
+//                b.add("userId", userId);
+//                Request.Builder builder = new Request.Builder();
+//                builder.url(url);
+//                builder.post(b.build());
+//                HistoryResult r = proxy.execute(activity, builder.build(), HistoryResult.class);
+//                uiResult.success = r.isSuccessful();
+//                uiResult.message = r.retMsg;
+//                if (uiResult.success) {
+//                    uiResult.t = r;
+//                    if (r.hlInfo.size() == 7) {
+//                        Calendar calendar = Calendar.getInstance();
+//                        int index = calendar.get(Calendar.DAY_OF_WEEK);
+//                        index = (index - 2 + 7) % 7;
+//                        r.hlInfo.get(index).timeLong = Massage.sum(activity, userId);
+//                    }
+//                }
                 String userId = UserController.getInstance().getUserId(activity);
-                String url = activity.getString(R.string.host) + "/rest/moli/get-record-list";
-                FormBody.Builder b = new FormBody.Builder();
-                b.add("userId", userId);
-                Request.Builder builder = new Request.Builder();
-                builder.url(url);
-                builder.post(b.build());
-                HistoryResult r = proxy.execute(activity, builder.build(), HistoryResult.class);
-                uiResult.success = r.isSuccessful();
-                uiResult.message = r.retMsg;
-                if (uiResult.success) {
-                    uiResult.t = r;
-                    if (r.hlInfo.size() == 7) {
-                        Calendar calendar = Calendar.getInstance();
+                String goalLong = UserController.getInstance().getTarget(activity);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                long todayStartTime = calendar.getTimeInMillis();
+                List<UploadHistoryDataService.Data> dataList = Massage.queryUploadData(activity, userId, goalLong, todayStartTime);
+                if (dataList.isEmpty()) {
+                }
+
+                HistoryResult r = new HistoryResult();
+                r.hlInfo = new ArrayList<>();
+
+                for (UploadHistoryDataService.Data data:dataList){
+                    HlInfo hlInfo = new HlInfo();
+                    hlInfo.date = data.date;
+                    hlInfo.goalLong = data.goalLong;
+                    try {
+                        hlInfo.timeLong = Integer.valueOf(data.timeLong);
+                    }catch (Exception e){
+                    }
+                    hlInfo.userId = data.userId;
+                    hlInfo.id =data.userId;
+                    r.hlInfo.add(hlInfo);
+                }
+
+                if (r.hlInfo.size() == 7) {
                         int index = calendar.get(Calendar.DAY_OF_WEEK);
                         index = (index - 2 + 7) % 7;
                         r.hlInfo.get(index).timeLong = Massage.sum(activity, userId);
                     }
-                }
+
+                uiResult.success = true;
+                uiResult.message = "";
+
             } catch (Exception e) {
                 Lg.w(TAG, "failed to get history", e);
                 uiResult.message = HttpProxy.parserError(activity, e);

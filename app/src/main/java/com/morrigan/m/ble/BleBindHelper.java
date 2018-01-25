@@ -22,6 +22,7 @@ public class BleBindHelper {
 
     public void connectAndBind(Context context, String address, String deviceName) throws InterruptedException {
         Lg.i(TAG, "start connect and bind " + deviceName + " " + address);
+
         UiResult<Boolean> result = DeviceController.getInstance().check(context, address);
         if (!result.success) {
             Lg.w(TAG, deviceName + "(" + address + ") is check error");
@@ -33,12 +34,14 @@ public class BleBindHelper {
             ble.getCallbacks().onBindDeviceFailed(BleError.BIND_BY_OTHER);
             return;
         }
+
         BluetoothDevice device = ble.getRemoteDevice(address);
         if (device == null) {
             ble.getCallbacks().onBindDeviceFailed(BleError.SYSTEM);
             return;
         }
         Lg.i(TAG, "start connect " + address);
+
         connect(device, 5, true);
     }
 

@@ -83,7 +83,7 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         massagePaint.setAntiAlias(true);
         massagePaint.setStyle(Paint.Style.STROKE);
         massagePaint.setStrokeWidth(strokeWidth * 50 / 100);
-        massagePaint.setColor(0xff5DAEF3);
+        massagePaint.setColor(0xff075D97);
         massagePaint.setStrokeCap(Paint.Cap.ROUND);
 
         massageBgPaint.setAntiAlias(true);
@@ -95,13 +95,13 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         massageConnectPaint.setAntiAlias(true);
         massageConnectPaint.setStyle(Paint.Style.STROKE);
         massageConnectPaint.setStrokeWidth(strokeWidth / 5);
-        massageConnectPaint.setColor(0xff5DAEF3);
+        massageConnectPaint.setColor(0xff075D97);
 
         wave1Paint.setAntiAlias(true);
-        wave1Paint.setColor(0x7f5B73EE);
+        wave1Paint.setColor(0x7f075D97);
 
         wave2Paint.setAntiAlias(true);
-        wave2Paint.setColor(0x7f5DAEF3);
+        wave2Paint.setColor(0x7f7bb0d4);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeCap(Paint.Cap.BUTT);
         radius = radius - strokeWidth;
-        paint.setColor(0xFF5B73EE);
+        paint.setColor(0xFF075D97);
         canvas.drawCircle(cx, cy, radius, paint);
 
         int left = Math.round(cx - radius);
@@ -159,7 +159,7 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         rectF.right = rectF.left + roundWidth;
         rectF.bottom = rectF.top + roundHeight;
         paint.setStyle(am ? Paint.Style.FILL : Paint.Style.STROKE);
-        paint.setColor(0xff5B73EE);
+        paint.setColor(0xffee7bb1);
         paint.setStrokeWidth(1);
         canvas.drawRoundRect(rectF, roundRectRadius, roundRectRadius, paint);
         rectF.left = cx + offset;
@@ -204,19 +204,19 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
                 ex = w - dialPadding;
                 sy = h / 2;
                 paint.setStrokeWidth(dialStrokeWidth2);
-                paint.setColor(0xff5B73EE);
+                paint.setColor(0xff075D97);
             } else if (i % 30 == 0) {
                 sx = w - strokeWidth + dialPadding;
                 ex = w - dialPadding;
                 sy = h / 2;
                 paint.setStrokeWidth(dialStrokeWidth2);
-                paint.setColor(0xff5B73EE);
+                paint.setColor(0xff075D97);
             } else if (i % 5 == 0) {
                 sx = w - strokeWidth + dialPadding * 2;
                 ex = w - dialPadding;
                 sy = h / 2;
                 paint.setStrokeWidth(dialStrokeWidth);
-                paint.setColor(0xff5B73EE);
+                paint.setColor(0xff075D97);
             }
 
             if (i % 5 == 0) {
@@ -231,7 +231,7 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
     private void drawProgress(Canvas canvas, int cx, int cy, float radius, int angle) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(strokeWidth / 4);
-        paint.setColor(0xff5B73EE);
+        paint.setColor(0xff075D97);
         paint.setStrokeCap(Paint.Cap.ROUND);
         oval.left = cx - radius;
         oval.top = cy - radius;

@@ -39,10 +39,10 @@
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Welcome">
-            <intent-filter>
+     <!--       <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".login.LoginActivity"
@@ -62,13 +62,21 @@
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Main" />
+            android:theme="@style/AppTheme.Main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+      </activity>
+
         <activity
             android:name=".main.ManualActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Manual"/>
         <activity
             android:name=".main.AutoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Auto"/>
         <activity
             android:name=".personal.PersonalActivity"
             android:label="@string/personal_title"
@@ -93,16 +101,21 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".device.DeviceScanActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.DeviceScan"/>
         <activity
             android:name=".device.DeviceScanResultActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.DeviceScanResult"
+        />
         <activity
             android:name=".device.DeviceBindFailedActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.DeviceScanResult"/>
         <activity
             android:name=".device.DeviceBindSuccessActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.DeviceScanResult"/>
         <activity
             android:name=".about.AboutActivity"
             android:label="@string/about_title"
@@ -121,7 +134,8 @@
             android:theme="@style/AppTheme.History" />
         <activity
             android:name=".music.MusicActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Music"/>
         <activity
             android:name=".GuideViewActivity"
             android:screenOrientation="portrait"

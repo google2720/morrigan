@@ -87,13 +87,13 @@ public class BatteryView extends View {
 
         int sc = canvas.saveLayer(0, 0, w, h, null, Canvas.ALL_SAVE_FLAG);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(0xff5B73EE);
+        paint.setColor(0xff075D97);
         canvas.drawCircle(cx, cy, radius, paint);
         rect.left = 0;
         rect.top = h * (100 - battery) / 100;
         rect.right = w;
         rect.bottom = h;
-        paint.setColor(0xff5B73EE);
+        paint.setColor(0xff075D97);
         paint.setXfermode(xfermode);
         canvas.drawRect(rect, paint);
         paint.setXfermode(null);

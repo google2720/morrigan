@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@drawable/manual_top_bg"
+        android:background="#075D97"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -96,7 +96,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#5DAEF3"
+        android:background="#7DC8FA"
         android:orientation="vertical">
 
         <TextView

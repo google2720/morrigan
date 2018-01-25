@@ -36,7 +36,7 @@
         android:paddingRight="15dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="进入摩莉"
+        android:text="进入慧丽"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#ffffff"
         android:visibility="gone"

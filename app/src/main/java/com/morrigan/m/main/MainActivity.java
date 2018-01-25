@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import com.morrigan.m.BaseActivity;
 import com.morrigan.m.R;
 import com.morrigan.m.ble.BleController;
+import com.morrigan.m.device.DeviceController;
 
 public class MainActivity extends BaseActivity implements NavigateFragment.NavigateListener, MainFragment.Listener, MenuLayout.Callback {
 
@@ -18,6 +19,10 @@ public class MainActivity extends BaseActivity implements NavigateFragment.Navig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DeviceController.getInstance().fetchAsync(this);
+        UploadHistoryDataService.startAction(this);
+
         mainLayout = (MenuLayout) findViewById(R.id.mainLayout);
         mainLayout.setCallback(this);
         mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content);

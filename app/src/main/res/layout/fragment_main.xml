@@ -89,7 +89,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="@string/knead_manual"
-            android:textColor="#5DAEF3" />
+            android:textColor="#5B73EE" />
 
         <TextView
             android:id="@+id/knead_auto"
@@ -104,7 +104,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="@string/knead_auto"
-            android:textColor="#5DAEF3" />
+            android:textColor="#5B73EE" />
 
         <TextView
             android:id="@+id/knead_music"
@@ -119,6 +119,6 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="@string/knead_music"
-            android:textColor="#5DAEF3" />
+            android:textColor="#5B73EE" />
     </LinearLayout>
 </LinearLayout>

@@ -9,7 +9,7 @@
 				android:topLeftRadius="3dp"
 				android:bottomRightRadius="3dp"
 				android:topRightRadius="3dp" />
-			<solid android:color="@color/c5F3684" />
+			<solid android:color="#7DC8FA" />
 		</shape>
 	</item>
 	<item android:id="@android:id/secondaryProgress">
@@ -20,7 +20,7 @@
 					android:topLeftRadius="3dp"
 					android:bottomRightRadius="3dp"
 					android:topRightRadius="3dp" />
-				<solid android:color="@color/c5F3684" />
+				<solid android:color="#7DC8FA" />
 			</shape>
 		</clip>
 	</item>
@@ -32,7 +32,7 @@
 					android:topLeftRadius="3dp"
 					android:bottomRightRadius="3dp"
 					android:topRightRadius="3dp" />
-				<solid android:color="@color/cFF70DC" />
+				<solid android:color="#7DC8FA" />
 			</shape>
 		</clip>
 	</item>

@@ -18,7 +18,7 @@ public class NavigateTextView extends TextView {
     public NavigateTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
-        paint.setColor(0xff5B73EE);
+        paint.setColor(0xff075D97);
         paint.setStrokeWidth(strokeWidth);
     }
 

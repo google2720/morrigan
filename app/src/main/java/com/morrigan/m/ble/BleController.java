@@ -15,7 +15,6 @@ import com.morrigan.m.ble.data.BatteryResult;
 import com.morrigan.m.ble.data.Bind;
 import com.morrigan.m.ble.data.Data;
 import com.morrigan.m.ble.data.MassageData;
-import com.morrigan.m.ble.data.MassageDataResult;
 import com.morrigan.m.ble.data.NotifyDataHelper;
 import com.morrigan.m.device.DeviceController;
 

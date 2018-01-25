@@ -32,7 +32,7 @@
     </style>
 
     <style name="AppTheme.Main">
-        <item name="android:windowBackground">@drawable/activity_main_bg</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.History">
@@ -40,9 +40,29 @@
         <item name="colorPrimaryDark">@color/c8c39e5</item>
     </style>
 
+    <style name="AppTheme.Manual">
+        <item name="colorPrimary">#075D97</item>
+        <item name="colorPrimaryDark">#075D97</item>
+    </style>
+
+    <style name="AppTheme.Auto">
+        <item name="colorPrimary">#075D97</item>
+        <item name="colorPrimaryDark">#075D97</item>
+    </style>
+
+    <style name="AppTheme.DeviceScan">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.DeviceScanResult">
+        <item name="colorPrimary">#B8DAF6</item>
+        <item name="colorPrimaryDark">#B8DAF6</item>
+    </style>
+
     <style name="AppTheme.Music">
-        <item name="colorPrimary">@color/cA957FF</item>
-        <item name="colorPrimaryDark">@color/cA957FF</item>
+        <item name="colorPrimary">#075D97</item>
+        <item name="colorPrimaryDark">#075D97</item>
     </style>
 
     <style name="AppTheme.Guide">

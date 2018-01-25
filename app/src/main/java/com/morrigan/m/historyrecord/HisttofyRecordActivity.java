@@ -74,7 +74,7 @@ public class HisttofyRecordActivity extends ToolbarActivity {
         DayHistotyRecordFragment day = new DayHistotyRecordFragment();
         WeekHistotyRecordFragment week = new WeekHistotyRecordFragment();
         fragments.add(day);
-        fragments.add(week);
+      //  fragments.add(week);
         HisttofyRecordActivity.TabAdapter tabAdapter = new HisttofyRecordActivity.TabAdapter(getSupportFragmentManager(), fragments);
         mViewPager.setOffscreenPageLimit(fragments.size());
         mViewPager.setAdapter(tabAdapter);

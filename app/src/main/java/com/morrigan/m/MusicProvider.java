@@ -9,7 +9,6 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -72,20 +71,20 @@ public class MusicProvider extends ContentProvider {
         MatrixCursor cursor = new MatrixCursor(COLUMN_NAME);
         MatrixCursor.RowBuilder builder1 = cursor.newRow();
         builder1.add(1);
-        builder1.add("喜欢你");
-        builder1.add("喜欢你");
-        builder1.add("邓紫棋");
-        builder1.add(4 * 60 * 1000 + 19000);
-        builder1.add(4162718);
+        builder1.add("梦中的婚礼");
+        builder1.add("梦中的婚礼");
+        builder1.add("钢琴曲");
+        builder1.add(3 * 60 * 1000 +2000);
+        builder1.add(2915041);
         builder1.add("content://" + context.getPackageName() + "/1");
 
         MatrixCursor.RowBuilder builder2 = cursor.newRow();
         builder2.add(2);
-        builder2.add("卡农");
-        builder2.add("卡农");
-        builder2.add("纯钢琴曲");
-        builder2.add(3 * 60 * 1000 + 17000);
-        builder2.add(3152551);
+        builder2.add("一念之间");
+        builder2.add("一念之间");
+        builder2.add("张杰、莫文蔚");
+        builder2.add(4 * 60 * 1000 + 58000);
+        builder2.add(4771020);
         builder2.add("content://" + context.getPackageName() + "/2");
         return cursor;
     }

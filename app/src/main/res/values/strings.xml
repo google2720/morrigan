@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">"慧莉smart"</string>
+    <string name="app_name">"慧丽smart"</string>
     <string name="action_cancel">"取消"</string>
     <string name="action_confirm">"确定"</string>
     <string name="action_complete">"完成"</string>
@@ -22,7 +22,7 @@
     <string name="error_modify">"修改失败"</string>
     <!-- 欢迎界面 -->
     <string name="permission_explain">"权限说明"</string>
-    <string name="permission_explain_location">"扫描摩莉设备需要使用手机的位置信息\n"</string>
+    <string name="permission_explain_location">"扫描慧丽设备需要使用手机的位置信息\n"</string>
     <string name="permission_explain_record">"显示音乐波形图需要使用麦克风权限\n"</string>
     <string name="permission_explain_retad_external_storage">"播放音乐需要使用读取外部存储权限\n"</string>
     <!-- 登录界面 -->
@@ -58,7 +58,7 @@
     <string name="navigate_setting_relate_account">"关联账号"</string>
     <string name="navigate_setting_relate_device">"关联设备"</string>
     <string name="navigate_setting_about_app">"关于应用"</string>
-    <string name="navigate_setting_about">"关于摩莉"</string>
+    <string name="navigate_setting_about">"关于慧丽"</string>
     <string name="navigate_setting_firmware_upgrade">"固件升级"</string>
     <string name="navigate_setting_feedback">"意见反馈"</string>
     <string name="navigate_setting_quit">"注销用户信息"</string>
@@ -96,7 +96,7 @@
     <!-- 关联设备 -->
     <string name="device_title">"关联设备"</string>
     <string name="device_add">"添加新设备"</string>
-    <string name="device_scan_title">"摩莉智能文胸"</string>
+    <string name="device_scan_title">"慧丽智能文胸"</string>
     <string name="device_scan_tip">"正在搜索设备&#8230;"</string>
     <string name="device_scan_stop">"停止搜索"</string>
     <string name="device_please_select">"请选择设备"</string>
@@ -113,11 +113,11 @@
     <string name="device_unbind_error">"该设备处于连接状态，暂不能解绑"</string>
     <string name="device_connect_success_o">"每天坚持%s分钟哦！"</string>
     <!-- 关于界面 -->
-    <string name="about_title">"关于摩莉"</string>
+    <string name="about_title">"关于慧丽"</string>
     <string name="about_product_team">"产品团队"</string>
     <string name="about_private">"隐私政策"</string>
     <string name="about_service">"服务条例"</string>
-    <string name="about_copy_right">"摩莉公司版权所有 ©2015-©2016"</string>
+    <string name="about_copy_right">"慧丽公司版权所有 ©2015-©2016"</string>
     <!-- 意见反馈 -->
     <string name="feedback_title">"意见反馈"</string>
     <string name="feedback_hint">"请输入您的改善意见和问题反馈"</string>

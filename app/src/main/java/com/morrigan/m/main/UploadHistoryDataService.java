@@ -35,7 +35,7 @@ public class UploadHistoryDataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-            upload();
+           // upload();
         } catch (Throwable e) {
             Log.w(TAG, "failed to upload data", e);
         }

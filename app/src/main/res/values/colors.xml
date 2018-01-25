@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#5B73EE</color>
-    <color name="colorPrimaryDark">#5B73EE</color>
-    <color name="colorAccent">#5B73EE</color>
+    <color name="colorPrimary">#075D97</color>
+    <color name="colorPrimaryDark">#075D97</color>
+    <color name="colorAccent">#075D97</color>
     <color name="welcome_default_bg">#ff100f11</color>
     <color name="transparent_half_bg">#7f000000</color>
-    <color name="c8c39e5">#5DAEF3</color>
-    <color name="c8126e4">#5DAEF3</color>
-    <color name="cffbe8ef2">#ff5DAEF3</color>
+    <color name="c8c39e5">#075D97</color>
+    <color name="c8126e4">#075D97</color>
+    <color name="cffbe8ef2">#075D97</color>
     <color name="cf7f7f7">#f7f7f7</color>
     <color name="cf3f3f3">#e3e3e3</color>
     <color name="cffffff">#ffffff</color>
     <color name="c5a5a5a">#5a5a5a</color>
     <color name="c000000">#000000</color>
-    <color name="cA957FF">#5DAEF3</color>
+    <color name="cA957FF">#075D97</color>
     <color name="cfaffffff">#faffffff</color>
     <color name="c7E7879">#7E7879</color>
-    <color name="cFFC3DC">#5DAEF3</color>
+    <color name="cFFC3DC">#075D97</color>
     <color name="divider_line">#E6E6F0</color>
-    <color name="cFF70DC">#5B73EE</color>
-    <color name="c5F3684">#5B73EE</color>
+    <color name="cFF70DC">#075D97</color>
+    <color name="c5F3684">#075D97</color>
     <color name="c989898">#989898</color>
 
 
@@ -35,14 +35,14 @@
     <color name="jj">#fff7bdd8</color>
     <color name="kk">#fff4d6e6</color>
 
-    <color name="l">#ff9438ca</color>
+    <color name="l">#fff8f9ff</color>
     <color name="m">#ffc34fdc</color>
     <color name="n">#ffc5e3c9</color>
     <color name="o">#7fff0000</color>
     <color name="p">#ff9438ca</color>
     <color name="x">#ff7128bd</color>
     <color name="z">#7fff0000</color>
-    <color name="y">#ff7128bd</color>
+    <color name="y">#ffB269FE</color>
 
 
 </resources>
