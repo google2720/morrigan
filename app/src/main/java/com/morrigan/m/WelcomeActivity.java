@@ -128,7 +128,7 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void doIt() {
-        handle.postDelayed(r, 2000);
+        handle.postDelayed(r, 0);
 //        final Context context = getApplicationContext();
 //        AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, Void>() {
 //            @Override
