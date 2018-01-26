@@ -38,11 +38,11 @@ android {
         variant.outputs.each { output ->
             if ("release".equals(variant.buildType.name)) {
                 def oldFile = output.outputFile
-                def apkName = 'morragan-' + variant.buildType.name + "-" + variant.versionName + '-' + getCurrentDate() + '.apk'
+                def apkName = 'huili-' + variant.buildType.name + "-" + variant.versionName + '-' + getCurrentDate() + '.apk'
                 output.outputFile = new File(oldFile.parent, apkName)
             }else{
                 def oldFile = output.outputFile
-                def apkName = 'morragan-' + variant.buildType.name + "-" + variant.versionName + '-.apk'
+                def apkName = 'huili-' + variant.buildType.name + "-" + variant.versionName + '-.apk'
                 output.outputFile = new File(oldFile.parent, apkName)
             }
         }
