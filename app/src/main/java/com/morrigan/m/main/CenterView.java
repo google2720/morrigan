@@ -116,7 +116,7 @@ public class CenterView extends View implements GestureDetector.OnGestureListene
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeCap(Paint.Cap.BUTT);
         radius = radius - strokeWidth;
-        paint.setColor(0xff7128bd);
+        paint.setColor(0xffed73ac);
         canvas.drawCircle(cx, cy, radius, paint);
 
         int left = Math.round(cx - radius);

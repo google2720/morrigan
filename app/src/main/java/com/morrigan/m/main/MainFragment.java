@@ -183,7 +183,7 @@ public class MainFragment extends Fragment implements CenterView.Callback {
     @Override
     public void onStart() {
         super.onStart();
-        loadRank();
+       // loadRank();
         loadMassageData();
     }
 

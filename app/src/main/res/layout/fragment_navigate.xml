@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
+        android:visibility="invisible"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -63,6 +64,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_my_information"
+                android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
@@ -147,6 +149,7 @@
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_about_app"
+                android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
@@ -164,6 +167,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
+                android:visibility="gone"
                 android:text="@string/navigate_setting_about"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
@@ -201,6 +205,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
                 android:text="@string/navigate_setting_feedback"
+                android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />
 
@@ -218,6 +223,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="10dp"
+                android:visibility="gone"
                 android:text="@string/navigate_setting_quit"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#fffffd" />

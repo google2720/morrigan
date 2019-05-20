@@ -103,12 +103,12 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
         rulePaint.setTextAlign(Paint.Align.CENTER);
 
         trianglePaint = new Paint();
-        trianglePaint.setColor(0xff7d1db6);
+        trianglePaint.setColor(0xffea5b9d);
         trianglePaint.setAntiAlias(true);
 
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltqh.ttf");
         valuePaint = new Paint();
-        valuePaint.setColor(0xff7d1db6);
+        valuePaint.setColor(0xffea5b9d);
         valuePaint.setStrokeWidth(1);
         valuePaint.setAntiAlias(true);
         valuePaint.setTypeface(font);
@@ -214,7 +214,7 @@ public class GoalView extends View implements GestureDetector.OnGestureListener 
                 canvas.drawLine(i, lineBottom, i, lineBottom - divide * 2, linePaint);
             }
         }
-        linePaint.setColor(0xcc8c39e5);
+        linePaint.setColor(0xffea5b9d);
         canvas.drawLine(centerX, lineBottom, centerX, top, linePaint);
 
         // 三角
